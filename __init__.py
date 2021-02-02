@@ -38,26 +38,10 @@ import math
 
 from .functions.main_functions import (
     sn_print,
-    sn_cast_string,
-    sn_cast_list,
-    sn_cast_int_vector,
-    sn_cast_int,
-    sn_cast_float_vector,
-    sn_cast_float,
-    sn_cast_color,
-    sn_cast_boolean_vector,
-    sn_cast_boolean,
-    sn_cast_blend_data,
+    sn_handle_script_line_exception,
     build_folder
 )
 
-
-###############   IMPERATIVE CODE
-#######   Blender Project Starter
-def sn_handle_script_line_exception(exc, line):
-    print("# # # # # # # # SCRIPT LINE ERROR # # # # # # # #")
-    print("Line:", line)
-    raise exc
 
 
 ###############   EVALUATED CODE
