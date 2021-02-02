@@ -51,7 +51,7 @@ from . import (
 
 def register():
     operators.register()
-    prefs.register()
+    prefs.register(bl_info)
     panels.register()
 
     sn_register_icons()

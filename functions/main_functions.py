@@ -25,17 +25,41 @@ from bpy.utils import previews
 import os
 from os import path as p
 
+
 def build_folder(context, prop):
     try:
         prop = prop.replace(">>", "\\")
-        path = os.path.join(bpy.path.abspath(bpy.context.scene.project_location), bpy.context.scene.project_name, prop)
+        path = p.join(bpy.path.abspath(bpy.context.scene.project_location), bpy.context.scene.project_name, prop)
 
     except Exception as exc:
-        sn_handle_script_line_exception(exc, ("path ='" + bpy.path.abspath(os.path.join(bpy.path.abspath(bpy.context.scene.project_location, bpy.context.scene.project_name), prop))))
+        sn_handle_script_line_exception(exc, ("path ='" + bpy.path.abspath(p.join(bpy.path.abspath(bpy.context.scene.project_location, bpy.context.scene.project_name), prop))))
 
-    if not os.path.isdir(path):
+    if not p.isdir(path):
         os.makedirs(path)
 
+
+def version_number(path):
+    i = 1
+
+    while p.exists(path + "_v" + str(i / 10000).split(".")[1] + ".blend"):
+        i += 1
+
+    return "_v" + str(i / 10000).split(".")[1]
+
+
+def file_subfolder(options, context):
+    if options == "Root":
+        return ""
+    elif options == "Folder 1":
+        return context.folder_1
+    elif options == "Folder 2":
+        return context.folder_2
+    elif options == "Folder 3":
+        return context.folder_3
+    elif options == "Folder 4":
+        return context.folder_4
+    elif options == "Folder 5":
+        return context.folder_5
 
 
 def sn_print(tree_name, *args):
@@ -53,25 +77,25 @@ def sn_handle_script_line_exception(exc, line):
     print("Line:", line)
     raise exc
 
-###############   REGISTER ICONS
+
 def sn_register_icons():
-    icons = ["BUILD_ICON","TWITTER","YOUTUBE","GUMROAD",]
-    bpy.types.Scene.blender_project_starter_icons = bpy.utils.previews.new()
-    icons_dir = os.path.join( os.path.dirname( __file__ ), "icons" )
+    icons = ["BUILD_ICON", "TWITTER", "YOUTUBE", "GUMROAD"]
+    bpy.types.Scene.blender_project_starter_icons = previews.new()
+    icons_dir = p.join(p.dirname(p.dirname(__file__)), "icons")
     for icon in icons:
-        bpy.types.Scene.blender_project_starter_icons.load( icon, os.path.join( icons_dir, icon + ".png" ), "IMAGE" )
+        bpy.types.Scene.blender_project_starter_icons.load(icon, p.join(icons_dir, icon + ".png"), "IMAGE")
+
 
 def sn_unregister_icons():
-    bpy.utils.previews.remove( bpy.types.Scene.blender_project_starter_icons )
+    previews.remove(bpy.types.Scene.blender_project_starter_icons)
 
 
-###############   REGISTER PROPERTIES
 def sn_register_properties():
     prefs = bpy.context.preferences.addons[__package__.split(".")[0]].preferences
 
     bpy.types.Scene.project_name = bpy.props.StringProperty(name="Project Name", subtype="NONE", options=set(), default="My_Project")
-    bpy.types.Scene.project_location = bpy.props.StringProperty(name="Project Location", description="Saves the location of file", subtype="DIR_PATH", options=set(), default= prefs.default_path)
-    bpy.types.Scene.project_setup = bpy.props.EnumProperty(name="Project Setup", options=set(),items=[("Automatic Setup", "Automatic Setup", "Automatic Project Setup "), ("Custom Setup", "Custom Setup", "My Custom Setup")])
+    bpy.types.Scene.project_location = bpy.props.StringProperty(name="Project Location", description="Saves the location of file", subtype="DIR_PATH", options=set(), default=prefs.default_path)
+    bpy.types.Scene.project_setup = bpy.props.EnumProperty(name="Project Setup", items=[("Automatic Setup", "Automatic Setup", "Automatic Project Setup "), ("Custom Setup", "Custom Setup", "My Custom Setup")])
 
     bpy.types.Scene.folder_1 = bpy.props.StringProperty(name="Folder_1", description="Custom Folder Setup", options=set())
     bpy.types.Scene.folder_2 = bpy.props.StringProperty(name="Folder_2", description="Folder Structure 2 ", options=set())
@@ -80,10 +104,21 @@ def sn_register_properties():
     bpy.types.Scene.folder_5 = bpy.props.StringProperty(name="Folder_5", description="Custom Folder 5", options=set())
 
     bpy.types.Scene.open_directory = bpy.props.BoolProperty(name="Open Directory", options=set(), default=True)
-    bpy.types.Scene.save_blender_file = bpy.props.BoolProperty(name="Save Blender File", options=set(), default=False)
-    bpy.types.Scene.save_file_name = bpy.props.StringProperty(name="Save File Name", subtype="NONE", options=set())
+    bpy.types.Scene.save_blender_file = bpy.props.BoolProperty(name="Save Blender File", options=set(), default=True)
+    bpy.types.Scene.file_folder = bpy.props.EnumProperty(name="Folder", items=[
+        ("Root", "Root", "Save to Root Folder"),
+        ("Folder 1", prefs.folder_1, "Save to Folder 1"),
+        ("Folder 2", prefs.folder_2, "Save to Folder 2"),
+        ("Folder 3", prefs.folder_3, "Save to Folder 3"),
+        ("Folder 4", prefs.folder_4, "Save to Folder 4"),
+        ("Folder 5", prefs.folder_5, "Save to Folder 5")
+
+        ])
+    bpy.types.Scene.save_blender_file_versioned = bpy.props.BoolProperty(name="Save Blender File with version number if File already exists", options=set(), default=False)
+    bpy.types.Scene.save_file_name = bpy.props.StringProperty(name="Save File Name", options=set())
     bpy.types.Scene.remap_relative = bpy.props.BoolProperty(name="Remap Relative", options=set(), default=True)
     bpy.types.Scene.compress_save = bpy.props.BoolProperty(name="Compress Save", options=set(), default=False)
+
 
 def sn_unregister_properties():
     del bpy.types.Scene.project_name

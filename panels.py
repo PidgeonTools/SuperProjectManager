@@ -43,48 +43,68 @@ class BLENDER_PROJECT_STARTER_PT_main_panel(bpy.types.Panel):
     def draw(self, context):
         try:
             layout = self.layout
-
-            layout.prop(bpy.context.scene,"project_name",text="Project Name")
-            layout.prop(bpy.context.scene,"project_location",text="Project Location")
-            layout.prop(bpy.context.scene,"project_setup",text="Project Setup", expand=False,)
-            if "Automatic Setup" == bpy.context.scene.project_setup:
-                pass
-            else:
-                layout.label(text="Custom Folder Setup",icon_value=689)
-                layout.prop(bpy.context.scene,"folder_1",text="Folder")
-                layout.prop(bpy.context.scene,"folder_2",text="Folder 2")
-                layout.prop(bpy.context.scene,"folder_3",text="Folder_3")
-                layout.prop(bpy.context.scene,"folder_4",text="Folder_4")
-                layout.prop(bpy.context.scene,"folder_5",text="Folder_5")
-            layout.separator(factor=1.0)
-
-            box = layout.box()
-
-            box.label(text=".blend Save Options",icon_value=70)
-
-            layout.prop(bpy.context.scene,"open_directory", text="Open Folder Window On Build")
-            layout.prop(bpy.context.scene,"save_blender_file", text="Save .blend File")
-
-            if bpy.context.scene.save_blender_file:
-                layout.prop(bpy.context.scene,"save_blender_file_versioned")
-                if bpy.data.filepath == "":
-                    layout.prop(bpy.context.scene,"save_file_name", text="Save File Name")
-                row = layout.row(align=False)
-
-                row.prop(bpy.context.scene,"remap_relative", icon_value = 2, text="Remap Relative")
-                row.prop(bpy.context.scene,"compress_save", icon_value = 70, text="Compress File")
-
             row = layout.row(align=False)
             row.scale_x = 2.0
             row.scale_y = 2.0
-            row.operator("blender_project_starter.build_project",text="BUILD PROJECT", depress=False, icon_value=bpy.context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id)
+            row.operator("blender_project_starter.build_project", text="BUILD PROJECT", depress=False, icon_value=bpy.context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id)
+
+            layout.separator(factor=1.0)
+
+            layout.prop(bpy.context.scene, "project_name", text="Project Name")
+            layout.prop(bpy.context.scene, "project_location", text="Project Location")
+            layout.prop(bpy.context.scene, "project_setup", text="Project Setup", expand=False,)
+            if "Automatic Setup" == bpy.context.scene.project_setup:
+                pass
+            else:
+                layout.label(text="Custom Folder Setup", icon_value=689)
+                layout.prop(bpy.context.scene, "folder_1", text="Folder")
+                layout.prop(bpy.context.scene, "folder_2", text="Folder 2")
+                layout.prop(bpy.context.scene, "folder_3", text="Folder_3")
+                layout.prop(bpy.context.scene, "folder_4", text="Folder_4")
+                layout.prop(bpy.context.scene, "folder_5", text="Folder_5")
+
+        except Exception as exc:
+            print(str(exc) + " | Error in Blender Starter Project panel")
+
+
+class BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel(bpy.types.Panel):
+    bl_label = "Save .blend File / Options"
+    bl_idname = "blender_project_starter_PT_Blender_File_save_options_subpanel"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "scene"
+    bl_parent_id = "blender_project_starter_PT__main_panel"
+
+    def draw_header(self, context):
+        try:
+            layout = self.layout
+            layout.prop(bpy.context.scene, "save_blender_file", text="")
+        except Exception as exc:
+            print(str(exc) + " | Error in Blender Starter Project panel header")
+
+    def draw(self, context):
+        try:
+            layout = self.layout
+            layout.enabled = bpy.context.scene.save_blender_file
+
+            layout.prop(bpy.context.scene, "save_blender_file_versioned")
+            if bpy.data.filepath == "":
+                layout.prop(bpy.context.scene, "file_folder")
+                layout.prop(bpy.context.scene, "save_file_name", text="Save File Name")
+            row = layout.row(align=False)
+
+            row.prop(bpy.context.scene, "remap_relative", icon_value=2, text="Remap Relative")
+            row.prop(bpy.context.scene, "compress_save", icon_value=70, text="Compress File")
+
         except Exception as exc:
             print(str(exc) + " | Error in Blender Starter Project panel")
 
 
 def register():
     bpy.utils.register_class(BLENDER_PROJECT_STARTER_PT_main_panel)
+    bpy.utils.register_class(BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel)
 
 
 def unregister():
     bpy.utils.unregister_class(BLENDER_PROJECT_STARTER_PT_main_panel)
+    bpy.utils.unregister_class(BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel)

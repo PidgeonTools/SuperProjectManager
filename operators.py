@@ -25,7 +25,9 @@ from os import path as p
 
 from .functions.main_functions import (
     sn_handle_script_line_exception,
-    build_folder
+    build_folder,
+    version_number,
+    file_subfolder
 )
 
 
@@ -35,32 +37,27 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
     bl_description = "Build Project Operator "
     bl_options = {"REGISTER", "UNDO"}
 
-
-    @classmethod
-    def poll(cls, context):
-        return True
-
     def execute(self, context):
         try:
             if "Automatic Setup" == bpy.context.scene.project_setup:
                 prefs = context.preferences.addons[__package__].preferences
 
-                build_folder(context, prefs.folder_save1)
+                build_folder(context, prefs.folder_1)
 
-                if prefs.folder_save2:
-                    build_folder(context, prefs.folder_save2)
+                if prefs.folder_2:
+                    build_folder(context, prefs.folder_2)
 
-                if prefs.folder_save3:
-                    build_folder(context, prefs.folder_save3)
+                if prefs.folder_3:
+                    build_folder(context, prefs.folder_3)
 
-                if prefs.folder_save4:
-                    build_folder(context, prefs.folder_save4)
+                if prefs.folder_4:
+                    build_folder(context, prefs.folder_4)
 
-                if prefs.folder_save5:
-                    build_folder(context, prefs.folder_save5)
+                if prefs.folder_5:
+                    build_folder(context, prefs.folder_5)
 
-
-
+                subfolder = file_subfolder(bpy.context.scene.file_folder, prefs)
+#
             else:
                 scene = bpy.context.scene
 
@@ -78,18 +75,29 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
                 if scene.folder_5:
                     build_folder(context, scene.folder_5)
 
+                subfolder = file_subfolder(bpy.context.scene.file_folder, bpy.context.scene)
 
             if bpy.context.scene.save_blender_file:
-                bpy.ops.wm.save_as_mainfile(filepath=(os.path.join(bpy.path.abspath(os.path.join(bpy.context.scene.project_location,bpy.context.scene.project_name)), bpy.context.scene.save_file_name) + "_v001.blend"), filter_btx=True, compress=bpy.context.scene.compress_save, relative_remap= bpy.context.scene.remap_relative)
+                if bpy.data.filepath == "":
+                    bpy.ops.wm.save_as_mainfile(filepath=p.join(bpy.context.scene.project_location, bpy.context.scene.project_name, subfolder, bpy.context.scene.save_file_name) + ".blend", compress=bpy.context.scene.compress_save, relative_remap=bpy.context.scene.remap_relative)
+                elif bpy.context.scene.save_blender_file_versioned:
+                    filename = bpy.data.filepath.split("//")
+                    filename = filename[len(filename) - 1].split(".blen")[0].split("_v")[0]
+                    version = version_number(filename)
+                    bpy.ops.wm.save_as_mainfile(filepath=filename + version + ".blend", compress=bpy.context.scene.compress_save, relative_remap=bpy.context.scene.remap_relative)
+                else:
+                    filename = bpy.data.filepath.split("//")
+                    filename = filename[len(filename) - 1]
+                    bpy.ops.wm.save_as_mainfile(filepath=filename, compress=bpy.context.scene.compress_save, relative_remap=bpy.context.scene.remap_relative)
 
             if bpy.context.scene.open_directory:
                 try:
-                    OpenLocation =  bpy.path.abspath(os.path.join(bpy.context.scene.project_location,bpy.context.scene.project_name))
+                    OpenLocation = bpy.path.abspath(p.join(bpy.context.scene.project_location, bpy.context.scene.project_name))
                 except Exception as exc:
-                    sn_handle_script_line_exception(exc, ("OpenLocation =  '" + bpy.path.abspath(os.path.join(bpy.context.scene.project_location,bpy.context.scene.project_name))))
+                    sn_handle_script_line_exception(exc, ("OpenLocation =  '" + bpy.path.abspath(p.join(bpy.context.scene.project_location, bpy.context.scene.project_name))))
 
-                try: 
-                    OpenLocation = os.path.realpath(OpenLocation)
+                try:
+                    OpenLocation = p.realpath(OpenLocation)
 
                 except Exception as exc:
                     sn_handle_script_line_exception(exc, "OpenLocation = os.path.realpath(OpenLocation)")
@@ -98,7 +106,6 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
                     os.startfile(OpenLocation)
                 except Exception as exc:
                     sn_handle_script_line_exception(exc, "os.startfile(OpenLocation)")
-
 
         except Exception as exc:
             print(str(exc) + " | Error in execute function of Build Project")
@@ -110,6 +117,7 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
         except Exception as exc:
             print(str(exc) + " | Error in invoke function of Build Project")
         return self.execute(context)
+
 
 def register():
     bpy.utils.register_class(BLENDER_PROJECT_STARTER_OT_Build_Project)
