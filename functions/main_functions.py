@@ -4,6 +4,22 @@ from bpy.utils import previews
 import os
 import math
 
+
+def build_folder(context, prop):
+    try:
+        path = os.path.join(bpy.path.abspath(bpy.context.scene.project_location), bpy.context.scene.project_name, prop)
+
+    except Exception as exc:
+        sn_handle_script_line_exception(exc, ("path ='" + bpy.path.abspath(os.path.join(bpy.path.abspath(bpy.context.scene.project_location, bpy.context.scene.project_name), prop))))
+
+    try:
+        os.makedirs(path)
+    except Exception as exc:
+        sn_handle_script_line_exception(exc, "os.makedirs(path)")
+
+
+
+
 ###############   INITALIZE VARIABLES
 ###############   SERPENS FUNCTIONS
 def sn_print(tree_name, *args):

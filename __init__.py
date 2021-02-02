@@ -47,7 +47,8 @@ from .functions.main_functions import (
     sn_cast_color,
     sn_cast_boolean_vector,
     sn_cast_boolean,
-    sn_cast_blend_data
+    sn_cast_blend_data,
+    build_folder
 )
 
 
