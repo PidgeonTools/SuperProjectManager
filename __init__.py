@@ -127,16 +127,17 @@ class SNA_PT_Blender_Starter_Project_9A326(bpy.types.Panel):
 
 class SNA_AddonPreferences_B0705(bpy.types.AddonPreferences):
     bl_idname = __name__.partition('.')[0]
-    folder_save1 : bpy.props.StringProperty(name='Folder_Save1',description='',subtype='FILE_PATH',options=set(),default='Folder//Sub')
-    folder_save2 : bpy.props.StringProperty(name='Folder_Save2',description='',subtype='FILE_PATH',options=set(),default='')
-    folder_save3 : bpy.props.StringProperty(name='Folder_Save3',description='',subtype='FILE_PATH',options=set(),default='')
-    folder_save4 : bpy.props.StringProperty(name='Folder_Save4',description='',subtype='FILE_PATH',options=set(),default='')
-    folder_save5 : bpy.props.StringProperty(name='Folder_Save5',description='',subtype='FILE_PATH',options=set(),default='')
+    folder_save1 : bpy.props.StringProperty(name='Folder_Save1',description='',subtype='DIR_PATH',options=set(),default='Folder//Sub')
+    folder_save2 : bpy.props.StringProperty(name='Folder_Save2',description='',subtype='DIR_PATH',options=set(),default='')
+    folder_save3 : bpy.props.StringProperty(name='Folder_Save3',description='',subtype='DIR_PATH',options=set(),default='')
+    folder_save4 : bpy.props.StringProperty(name='Folder_Save4',description='',subtype='DIR_PATH',options=set(),default='')
+    folder_save5 : bpy.props.StringProperty(name='Folder_Save5',description='',subtype='DIR_PATH',options=set(),default='')
 
     def draw(self, context):
         try:
             layout = self.layout
             layout.label(text=r"Blender Project Manager ",icon_value=bpy.context.scene.blender_project_starter_icons['BUILD_ICON'].icon_id)
+
             box = layout.box()
             box.enabled = True
             box.alert = False
@@ -286,11 +287,11 @@ def sn_register_properties():
     bpy.types.Scene.project_name = bpy.props.StringProperty(name='Project Name',description='',subtype='NONE',options=set(),default='My_Project')
     bpy.types.Scene.project_location = bpy.props.StringProperty(name='Project Location',description='Saves the location of file',subtype='DIR_PATH',options=set(),default='C:\Blender_External')
     bpy.types.Scene.project_setup = bpy.props.EnumProperty(name='Project Setup',description='',options=set(),items=[('Automatic Setup', 'Automatic Setup', 'Automatic Project Setup '), ('Custom Setup', 'Custom Setup', 'My Custom Setup')])
-    bpy.types.Scene.folder_1 = bpy.props.StringProperty(name='Folder_1',description='Custom Folder Setup',subtype='NONE',options=set(),default='')
-    bpy.types.Scene.folder_2 = bpy.props.StringProperty(name='Folder_2',description='Folder Structure 2 ',subtype='NONE',options=set(),default='')
-    bpy.types.Scene.folder_3 = bpy.props.StringProperty(name='Folder_3',description='Custom Folder 3 ',subtype='NONE',options=set(),default='')
-    bpy.types.Scene.folder_4 = bpy.props.StringProperty(name='Folder_4',description='Custom Folder 4',subtype='NONE',options=set(),default='')
-    bpy.types.Scene.folder_5 = bpy.props.StringProperty(name='Folder_5',description='Custom Folder 5',subtype='NONE',options=set(),default='')
+    bpy.types.Scene.folder_1 = bpy.props.StringProperty(name='Folder_1',description='Custom Folder Setup',subtype='DIR_PATH',options=set(),default='')
+    bpy.types.Scene.folder_2 = bpy.props.StringProperty(name='Folder_2',description='Folder Structure 2 ',subtype='DIR_PATH',options=set(),default='')
+    bpy.types.Scene.folder_3 = bpy.props.StringProperty(name='Folder_3',description='Custom Folder 3 ',subtype='DIR_PATH',options=set(),default='')
+    bpy.types.Scene.folder_4 = bpy.props.StringProperty(name='Folder_4',description='Custom Folder 4',subtype='DIR_PATH',options=set(),default='')
+    bpy.types.Scene.folder_5 = bpy.props.StringProperty(name='Folder_5',description='Custom Folder 5',subtype='DIR_PATH',options=set(),default='')
     bpy.types.Scene.open_directory = bpy.props.BoolProperty(name='Open Directory',description='',options=set(),default=True)
     bpy.types.Scene.save_blender_file = bpy.props.BoolProperty(name='Save Blender File',description='',options=set(),default=False)
     bpy.types.Scene.save_file_name = bpy.props.StringProperty(name='Save File Name',description='',subtype='NONE',options=set(),default='')
