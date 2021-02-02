@@ -234,11 +234,11 @@ class SNA_PT_Blender_Starter_Project_9A326(bpy.types.Panel):
 
 class SNA_AddonPreferences_B0705(bpy.types.AddonPreferences):
     bl_idname = __name__.partition('.')[0]
-    folder_save1 : bpy.props.StringProperty(name='Folder_Save1',description='',subtype='FILEPATH',options=set(),default='Folder//Sub')
-    folder_save2 : bpy.props.StringProperty(name='Folder_Save2',description='',subtype='FILEPATH',options=set(),default='')
-    folder_save3 : bpy.props.StringProperty(name='Folder_Save3',description='',subtype='FILEPATH',options=set(),default='')
-    folder_save4 : bpy.props.StringProperty(name='Folder_Save4',description='',subtype='FILEPATH',options=set(),default='')
-    folder_save5 : bpy.props.StringProperty(name='Folder_Save5',description='',subtype='FILEPATH',options=set(),default='')
+    folder_save1 : bpy.props.StringProperty(name='Folder_Save1',description='',subtype='FILE_PATH',options=set(),default='Folder//Sub')
+    folder_save2 : bpy.props.StringProperty(name='Folder_Save2',description='',subtype='FILE_PATH',options=set(),default='')
+    folder_save3 : bpy.props.StringProperty(name='Folder_Save3',description='',subtype='FILE_PATH',options=set(),default='')
+    folder_save4 : bpy.props.StringProperty(name='Folder_Save4',description='',subtype='FILE_PATH',options=set(),default='')
+    folder_save5 : bpy.props.StringProperty(name='Folder_Save5',description='',subtype='FILE_PATH',options=set(),default='')
 
     def draw(self, context):
         try:
