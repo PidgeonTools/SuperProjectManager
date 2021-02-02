@@ -23,7 +23,7 @@ bl_info = {
     "name": "Blender Project Starter",
     "description": "",
     "author": "Steven Scott, Blender Defender",
-    "version": (1, 0, 0),
+    "version": (1, 1, 0),
     "blender": (2, 83, 0),
     "location": "Properties >> Scene Properties",
     "warning": "",
