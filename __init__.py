@@ -27,7 +27,7 @@ bl_info = {
     "blender": (2, 83, 0),
     "location": "Properties >> Scene Properties",
     "warning": "",
-    "wiki_url": "https://www.youtube.com/channel/UCiy-QcXrvu9hhe4arymNcfw",
+    "wiki_url": "https://www.youtube.com/watch?v=Jn-4Yjjn_5A",
     "tracker_url": "https://github.com/BlenderDefender/blender_project_starter/issues",
     "category": "System"
 }
