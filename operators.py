@@ -21,6 +21,7 @@
 
 import bpy
 import os
+from os import path as p
 
 from .functions.main_functions import (
     sn_handle_script_line_exception,

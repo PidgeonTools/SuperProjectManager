@@ -20,8 +20,10 @@
 # ##### END GPL LICENSE BLOCK #####
 
 import bpy
-import os
+from bpy.utils import previews
 
+import os
+from os import path as p
 
 def build_folder(context, prop):
     try:
