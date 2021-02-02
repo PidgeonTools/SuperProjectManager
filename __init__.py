@@ -24,8 +24,8 @@ bl_info = {
     "blender": (2, 91, 0),
     "location": "Scene Properties ",
     "warning": "",
-    "wiki_url": "",
-    "tracker_url": "",
+    "wiki_url": "https://www.youtube.com/channel/UCiy-QcXrvu9hhe4arymNcfw",
+    "tracker_url": "https://github.com/BlenderDefender/blender_project_starter/issues",
     "category": "3D View"
 }
 
@@ -145,29 +145,15 @@ class SNA_AddonPreferences_B0705(bpy.types.AddonPreferences):
             box.label(text=r"Blender Project manager ",icon_value=0)
             box.label(text=r"Here you can setup the automatic project folders ",icon_value=0)
             box.label(text=r"If you would like to add subfolders -please use double backslash Folder\\Subfolder",icon_value=2)
+
             layout.prop(self,"folder_save1",icon_value=0,text=r"Folder Name",emboss=True,)
             layout.prop(self,"folder_save2",icon_value=0,text=r"Folder Name 2",emboss=True,)
             layout.prop(self,"folder_save3",icon_value=0,text=r"Folder Name 3",emboss=True,)
             layout.prop(self,"folder_save4",icon_value=0,text=r"Folder Name 4 ",emboss=True,)
             layout.prop(context.preferences.addons[__name__.partition('.')[0]].preferences,"folder_save5",icon_value=0,text=r"Folder Name 5 ",emboss=True,)
             layout.separator(factor=1.0)
-            box = layout.box()
-            box.enabled = True
-            box.alert = False
-            box.scale_x = 1.0
-            box.scale_y = 1.0
-            box.label(text=r"Follow and Contact Information",icon_value=0)
-            row = box.row(align=True)
-            row.enabled = True
-            row.alert = False
-            row.scale_x = 2.0
-            row.scale_y = 2.0
-            op = row.operator("wm.url_open",text=r"Youtube",emboss=True,depress=False,icon_value=bpy.context.scene.blender_project_starter_icons['YOUTUBE'].icon_id)
-            op.url = r"https://www.youtube.com/channel/UCiy-QcXrvu9hhe4arymNcfw"
-            op = row.operator("wm.url_open",text=r"Twitter",emboss=True,depress=False,icon_value=bpy.context.scene.blender_project_starter_icons['TWITTER'].icon_id)
-            op.url = r"https://twitter.com/IdoineTutorials"
-            op = row.operator("wm.url_open",text=r"Gumroad",emboss=True,depress=False,icon_value=bpy.context.scene.blender_project_starter_icons['GUMROAD'].icon_id)
-            op.url = r"https://gumroad.com/onlinerender"
+
+
         except Exception as exc:
             print(str(exc) + " | Error in  addon preferences")
 
