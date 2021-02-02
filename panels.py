@@ -1,0 +1,90 @@
+# ##### BEGIN GPL LICENSE BLOCK #####
+#
+#  <Blender Project Starter is an addon for automatic Project Folder Structure Generation.>
+#    Copyright (C) <2021>  <Steven Scott>
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 3
+#  of the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software Foundation,
+#  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# ##### END GPL LICENSE BLOCK #####
+
+import bpy
+
+
+class BLENDER_PROJECT_STARTER_PT_main_panel(bpy.types.Panel):
+    bl_label = "Blender Starter Project"
+    bl_idname = "blender_project_starter_PT__main_panel"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "scene"
+    bl_order = 0
+
+    @classmethod
+    def poll(cls, context):
+        return True
+
+    def draw_header(self, context):
+        try:
+            layout = self.layout
+        except Exception as exc:
+            print(str(exc) + " | Error in Blender Starter Project panel header")
+
+    def draw(self, context):
+        try:
+            layout = self.layout
+
+            layout.prop(bpy.context.scene,"project_name",text="Project Name")
+            layout.prop(bpy.context.scene,"project_location",text="Project Location")
+            layout.prop(bpy.context.scene,"project_setup",text="Project Setup", expand=False,)
+            if "Automatic Setup" == bpy.context.scene.project_setup:
+                pass
+            else:
+                layout.label(text="Custom Folder Setup",icon_value=689)
+                layout.prop(bpy.context.scene,"folder_1",text="Folder")
+                layout.prop(bpy.context.scene,"folder_2",text="Folder 2")
+                layout.prop(bpy.context.scene,"folder_3",text="Folder_3")
+                layout.prop(bpy.context.scene,"folder_4",text="Folder_4")
+                layout.prop(bpy.context.scene,"folder_5",text="Folder_5")
+            layout.separator(factor=1.0)
+
+            box = layout.box()
+
+            box.label(text=".blend Save Options",icon_value=70)
+
+            layout.prop(bpy.context.scene,"open_directory", text="Open Folder Window On Build")
+            layout.prop(bpy.context.scene,"save_blender_file", text="Save .blend File")
+
+            if bpy.context.scene.save_blender_file:
+                layout.prop(bpy.context.scene,"save_blender_file_versioned")
+                if bpy.data.filepath == "":
+                    layout.prop(bpy.context.scene,"save_file_name", text="Save File Name")
+                row = layout.row(align=False)
+
+                row.prop(bpy.context.scene,"remap_relative", icon_value = 2, text="Remap Relative")
+                row.prop(bpy.context.scene,"compress_save", icon_value = 70, text="Compress File")
+
+            row = layout.row(align=False)
+            row.scale_x = 2.0
+            row.scale_y = 2.0
+            row.operator("blender_project_starter.build_project",text="BUILD PROJECT", depress=False, icon_value=bpy.context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id)
+        except Exception as exc:
+            print(str(exc) + " | Error in Blender Starter Project panel")
+
+
+def register():
+    bpy.utils.register_class(BLENDER_PROJECT_STARTER_PT_main_panel)
+
+
+def unregister():
+    bpy.utils.unregister_class(BLENDER_PROJECT_STARTER_PT_main_panel)
