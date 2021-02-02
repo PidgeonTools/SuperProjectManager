@@ -19,14 +19,14 @@
 bl_info = {
     "name": "Blender Project Starter",
     "description": "",
-    "author": "Steven Scott ",
+    "author": "Steven Scott, Blender Defender",
     "version": (1, 0, 0),
-    "blender": (2, 91, 0),
-    "location": "Scene Properties ",
+    "blender": (2, 83, 0),
+    "location": "Properties >> Scene Properties",
     "warning": "",
     "wiki_url": "https://www.youtube.com/channel/UCiy-QcXrvu9hhe4arymNcfw",
     "tracker_url": "https://github.com/BlenderDefender/blender_project_starter/issues",
-    "category": "3D View"
+    "category": "System"
 }
 
 
