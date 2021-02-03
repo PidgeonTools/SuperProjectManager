@@ -69,11 +69,11 @@ def file_subfolder(options, context):
 
 def open_directory(path):
     if sys.platform == "win32":
-        subprocess.Popen('explorer "{}'.format(path))
+        subprocess.call('explorer "{}"'.format(path), shell=True)
     elif sys.platform == 'linux':
-        subprocess.Popen('xdg-open "{}'.format(path))
+        subprocess.call('xdg-open "{}"'.format(path), shell=True)
     elif sys.platform == 'darwin':
-        subprocess.Popen('open "{}'.format(path))
+        subprocess.call('open "{}"'.format(path), shell=True)
 
 
 def sn_print(tree_name, *args):
