@@ -53,15 +53,18 @@ class BLENDER_PROJECT_STARTER_PT_main_panel(bpy.types.Panel):
             layout.prop(bpy.context.scene, "project_name", text="Project Name")
             layout.prop(bpy.context.scene, "project_location", text="Project Location")
             layout.prop(bpy.context.scene, "project_setup", text="Project Setup", expand=False,)
-            if "Automatic Setup" == bpy.context.scene.project_setup:
-                pass
-            else:
+
+            if bpy.context.scene.project_setup == "Custom Setup":
                 layout.label(text="Custom Folder Setup", icon_value=689)
                 layout.prop(bpy.context.scene, "folder_1", text="Folder")
                 layout.prop(bpy.context.scene, "folder_2", text="Folder 2")
                 layout.prop(bpy.context.scene, "folder_3", text="Folder_3")
                 layout.prop(bpy.context.scene, "folder_4", text="Folder_4")
                 layout.prop(bpy.context.scene, "folder_5", text="Folder_5")
+
+            layout.separator(factor=1.0)
+
+            layout.prop(bpy.context.scene, "open_directory", text="Open Directory after Build", expand=False,)
 
         except Exception as exc:
             print(str(exc) + " | Error in Blender Starter Project panel")
