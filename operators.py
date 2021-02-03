@@ -27,7 +27,8 @@ from .functions.main_functions import (
     sn_handle_script_line_exception,
     build_folder,
     version_number,
-    file_subfolder
+    file_subfolder,
+    open_directory
 )
 
 
@@ -57,7 +58,7 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
                     build_folder(context, prefs.folder_5)
 
                 subfolder = file_subfolder(bpy.context.scene.file_folder, prefs)
-#
+
             else:
                 scene = bpy.context.scene
 
@@ -103,7 +104,7 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
                     sn_handle_script_line_exception(exc, "OpenLocation = os.path.realpath(OpenLocation)")
 
                 try:
-                    os.startfile(OpenLocation)
+                    open_directory(OpenLocation)
                 except Exception as exc:
                     sn_handle_script_line_exception(exc, "os.startfile(OpenLocation)")
 

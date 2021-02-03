@@ -25,6 +25,8 @@ from bpy.utils import previews
 import os
 from os import path as p
 
+import sys
+import subprocess
 
 def build_folder(context, prop):
     try:
@@ -63,6 +65,15 @@ def file_subfolder(options, context):
         return context.folder_4
     elif options == "Folder 5":
         return context.folder_5
+
+
+def open_directory(path):
+    if sys.platform == "win32":
+        subprocess.Popen('explorer "{}'.format(path))
+    elif sys.platform == 'linux':
+        subprocess.Popen('xdg-open "{}'.format(path))
+    elif sys.platform == 'darwin':
+        subprocess.Popen('open "{}'.format(path))
 
 
 def sn_print(tree_name, *args):
