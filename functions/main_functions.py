@@ -28,8 +28,11 @@ from os import path as p
 
 def build_folder(context, prop):
     try:
-        prop = prop.replace(">>", "\\")
-        path = p.join(bpy.path.abspath(bpy.context.scene.project_location), bpy.context.scene.project_name, prop)
+        prop = prop.split(">>")
+        path = p.join(bpy.path.abspath(bpy.context.scene.project_location), bpy.context.scene.project_name)
+
+        for i in prop:
+            path = p.join(path, i)
 
     except Exception as exc:
         sn_handle_script_line_exception(exc, ("path ='" + bpy.path.abspath(p.join(bpy.path.abspath(bpy.context.scene.project_location, bpy.context.scene.project_name), prop))))
