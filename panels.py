@@ -46,7 +46,6 @@ class BLENDER_PROJECT_STARTER_PT_main_panel(bpy.types.Panel):
             row.scale_y = 2.0
             row.operator("blender_project_starter.build_project",
                          text="BUILD PROJECT",
-                         depress=False,
                          icon_value=bpy.context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id)
 
             layout.separator(factor=1.0)

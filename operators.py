@@ -130,13 +130,6 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
             print(str(exc) + " | Error in execute function of Build Project")
         return {"FINISHED"}
 
-    def invoke(self, context, event):
-        try:
-            pass
-        except Exception as exc:
-            print(str(exc) + " | Error in invoke function of Build Project")
-        return self.execute(context)
-
 
 def register():
     bpy.utils.register_class(BLENDER_PROJECT_STARTER_OT_Build_Project)
