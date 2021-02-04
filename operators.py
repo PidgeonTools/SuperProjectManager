@@ -103,7 +103,7 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
                     filename = p.basename(bpy.data.filepath).split(".blen")[0].split("_v0")[0]
                     version = version_number(p.join(filepath, filename))
 
-                    filename += version + ".blend"
+                    filename += version
 
                     copy_file(context, filename, subfolder)
                 else:
