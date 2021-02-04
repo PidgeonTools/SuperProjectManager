@@ -80,8 +80,26 @@ def open_directory(path):
         subprocess.call('open "{}"'.format(path), shell=True)
 
 
+def file_in_project_folder(context, filepath):
+    if filepath == "":
+        return False
+
+    project_folder = p.normpath(p.join(context.scene.project_location, context.scene.project_name))
+    filepath = p.normpath(filepath)
+    return filepath.startswith(project_folder)
 
 
+def copy_file(context, filename, subfolder):
+    bpy.ops.wm.save_as_mainfile(
+        filepath=p.join(
+            bpy.context.scene.project_location,
+            bpy.context.scene.project_name,
+            subfolder,
+            filename
+        ) + ".blend",
+        compress=bpy.context.scene.compress_save,
+        relative_remap=bpy.context.scene.remap_relative
+    )
 
 def handle_script_line_exception(exc, line):
     print("# # # # # # # # SCRIPT LINE ERROR # # # # # # # #")
@@ -142,8 +160,20 @@ def register_properties():
             ("Folder 5", prefs.folder_5, "Save to Folder 5")
         ]
     )
+
+
+    bpy.types.Scene.cut_or_copy = bpy.props.BoolProperty(
+        name="Cut or Copy",
+        description="Decide, if you want to cut or copy your file from the current folder to the project folder.",
+        default=False
+    )
+    bpy.types.Scene.save_file_with_new_name = bpy.props.BoolProperty(
+        name="Save Blender File with another name",
+        default=False
+    )
     bpy.types.Scene.save_blender_file_versioned = bpy.props.BoolProperty(
-        name="Save Blender File with version number if File already exists",
+        name="Add Version Number",
+        description="Add a Version Number if the File already exists",
         default=False
     )
     bpy.types.Scene.save_file_name = bpy.props.StringProperty(name="Save File Name")

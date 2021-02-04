@@ -38,7 +38,6 @@ from .functions.main_functions import (
     register_icons,
     register_properties,
     unregister_icons,
-    unregister_properties,
 )
 
 from . import (
@@ -63,4 +62,3 @@ def unregister():
     panels.unregister()
 
     unregister_icons()
-    unregister_properties()

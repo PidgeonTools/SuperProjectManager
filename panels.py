@@ -21,6 +21,8 @@
 
 import bpy
 
+from .functions.main_functions import file_in_project_folder
+
 
 class BLENDER_PROJECT_STARTER_PT_main_panel(bpy.types.Panel):
     bl_label = "Blender Starter Project"
@@ -90,10 +92,23 @@ class BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel(bpy.types.Pa
             layout = self.layout
             layout.enabled = bpy.context.scene.save_blender_file
 
-            layout.prop(bpy.context.scene, "save_blender_file_versioned")
             if bpy.data.filepath == "":
                 layout.prop(bpy.context.scene, "file_folder")
                 layout.prop(bpy.context.scene, "save_file_name", text="Save File Name")
+
+            elif not file_in_project_folder(context, bpy.data.filepath):
+                if context.scene.cut_or_copy:
+                    layout.prop(bpy.context.scene, "cut_or_copy", text="Change to Copy File", toggle=True)
+                else:
+                    layout.prop(bpy.context.scene, "cut_or_copy", text="Change to Cut File", toggle=True)
+                layout.prop(bpy.context.scene, "file_folder")
+                layout.prop(bpy.context.scene, "save_file_with_new_name", text="Save with new File Name")
+                if context.scene.save_file_with_new_name:
+                    layout.prop(bpy.context.scene, "save_file_name", text="Save File Name")
+
+            else:
+                layout.prop(bpy.context.scene, "save_blender_file_versioned")
+
             row = layout.row(align=False)
 
             row.prop(bpy.context.scene, "remap_relative", icon_value=2, text="Remap Relative")

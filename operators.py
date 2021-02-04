@@ -28,7 +28,9 @@ from .functions.main_functions import (
     build_folder,
     version_number,
     file_subfolder,
-    open_directory
+    open_directory,
+    file_in_project_folder,
+    copy_file
 )
 
 
@@ -80,25 +82,32 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
 
             if bpy.context.scene.save_blender_file:
                 if bpy.data.filepath == "":
-                    bpy.ops.wm.save_as_mainfile(
-                        filepath=p.join(
-                            bpy.context.scene.project_location,
-                            bpy.context.scene.project_name,
-                            subfolder,
-                            bpy.context.scene.save_file_name
-                        ) + ".blend",
-                        compress=bpy.context.scene.compress_save,
-                        relative_remap=bpy.context.scene.remap_relative
-                    )
+                    # Copy file performs a save operation that Performs a save with new name
+                    copy_file(context, bpy.context.scene.save_file_name, subfolder)
+
+
+                elif not file_in_project_folder(context, bpy.data.filepath):
+                    old_file_path = bpy.data.filepath
+
+                    if bpy.context.scene.save_file_with_new_name:
+                        copy_file(context, bpy.context.scene.save_file_name, subfolder)
+                    else:
+                        copy_file(context, p.basename(bpy.data.filepath).split(".blend")[0], subfolder)
+
+                    if bpy.context.scene.cut_or_copy:
+                        os.remove(old_file_path)
+
+
                 elif bpy.context.scene.save_blender_file_versioned:
-                    filename = bpy.data.filepath.split("//")
-                    filename = filename[len(filename) - 1].split(".blen")[0].split("_v")[0]
-                    version = version_number(filename)
-                    bpy.ops.wm.save_as_mainfile(filepath=filename + version + ".blend", compress=bpy.context.scene.compress_save, relative_remap=bpy.context.scene.remap_relative)
+                    filepath = p.dirname(bpy.data.filepath)
+                    filename = p.basename(bpy.data.filepath).split(".blen")[0].split("_v0")[0]
+                    version = version_number(p.join(filepath, filename))
+
+                    filename += version + ".blend"
+
+                    copy_file(context, filename, subfolder)
                 else:
-                    filename = bpy.data.filepath.split("//")
-                    filename = filename[len(filename) - 1]
-                    bpy.ops.wm.save_as_mainfile(filepath=filename, compress=bpy.context.scene.compress_save, relative_remap=bpy.context.scene.remap_relative)
+                    bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath, compress=bpy.context.scene.compress_save, relative_remap=bpy.context.scene.remap_relative)
 
             if bpy.context.scene.open_directory:
                 try:
