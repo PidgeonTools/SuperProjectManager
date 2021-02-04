@@ -8,11 +8,11 @@
 - [x] Fix: Bring back property "Open Folder after Build"
 - [ ] Codestyle: Enhance Codestyle
 - [ ] Feature: Mark Project as open/unfinished
-- [ ] Copy file to project/target folder, even if it already exists in another folder (Inform the user):
-    - [ ] Get File name
-    - [ ] Cut File Option
-    - [ ] Copy File Option
-    - [ ] New Name Option
+- [x] Copy file to project/target folder, even if it already exists in another folder (Inform the user):
+    - [x] Get File name
+    - [x] Cut File Option
+    - [x] Copy File Option
+    - [x] New Name Option
 
 
 ## Changelog:
