@@ -80,7 +80,16 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
 
             if bpy.context.scene.save_blender_file:
                 if bpy.data.filepath == "":
-                    bpy.ops.wm.save_as_mainfile(filepath=p.join(bpy.context.scene.project_location, bpy.context.scene.project_name, subfolder, bpy.context.scene.save_file_name) + ".blend", compress=bpy.context.scene.compress_save, relative_remap=bpy.context.scene.remap_relative)
+                    bpy.ops.wm.save_as_mainfile(
+                        filepath=p.join(
+                            bpy.context.scene.project_location,
+                            bpy.context.scene.project_name,
+                            subfolder,
+                            bpy.context.scene.save_file_name
+                        ) + ".blend",
+                        compress=bpy.context.scene.compress_save,
+                        relative_remap=bpy.context.scene.remap_relative
+                    )
                 elif bpy.context.scene.save_blender_file_versioned:
                     filename = bpy.data.filepath.split("//")
                     filename = filename[len(filename) - 1].split(".blen")[0].split("_v")[0]

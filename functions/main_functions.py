@@ -28,6 +28,7 @@ from os import path as p
 import sys
 import subprocess
 
+
 def build_folder(context, prop):
     try:
         prop = prop.split(">>")
@@ -37,7 +38,10 @@ def build_folder(context, prop):
             path = p.join(path, i)
 
     except Exception as exc:
-        sn_handle_script_line_exception(exc, ("path ='" + bpy.path.abspath(p.join(bpy.path.abspath(bpy.context.scene.project_location, bpy.context.scene.project_name), prop))))
+        sn_handle_script_line_exception(
+            exc,
+            ("path ='" + bpy.path.abspath(p.join(bpy.path.abspath(bpy.context.scene.project_location, bpy.context.scene.project_name), prop)))
+        )
 
     if not p.isdir(path):
         os.makedirs(path)
@@ -107,31 +111,51 @@ def sn_unregister_icons():
 def sn_register_properties():
     prefs = bpy.context.preferences.addons[__package__.split(".")[0]].preferences
 
-    bpy.types.Scene.project_name = bpy.props.StringProperty(name="Project Name", subtype="NONE", options=set(), default="My_Project")
-    bpy.types.Scene.project_location = bpy.props.StringProperty(name="Project Location", description="Saves the location of file", subtype="DIR_PATH", options=set(), default=prefs.default_path)
-    bpy.types.Scene.project_setup = bpy.props.EnumProperty(name="Project Setup", items=[("Automatic Setup", "Automatic Setup", "Automatic Project Setup "), ("Custom Setup", "Custom Setup", "My Custom Setup")])
+    bpy.types.Scene.project_name = bpy.props.StringProperty(
+        name="Project Name",
+        subtype="NONE",
+        default="My_Project"
+    )
+    bpy.types.Scene.project_location = bpy.props.StringProperty(
+        name="Project Location",
+        description="Saves the location of file",
+        subtype="DIR_PATH",
+        default=prefs.default_path
+    )
+    bpy.types.Scene.project_setup = bpy.props.EnumProperty(
+        name="Project Setup",
+        items=[
+            ("Automatic Setup", "Automatic Setup", "Automatic Project Setup "),
+            ("Custom Setup", "Custom Setup", "My Custom Setup")
+        ]
+    )
 
-    bpy.types.Scene.folder_1 = bpy.props.StringProperty(name="Folder_1", description="Custom Folder Setup", options=set())
-    bpy.types.Scene.folder_2 = bpy.props.StringProperty(name="Folder_2", description="Folder Structure 2 ", options=set())
-    bpy.types.Scene.folder_3 = bpy.props.StringProperty(name="Folder_3", description="Custom Folder 3 ", options=set())
-    bpy.types.Scene.folder_4 = bpy.props.StringProperty(name="Folder_4", description="Custom Folder 4", options=set())
-    bpy.types.Scene.folder_5 = bpy.props.StringProperty(name="Folder_5", description="Custom Folder 5", options=set())
+    bpy.types.Scene.folder_1 = bpy.props.StringProperty(name="Folder_1", description="Custom Folder Setup")
+    bpy.types.Scene.folder_2 = bpy.props.StringProperty(name="Folder_2", description="Folder Structure 2 ")
+    bpy.types.Scene.folder_3 = bpy.props.StringProperty(name="Folder_3", description="Custom Folder 3 ")
+    bpy.types.Scene.folder_4 = bpy.props.StringProperty(name="Folder_4", description="Custom Folder 4")
+    bpy.types.Scene.folder_5 = bpy.props.StringProperty(name="Folder_5", description="Custom Folder 5")
 
     bpy.types.Scene.open_directory = bpy.props.BoolProperty(name="Open Directory", options=set(), default=True)
     bpy.types.Scene.save_blender_file = bpy.props.BoolProperty(name="Save Blender File", options=set(), default=True)
-    bpy.types.Scene.file_folder = bpy.props.EnumProperty(name="Folder", items=[
-        ("Root", "Root", "Save to Root Folder"),
-        ("Folder 1", prefs.folder_1, "Save to Folder 1"),
-        ("Folder 2", prefs.folder_2, "Save to Folder 2"),
-        ("Folder 3", prefs.folder_3, "Save to Folder 3"),
-        ("Folder 4", prefs.folder_4, "Save to Folder 4"),
-        ("Folder 5", prefs.folder_5, "Save to Folder 5")
-
-        ])
-    bpy.types.Scene.save_blender_file_versioned = bpy.props.BoolProperty(name="Save Blender File with version number if File already exists", options=set(), default=False)
-    bpy.types.Scene.save_file_name = bpy.props.StringProperty(name="Save File Name", options=set())
-    bpy.types.Scene.remap_relative = bpy.props.BoolProperty(name="Remap Relative", options=set(), default=True)
-    bpy.types.Scene.compress_save = bpy.props.BoolProperty(name="Compress Save", options=set(), default=False)
+    bpy.types.Scene.file_folder = bpy.props.EnumProperty(
+        name="Folder",
+        items=[
+            ("Root", "Root", "Save to Root Folder"),
+            ("Folder 1", prefs.folder_1, "Save to Folder 1"),
+            ("Folder 2", prefs.folder_2, "Save to Folder 2"),
+            ("Folder 3", prefs.folder_3, "Save to Folder 3"),
+            ("Folder 4", prefs.folder_4, "Save to Folder 4"),
+            ("Folder 5", prefs.folder_5, "Save to Folder 5")
+        ]
+    )
+    bpy.types.Scene.save_blender_file_versioned = bpy.props.BoolProperty(
+        name="Save Blender File with version number if File already exists",
+        default=False
+    )
+    bpy.types.Scene.save_file_name = bpy.props.StringProperty(name="Save File Name")
+    bpy.types.Scene.remap_relative = bpy.props.BoolProperty(name="Remap Relative", default=True)
+    bpy.types.Scene.compress_save = bpy.props.BoolProperty(name="Compress Save", default=False)
 
 
 def sn_unregister_properties():
