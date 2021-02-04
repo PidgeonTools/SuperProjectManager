@@ -21,6 +21,11 @@
 
 import bpy
 from bpy.utils import previews
+from bpy.props import (
+    BoolProperty,
+    StringProperty,
+    EnumProperty
+)
 
 import os
 from os import path as p
@@ -44,18 +49,18 @@ def unregister_icons():
 def register_properties():
     prefs = bpy.context.preferences.addons[__package__.split(".")[0]].preferences
 
-    bpy.types.Scene.project_name = bpy.props.StringProperty(
+    bpy.types.Scene.project_name = StringProperty(
         name="Project Name",
         subtype="NONE",
         default="My_Project"
     )
-    bpy.types.Scene.project_location = bpy.props.StringProperty(
+    bpy.types.Scene.project_location = StringProperty(
         name="Project Location",
         description="Saves the location of file",
         subtype="DIR_PATH",
         default=prefs.default_path
     )
-    bpy.types.Scene.project_setup = bpy.props.EnumProperty(
+    bpy.types.Scene.project_setup = EnumProperty(
         name="Project Setup",
         items=[
             ("Automatic Setup", "Automatic Setup", "Automatic Project Setup "),
@@ -63,15 +68,18 @@ def register_properties():
         ]
     )
 
-    bpy.types.Scene.folder_1 = bpy.props.StringProperty(name="Folder_1", description="Custom Folder Setup")
-    bpy.types.Scene.folder_2 = bpy.props.StringProperty(name="Folder_2", description="Folder Structure 2 ")
-    bpy.types.Scene.folder_3 = bpy.props.StringProperty(name="Folder_3", description="Custom Folder 3 ")
-    bpy.types.Scene.folder_4 = bpy.props.StringProperty(name="Folder_4", description="Custom Folder 4")
-    bpy.types.Scene.folder_5 = bpy.props.StringProperty(name="Folder_5", description="Custom Folder 5")
+    bpy.types.Scene.folder_1 = StringProperty(name="Folder_1", description="Custom Folder Setup")
+    bpy.types.Scene.folder_2 = StringProperty(name="Folder_2", description="Folder Structure 2 ")
+    bpy.types.Scene.folder_3 = StringProperty(name="Folder_3", description="Custom Folder 3 ")
+    bpy.types.Scene.folder_4 = StringProperty(name="Folder_4", description="Custom Folder 4")
+    bpy.types.Scene.folder_5 = StringProperty(name="Folder_5", description="Custom Folder 5")
 
-    bpy.types.Scene.open_directory = bpy.props.BoolProperty(name="Open Directory", options=set(), default=True)
-    bpy.types.Scene.save_blender_file = bpy.props.BoolProperty(name="Save Blender File", description="Save Blender File on build. If disabled, only the project folders are created", default=True)
-    bpy.types.Scene.file_folder = bpy.props.EnumProperty(
+    bpy.types.Scene.open_directory = BoolProperty(name="Open Directory", default=True)
+    bpy.types.Scene.save_blender_file = BoolProperty(name="Save Blender File",
+                                                     description="Save Blender File on build. If disable"
+                                                     + "d, only the project folders are created",
+                                                     default=True)
+    bpy.types.Scene.file_folder = EnumProperty(
         name="Folder",
         items=[
             ("Root", "Root", "Save to Root Folder"),
@@ -83,21 +91,17 @@ def register_properties():
         ]
     )
 
-
-    bpy.types.Scene.cut_or_copy = bpy.props.BoolProperty(
+    bpy.types.Scene.cut_or_copy = BoolProperty(
         name="Cut or Copy",
         description="Decide, if you want to cut or copy your file from the current folder to the project folder.",
-        default=False
     )
-    bpy.types.Scene.save_file_with_new_name = bpy.props.BoolProperty(
+    bpy.types.Scene.save_file_with_new_name = BoolProperty(
         name="Save Blender File with another name",
-        default=False
     )
-    bpy.types.Scene.save_blender_file_versioned = bpy.props.BoolProperty(
+    bpy.types.Scene.save_blender_file_versioned = BoolProperty(
         name="Add Version Number",
         description="Add a Version Number if the File already exists",
-        default=False
     )
-    bpy.types.Scene.save_file_name = bpy.props.StringProperty(name="Save File Name")
-    bpy.types.Scene.remap_relative = bpy.props.BoolProperty(name="Remap Relative", default=True)
-    bpy.types.Scene.compress_save = bpy.props.BoolProperty(name="Compress Save", default=False)
+    bpy.types.Scene.save_file_name = StringProperty(name="Save File Name")
+    bpy.types.Scene.remap_relative = BoolProperty(name="Remap Relative", default=True)
+    bpy.types.Scene.compress_save = BoolProperty(name="Compress Save")

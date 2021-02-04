@@ -40,7 +40,7 @@ def build_folder(context, prop):
     except Exception as exc:
         handle_script_line_exception(
             exc,
-            ("path ='" + bpy.path.abspath(p.join(bpy.path.abspath(bpy.context.scene.project_location, bpy.context.scene.project_name), prop)))
+            ("path ='" + p.join(bpy.context.scene.project_location, bpy.context.scene.project_name, prop))
         )
 
     if not p.isdir(path):
@@ -101,9 +101,8 @@ def copy_file(context, filename, subfolder):
         relative_remap=bpy.context.scene.remap_relative
     )
 
+
 def handle_script_line_exception(exc, line):
     print("# # # # # # # # SCRIPT LINE ERROR # # # # # # # #")
     print("Line:", line)
     raise exc
-
-

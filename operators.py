@@ -85,7 +85,6 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
                     # Copy file performs a save operation that Performs a save with new name
                     copy_file(context, bpy.context.scene.save_file_name, subfolder)
 
-
                 elif not file_in_project_folder(context, bpy.data.filepath):
                     old_file_path = bpy.data.filepath
 
@@ -96,7 +95,6 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
 
                     if bpy.context.scene.cut_or_copy:
                         os.remove(old_file_path)
-
 
                 elif bpy.context.scene.save_blender_file_versioned:
                     filepath = p.dirname(bpy.data.filepath)
@@ -113,7 +111,7 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
                 try:
                     OpenLocation = bpy.path.abspath(p.join(bpy.context.scene.project_location, bpy.context.scene.project_name))
                 except Exception as exc:
-                    handle_script_line_exception(exc, ("OpenLocation =  '" + bpy.path.abspath(p.join(bpy.context.scene.project_location, bpy.context.scene.project_name))))
+                    handle_script_line_exception(exc, ("OpenLocation =  '" + p.join(bpy.context.scene.project_location, bpy.context.scene.project_name)))
 
                 try:
                     OpenLocation = p.realpath(OpenLocation)
