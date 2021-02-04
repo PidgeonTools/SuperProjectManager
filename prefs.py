@@ -55,8 +55,6 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(bpy.types.AddonPreferences):
         default="Sounds"
     )
 
-    # addon updater preferences
-
     auto_check_update = bpy.props.BoolProperty(
         name="Auto-check for Update",
         description="If enabled, auto-check for updates using an interval",

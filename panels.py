@@ -32,10 +32,6 @@ class BLENDER_PROJECT_STARTER_PT_main_panel(bpy.types.Panel):
     bl_context = "scene"
     bl_order = 0
 
-    @classmethod
-    def poll(cls, context):
-        return True
-
     def draw_header(self, context):
         try:
             layout = self.layout
@@ -48,7 +44,10 @@ class BLENDER_PROJECT_STARTER_PT_main_panel(bpy.types.Panel):
             row = layout.row(align=False)
             row.scale_x = 2.0
             row.scale_y = 2.0
-            row.operator("blender_project_starter.build_project", text="BUILD PROJECT", depress=False, icon_value=bpy.context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id)
+            row.operator("blender_project_starter.build_project",
+                         text="BUILD PROJECT",
+                         depress=False,
+                         icon_value=bpy.context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id)
 
             layout.separator(factor=1.0)
 
