@@ -33,8 +33,7 @@ bl_info = {
 }
 
 
-from .functions.main_functions import (
-    handle_script_line_exception,
+from .functions.register_functions import (
     register_icons,
     register_properties,
     unregister_icons,
