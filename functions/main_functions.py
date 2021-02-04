@@ -38,7 +38,7 @@ def build_folder(context, prop):
             path = p.join(path, i)
 
     except Exception as exc:
-        sn_handle_script_line_exception(
+        handle_script_line_exception(
             exc,
             ("path ='" + bpy.path.abspath(p.join(bpy.path.abspath(bpy.context.scene.project_location, bpy.context.scene.project_name), prop)))
         )
@@ -80,23 +80,16 @@ def open_directory(path):
         subprocess.call('open "{}"'.format(path), shell=True)
 
 
-def sn_print(tree_name, *args):
-    if tree_name in bpy.data.node_groups:
-        item = bpy.data.node_groups[tree_name].sn_graphs[0].prints.add()
-        for arg in args:
-            item.value += str(arg) + ";;;"
-        for area in bpy.context.screen.areas:
-            area.tag_redraw()
-    print(*args)
 
 
-def sn_handle_script_line_exception(exc, line):
+
+def handle_script_line_exception(exc, line):
     print("# # # # # # # # SCRIPT LINE ERROR # # # # # # # #")
     print("Line:", line)
     raise exc
 
 
-def sn_register_icons():
+def register_icons():
     icons = ["BUILD_ICON", "TWITTER", "YOUTUBE", "GUMROAD"]
     bpy.types.Scene.blender_project_starter_icons = previews.new()
     icons_dir = p.join(p.dirname(p.dirname(__file__)), "icons")
@@ -104,11 +97,11 @@ def sn_register_icons():
         bpy.types.Scene.blender_project_starter_icons.load(icon, p.join(icons_dir, icon + ".png"), "IMAGE")
 
 
-def sn_unregister_icons():
+def unregister_icons():
     previews.remove(bpy.types.Scene.blender_project_starter_icons)
 
 
-def sn_register_properties():
+def register_properties():
     prefs = bpy.context.preferences.addons[__package__.split(".")[0]].preferences
 
     bpy.types.Scene.project_name = bpy.props.StringProperty(
@@ -156,19 +149,3 @@ def sn_register_properties():
     bpy.types.Scene.save_file_name = bpy.props.StringProperty(name="Save File Name")
     bpy.types.Scene.remap_relative = bpy.props.BoolProperty(name="Remap Relative", default=True)
     bpy.types.Scene.compress_save = bpy.props.BoolProperty(name="Compress Save", default=False)
-
-
-def sn_unregister_properties():
-    del bpy.types.Scene.project_name
-    del bpy.types.Scene.project_location
-    del bpy.types.Scene.project_setup
-    del bpy.types.Scene.folder_1
-    del bpy.types.Scene.folder_2
-    del bpy.types.Scene.folder_3
-    del bpy.types.Scene.folder_4
-    del bpy.types.Scene.folder_5
-    del bpy.types.Scene.open_directory
-    del bpy.types.Scene.save_blender_file
-    del bpy.types.Scene.save_file_name
-    del bpy.types.Scene.remap_relative
-    del bpy.types.Scene.compress_save

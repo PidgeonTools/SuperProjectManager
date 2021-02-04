@@ -24,7 +24,7 @@ import os
 from os import path as p
 
 from .functions.main_functions import (
-    sn_handle_script_line_exception,
+    handle_script_line_exception,
     build_folder,
     version_number,
     file_subfolder,
@@ -104,18 +104,18 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(bpy.types.Operator):
                 try:
                     OpenLocation = bpy.path.abspath(p.join(bpy.context.scene.project_location, bpy.context.scene.project_name))
                 except Exception as exc:
-                    sn_handle_script_line_exception(exc, ("OpenLocation =  '" + bpy.path.abspath(p.join(bpy.context.scene.project_location, bpy.context.scene.project_name))))
+                    handle_script_line_exception(exc, ("OpenLocation =  '" + bpy.path.abspath(p.join(bpy.context.scene.project_location, bpy.context.scene.project_name))))
 
                 try:
                     OpenLocation = p.realpath(OpenLocation)
 
                 except Exception as exc:
-                    sn_handle_script_line_exception(exc, "OpenLocation = os.path.realpath(OpenLocation)")
+                    handle_script_line_exception(exc, "OpenLocation = os.path.realpath(OpenLocation)")
 
                 try:
                     open_directory(OpenLocation)
                 except Exception as exc:
-                    sn_handle_script_line_exception(exc, "os.startfile(OpenLocation)")
+                    handle_script_line_exception(exc, "os.startfile(OpenLocation)")
 
         except Exception as exc:
             print(str(exc) + " | Error in execute function of Build Project")

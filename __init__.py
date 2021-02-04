@@ -34,12 +34,11 @@ bl_info = {
 
 
 from .functions.main_functions import (
-    sn_print,
-    sn_handle_script_line_exception,
-    sn_register_icons,
-    sn_register_properties,
-    sn_unregister_icons,
-    sn_unregister_properties,
+    handle_script_line_exception,
+    register_icons,
+    register_properties,
+    unregister_icons,
+    unregister_properties,
 )
 
 from . import (
@@ -54,8 +53,8 @@ def register():
     prefs.register(bl_info)
     panels.register()
 
-    sn_register_icons()
-    sn_register_properties()
+    register_icons()
+    register_properties()
 
 
 def unregister():
@@ -63,5 +62,5 @@ def unregister():
     prefs.unregister()
     panels.unregister()
 
-    sn_unregister_icons()
-    sn_unregister_properties()
+    unregister_icons()
+    unregister_properties()
