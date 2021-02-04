@@ -2,6 +2,19 @@
 
 # Blender Project Starter
 
+## Upcoming Version:
+- [x] Fix: Project Folder doesn't open on Linux
+- [x] Fix: Subfolders aren't created on Linux
+- [x] Fix: Bring back property "Open Folder after Build"
+- [ ] Codestyle: Enhance Codestyle
+- [ ] Feature: Mark Project as open/unfinished
+- [ ] Copy file to project/target folder, even if it already exists in another folder (Inform the user):
+    - [ ] Get File name
+    - [ ] Cut File Option
+    - [ ] Copy File Option
+    - [ ] New Name Option
+
+
 ## Changelog:
 
 Version 1.1.0:
@@ -17,3 +30,10 @@ Version 1.1.0:
 * Feature: Version Counting has been implemented
 * Feature: Blender file can now be saved to one of the subfolders
 * Fix: File name field is only shown if the file isn't saved to any directory
+
+## System requirements:
+| **OS** | **Blender** |
+| ------------- | ------------- |
+| OSX | Testing, please give feedback if it works for you. |
+| Windows | Blender 2.80+ |
+| Linux | Testing, please give feedback if it works for you. |
