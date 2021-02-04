@@ -148,7 +148,7 @@ def register_properties():
     bpy.types.Scene.folder_5 = bpy.props.StringProperty(name="Folder_5", description="Custom Folder 5")
 
     bpy.types.Scene.open_directory = bpy.props.BoolProperty(name="Open Directory", options=set(), default=True)
-    bpy.types.Scene.save_blender_file = bpy.props.BoolProperty(name="Save Blender File", options=set(), default=True)
+    bpy.types.Scene.save_blender_file = bpy.props.BoolProperty(name="Save Blender File", description="Save Blender File on build. If disabled, only the project folders are created", default=True)
     bpy.types.Scene.file_folder = bpy.props.EnumProperty(
         name="Folder",
         items=[
