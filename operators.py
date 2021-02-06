@@ -62,7 +62,11 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(Operator):
 
         D = bpy.data
         prefs = C.preferences.addons[__package__].preferences
+        path = p.join(context.scene.project_location, context.scene.project_name)
         filename = context.scene.save_file_name
+
+        if not p.isdir(path):
+            os.makedirs(path)
 
         if context.scene.project_setup == "Automatic_Setup":
             for index, folder in enumerate(prefs.automatic_folders):
