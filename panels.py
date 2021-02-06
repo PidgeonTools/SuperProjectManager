@@ -109,7 +109,7 @@ class BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel(bpy.types.Pa
                 layout.prop(context.scene, "cut_or_copy", text="Change to Copy File", toggle=True)
             else:
                 layout.prop(context.scene, "cut_or_copy", text="Change to Cut File", toggle=True)
-            layout.prop(context.scene, "file_folder")
+            layout.prop(prefs, "save_folder")
             layout.prop(context.scene, "save_file_with_new_name", text="Save with new File Name")
             if context.scene.save_file_with_new_name:
                 layout.prop(context.scene, "save_file_name", text="Save File Name")
