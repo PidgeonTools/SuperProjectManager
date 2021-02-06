@@ -22,6 +22,8 @@
 
 import bpy
 from bpy.utils import previews
+C = bpy.context
+D = bpy.data
 
 import os
 from os import path as p
@@ -29,26 +31,28 @@ from os import path as p
 import sys
 import subprocess
 
+import json
 
-def build_folder(context, prop):
-    try:
-        prop = prop.split(">>")
-        path = p.join(bpy.path.abspath(bpy.context.scene.project_location), bpy.context.scene.project_name)
+from .json_functions import (
+    decode_json,
+    encode_json,
+    get_element
+)
 
-        for i in prop:
-            path = p.join(path, i)
 
-    except Exception as exc:
-        handle_script_line_exception(
-            exc,
-            ("path ='" + p.join(bpy.context.scene.project_location, bpy.context.scene.project_name, prop))
-        )
+def build_file_folders(context, prop):
+
+    prop = prop.split(">>")
+    path = p.join(context.scene.project_location, context.scene.project_name)
+
+    for i in prop:
+        path = p.join(path, i)
 
     if not p.isdir(path):
         os.makedirs(path)
 
 
-def version_number(path):
+def generate_file_version_number(path):
     i = 1
 
     while p.exists(path + "_v" + str(i / 10000).split(".")[1] + ".blend"):
@@ -57,53 +61,58 @@ def version_number(path):
     return "_v" + str(i / 10000).split(".")[1]
 
 
-def file_subfolder(options, context):
-    if options == "Root":
-        return ""
-    elif options == "Folder 1":
-        return context.folder_1
-    elif options == "Folder 2":
-        return context.folder_2
-    elif options == "Folder 3":
-        return context.folder_3
-    elif options == "Folder 4":
-        return context.folder_4
-    elif options == "Folder 5":
-        return context.folder_5
-
-
 def open_directory(path):
     if sys.platform == "win32":
         subprocess.call('explorer "{}"'.format(path), shell=True)
-    elif sys.platform == 'linux':
+    elif sys.platform == "linux":
         subprocess.call('xdg-open "{}"'.format(path), shell=True)
-    elif sys.platform == 'darwin':
+    elif sys.platform == "darwin":
         subprocess.call('open "{}"'.format(path), shell=True)
 
 
-def file_in_project_folder(context, filepath):
+def is_file_in_project_folder(context, filepath):
     if filepath == "":
         return False
 
-    project_folder = p.normpath(p.join(context.scene.project_location, context.scene.project_name))
     filepath = p.normpath(filepath)
+    project_folder = p.normpath(p.join(context.scene.project_location, context.scene.project_name))
     return filepath.startswith(project_folder)
 
 
-def copy_file(context, filename, subfolder):
+def save_file(context, filename, subfolder):
     bpy.ops.wm.save_as_mainfile(
         filepath=p.join(
-            bpy.context.scene.project_location,
-            bpy.context.scene.project_name,
+            context.scene.project_location,
+            context.scene.project_name,
             subfolder,
             filename
         ) + ".blend",
-        compress=bpy.context.scene.compress_save,
-        relative_remap=bpy.context.scene.remap_relative
+        compress=context.scene.compress_save,
+        relative_remap=context.scene.remap_relative
     )
 
 
-def handle_script_line_exception(exc, line):
-    print("# # # # # # # # SCRIPT LINE ERROR # # # # # # # #")
-    print("Line:", line)
-    raise exc
+def get_file_subfolder(context, options, item):
+    try:
+        for index, subfolder in enumerate(options):
+            if index == int(item):
+                return subfolder[context]
+        return ""
+    except:
+        print("Exception")
+        return ""
+
+
+def subfolder_enum():
+    tooltip = "Select Folder as target folder for your Blender File. Uses Folders from Automatic Setup. If you choose an invalid folder, the Root Folder will be selected."
+    default = [("Root", "Root", tooltip)]
+    index = 0
+
+    try:
+        for folder in get_element("automatic_folders"):
+            default.append((str(index), folder, tooltip))
+            index += 1
+    except:
+        return default
+
+    return default

@@ -33,11 +33,17 @@ bl_info = {
     "category": "System"
 }
 
+import os
+import shutil
 
 from .functions.register_functions import (
     register_icons,
     register_properties,
     unregister_icons,
+)
+
+from .functions.blenderdefender_functions import (
+    setup_addons_data
 )
 
 from . import (
@@ -48,8 +54,17 @@ from . import (
 
 
 def register():
-    operators.register()
+    path = os.path.join(os.path.expanduser("~"), "Blender Addons Data", "blender-project-starter")
+
+    setup_addons_data()
+    if not "BPS.json" in os.listdir(path):
+        shutil.copyfile(os.path.join(list(os.path.split(os.path.abspath(__file__)))[0],
+                                    "functions",
+                                    "BPS.json"),
+                        path)
+
     prefs.register(bl_info)
+    operators.register()
     panels.register()
 
     register_icons()
