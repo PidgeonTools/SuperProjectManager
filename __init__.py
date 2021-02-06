@@ -34,6 +34,7 @@ bl_info = {
 }
 
 import os
+from os import path as p
 import shutil
 
 from .functions.register_functions import (
@@ -54,14 +55,14 @@ from . import (
 
 
 def register():
-    path = os.path.join(os.path.expanduser("~"), "Blender Addons Data", "blender-project-starter")
+    path = p.join(p.expanduser("~"), "Blender Addons Data", "blender-project-starter")
 
     setup_addons_data()
     if not "BPS.json" in os.listdir(path):
-        shutil.copyfile(os.path.join(list(os.path.split(os.path.abspath(__file__)))[0],
-                                    "functions",
-                                    "BPS.json"),
-                        path)
+        shutil.copyfile(p.join(p.dirname(__file__),
+                               "functions",
+                               "BPS.json"),
+                        p.join(path, "BPS.json"))
 
     prefs.register(bl_info)
     operators.register()
