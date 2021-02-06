@@ -96,7 +96,11 @@ def get_file_subfolder(context, options, item):
     try:
         for index, subfolder in enumerate(options):
             if index == int(item):
-                return subfolder[context]
+                prop = subfolder[context].split(">>")
+                subfolder = ""
+                for i in prop:
+                    subfolder = p.join(subfolder, i)
+                return subfolder
         return ""
     except:
         return ""
