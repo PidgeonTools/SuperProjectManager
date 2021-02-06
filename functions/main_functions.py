@@ -99,7 +99,6 @@ def get_file_subfolder(context, options, item):
                 return subfolder[context]
         return ""
     except:
-        print("Exception")
         return ""
 
 

@@ -45,7 +45,7 @@ class custom_folder(bpy.types.PropertyGroup):
 
     Custom_Setup: StringProperty(
         name = "Folder Name",
-        description = "Custom Setup Folder",
+        description = "Custom Setup Folder. Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
         default = "")
 
 
@@ -53,7 +53,7 @@ class automatic_folder(bpy.types.PropertyGroup):
 
     Automatic_Setup: StringProperty(
         name = "Folder Name",
-        description = "Automatic Setup Folder",
+        description = "Automatic Setup Folder. Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
         default = "")
 
 
@@ -116,16 +116,8 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(bpy.types.AddonPreferences):
             icon_value=context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id
         )
 
-        box = layout.box()
-        box.enabled = True
-        box.alert = False
-        box.scale_x = 1.0
-        box.scale_y = 1.0
-        box.label(text="Here you can setup the automatic project folders ", icon_value=0)
-        box.label(text="Format for adding subfolders: Folder>>Subfolder>>Subsubfolder")
-        box.label(text="When adding/removing Folders, please restart Blender to avoid issues.")
-
         layout.prop(self, "default_path")
+        layout.separator(factor = 0.4)
 
 
         for index, folder in enumerate(self.automatic_folders):
