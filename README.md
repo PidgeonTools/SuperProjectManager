@@ -10,7 +10,7 @@
 - [x] Fix: Bring back property "Open Folder after Build"
 - [x] Fix: Error when trying to build without specifying any Folders within the Root Folder
 - [x] Fix: Error when trying to save to subfolder
-- [ ] Fix: Correct Version Numbers
+- [x] Fix: Correct Version Numbers
 - [x] Codestyle: Enhance Codestyle
 - [ ] Feature: Mark Project as open/unfinished
 - [x] Feature: Add option to prefix folders with the project name.
