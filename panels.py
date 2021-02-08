@@ -76,6 +76,7 @@ class BLENDER_PROJECT_STARTER_PT_main_panel(Panel):
                 split.prop(folder, "Custom_Setup", text="")
 
                 op = row.operator("blender_project_starter.remove_folder",
+                                  text="",
                                   emboss=False,
                                   icon="PANEL_CLOSE")
                 op.index = index
