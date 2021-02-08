@@ -21,8 +21,9 @@
 # ##### END GPL LICENSE BLOCK #####
 
 import bpy
+C = bpy.context
 
-from .functions.main_functions import file_in_project_folder
+from .functions.main_functions import is_file_in_project_folder
 
 
 class BLENDER_PROJECT_STARTER_PT_main_panel(bpy.types.Panel):
@@ -34,41 +35,49 @@ class BLENDER_PROJECT_STARTER_PT_main_panel(bpy.types.Panel):
     bl_order = 0
 
     def draw_header(self, context):
-        try:
             layout = self.layout
-        except Exception as exc:
-            print(str(exc) + " | Error in Blender Starter Project panel header")
 
     def draw(self, context):
-        try:
-            layout = self.layout
-            row = layout.row(align=False)
-            row.scale_x = 2.0
-            row.scale_y = 2.0
-            row.operator("blender_project_starter.build_project",
-                         text="BUILD PROJECT",
-                         icon_value=bpy.context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id)
 
-            layout.separator(factor=1.0)
+        prefs = C.preferences.addons[__package__].preferences
 
-            layout.prop(bpy.context.scene, "project_name", text="Project Name")
-            layout.prop(bpy.context.scene, "project_location", text="Project Location")
-            layout.prop(bpy.context.scene, "project_setup", text="Project Setup", expand=False,)
+        layout = self.layout
+        row = layout.row(align=False)
+        row.scale_x = 2.0
+        row.scale_y = 2.0
+        row.operator("blender_project_starter.build_project",
+                        text="BUILD PROJECT",
+                        icon_value=context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id)
 
-            if bpy.context.scene.project_setup == "Custom Setup":
-                layout.label(text="Custom Folder Setup", icon_value=689)
-                layout.prop(bpy.context.scene, "folder_1", text="Folder")
-                layout.prop(bpy.context.scene, "folder_2", text="Folder 2")
-                layout.prop(bpy.context.scene, "folder_3", text="Folder_3")
-                layout.prop(bpy.context.scene, "folder_4", text="Folder_4")
-                layout.prop(bpy.context.scene, "folder_5", text="Folder_5")
+        layout.separator(factor=1.0)
 
-            layout.separator(factor=1.0)
+        layout.prop(context.scene, "project_name", text="Project Name")
+        layout.prop(context.scene, "project_location", text="Project Location")
+        layout.prop(context.scene, "project_setup", text="Project Setup", expand=False,)
 
-            layout.prop(bpy.context.scene, "open_directory", text="Open Directory after Build", expand=False,)
+        if context.scene.project_setup == "Custom_Setup":
+            layout.label(text="Custom Folder Setup", icon_value=689)
+            for index, folder in enumerate(prefs.custom_folders):
+                row = layout.row()
+                split = row.split(factor=0.2)
+                split.label(text="Folder {}".format(index + 1))
 
-        except Exception as exc:
-            print(str(exc) + " | Error in Blender Starter Project panel")
+                split.prop(folder, "Custom_Setup", text="")
+
+                op = row.operator("blender_project_starter.remove_folder", text="", emboss=False, icon="PANEL_CLOSE")
+                op.index = index
+                op.coming_from = "panel"
+
+            row = layout.row()
+            split = row.split(factor=0.2)
+
+            split.separator()
+            op = split.operator("blender_project_starter.add_folder", text="", icon="PLUS")
+            op.coming_from = "panel"
+
+        layout.separator(factor=1.0)
+
+        layout.prop(context.scene, "open_directory", text="Open Directory after Build", expand=False,)
 
 
 class BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel(bpy.types.Panel):
@@ -80,41 +89,39 @@ class BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel(bpy.types.Pa
     bl_parent_id = "blender_project_starter_PT__main_panel"
 
     def draw_header(self, context):
-        try:
-            layout = self.layout
-            layout.prop(bpy.context.scene, "save_blender_file", text="")
-        except Exception as exc:
-            print(str(exc) + " | Error in Blender Starter Project panel header")
+        layout = self.layout
+        layout.prop(context.scene, "save_blender_file", text="")
+
 
     def draw(self, context):
-        try:
-            layout = self.layout
-            layout.enabled = bpy.context.scene.save_blender_file
 
-            if bpy.data.filepath == "":
-                layout.prop(bpy.context.scene, "file_folder")
-                layout.prop(bpy.context.scene, "save_file_name", text="Save File Name")
+        prefs = C.preferences.addons[__package__].preferences
+        D = bpy.data
+        layout = self.layout
+        layout.enabled = context.scene.save_blender_file
 
-            elif not file_in_project_folder(context, bpy.data.filepath):
-                if context.scene.cut_or_copy:
-                    layout.prop(bpy.context.scene, "cut_or_copy", text="Change to Copy File", toggle=True)
-                else:
-                    layout.prop(bpy.context.scene, "cut_or_copy", text="Change to Cut File", toggle=True)
-                layout.prop(bpy.context.scene, "file_folder")
-                layout.prop(bpy.context.scene, "save_file_with_new_name", text="Save with new File Name")
-                if context.scene.save_file_with_new_name:
-                    layout.prop(bpy.context.scene, "save_file_name", text="Save File Name")
+        if D.filepath == "":
+            layout.prop(prefs, "save_folder")
+            layout.prop(context.scene, "save_file_name", text="Save File Name")
 
+        elif not is_file_in_project_folder(context, D.filepath):
+            if context.scene.cut_or_copy:
+                layout.prop(context.scene, "cut_or_copy", text="Change to Copy File", toggle=True)
             else:
-                layout.prop(bpy.context.scene, "save_blender_file_versioned")
+                layout.prop(context.scene, "cut_or_copy", text="Change to Cut File", toggle=True)
+            layout.prop(prefs, "save_folder")
+            layout.prop(context.scene, "save_file_with_new_name", text="Save with new File Name")
+            if context.scene.save_file_with_new_name:
+                layout.prop(context.scene, "save_file_name", text="Save File Name")
 
-            row = layout.row(align=False)
+        else:
+            layout.prop(context.scene, "save_blender_file_versioned")
 
-            row.prop(bpy.context.scene, "remap_relative", icon_value=2, text="Remap Relative")
-            row.prop(bpy.context.scene, "compress_save", icon_value=70, text="Compress File")
+        row = layout.row(align=False)
 
-        except Exception as exc:
-            print(str(exc) + " | Error in Blender Starter Project panel")
+        row.prop(context.scene, "remap_relative", icon_value=2, text="Remap Relative")
+        row.prop(context.scene, "compress_save", icon_value=70, text="Compress File")
+
 
 
 def register():

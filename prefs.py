@@ -21,68 +21,87 @@
 # ##### END GPL LICENSE BLOCK #####
 
 import bpy
+from bpy.props import (
+    StringProperty,
+    EnumProperty,
+    CollectionProperty,
+    BoolProperty,
+    IntProperty
+)
+
+C = bpy.context
+D = bpy.data
+
 import os
 from os import path as p
 
 from . import addon_updater_ops
 
+from .functions.main_functions import (
+    subfolder_enum,
+)
+
+class custom_folder(bpy.types.PropertyGroup):
+
+    Custom_Setup: StringProperty(
+        name = "Folder Name",
+        description = "Custom Setup Folder. Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
+        default = "")
+
+
+class automatic_folder(bpy.types.PropertyGroup):
+
+    Automatic_Setup: StringProperty(
+        name = "Folder Name",
+        description = "Automatic Setup Folder. Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
+        default = "")
+
 
 class BLENDER_PROJECT_STARTER_APT_Preferences(bpy.types.AddonPreferences):
     bl_idname = __package__
 
-    default_path: bpy.props.StringProperty(
+    custom_folders: CollectionProperty(type=custom_folder)
+
+    automatic_folders: CollectionProperty(type=automatic_folder)
+
+    default_path: StringProperty(
         name="Default Project Location",
         subtype="DIR_PATH",
         default=p.expanduser("~")
     )
-    folder_1: bpy.props.StringProperty(
-        name="Folder Name 1",
-        default="Blender Files"
-    )
-    folder_2: bpy.props.StringProperty(
-        name="Folder Name 2",
-        default="Textures"
-    )
-    folder_3: bpy.props.StringProperty(
-        name="Folder Name 3",
-        default="Rendered Images"
-    )
-    folder_4: bpy.props.StringProperty(
-        name="Folder Name 4",
-        default="References"
-    )
-    folder_5: bpy.props.StringProperty(
-        name="Folder Name 5",
-        default="Sounds"
+
+    save_folder: EnumProperty(
+        name="Save to",
+        items=subfolder_enum(),
     )
 
-    auto_check_update = bpy.props.BoolProperty(
+    auto_check_update = BoolProperty(
         name="Auto-check for Update",
         description="If enabled, auto-check for updates using an interval",
         default=True,
     )
-    updater_intrval_months = bpy.props.IntProperty(
-        name='Months',
+    updater_intrval_months = IntProperty(
+        name="Months",
         description="Number of months between checking for updates",
         default=0,
         min=0
     )
-    updater_intrval_days = bpy.props.IntProperty(
-        name='Days',
+    updater_intrval_days = IntProperty(
+        name="Days",
         description="Number of days between checking for updates",
         default=7,
         min=0,
         max=31
     )
-    updater_intrval_hours = bpy.props.IntProperty(
-        name='Hours',
+    updater_intrval_hours = IntProperty(
+        name="Hours",
         description="Number of hours between checking for updates",
         default=0,
         min=0,
         max=23
     )
-    updater_intrval_minutes = bpy.props.IntProperty(
-        name='Minutes',
+    updater_intrval_minutes = IntProperty(
+        name="Minutes",
         description="Number of minutes between checking for updates",
         default=0,
         min=0,
@@ -94,26 +113,32 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(bpy.types.AddonPreferences):
 
         layout.label(
             text="Blender Project Manager ",
-            icon_value=bpy.context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id
+            icon_value=context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id
         )
 
-        box = layout.box()
-        box.enabled = True
-        box.alert = False
-        box.scale_x = 1.0
-        box.scale_y = 1.0
-        box.label(text="Blender Project manager ", icon_value=0)
-        box.label(text="Here you can setup the automatic project folders ", icon_value=0)
-        box.label(text="Format for adding subfolders: Folder>>Subfolder>>Subsubfolder")
-
         layout.prop(self, "default_path")
-        layout.prop(self, "folder_1")
-        layout.prop(self, "folder_2")
-        layout.prop(self, "folder_3")
-        layout.prop(self, "folder_4")
-        layout.prop(self, "folder_5")
+        layout.separator(factor = 0.4)
 
-        layout = self.layout
+
+        for index, folder in enumerate(self.automatic_folders):
+            row = layout.row()
+            split = row.split(factor=0.2)
+            split.label(text="Folder {}".format(index + 1))
+
+            split.prop(folder, "Automatic_Setup", text="")
+
+
+            op = row.operator("blender_project_starter.remove_folder", text="", emboss=False, icon="PANEL_CLOSE")
+            op.index = index
+            op.coming_from = "prefs"
+
+        row = layout.row()
+        split = row.split(factor=0.2)
+
+        split.separator()
+        op = split.operator("blender_project_starter.add_folder", text="", icon="PLUS")
+        op.coming_from = "prefs"
+
         # col = layout.column() # works best if a column, or even just self.layout
         mainrow = layout.row()
         col = mainrow.column()
@@ -135,7 +160,9 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(bpy.types.AddonPreferences):
 
 
 classes = (
-    BLENDER_PROJECT_STARTER_APT_Preferences,
+    custom_folder,
+    automatic_folder,
+    BLENDER_PROJECT_STARTER_APT_Preferences
 )
 
 
