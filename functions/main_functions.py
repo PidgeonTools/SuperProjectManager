@@ -1,6 +1,6 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
-#  <Blender Project Starter is an addon for automatic Project Folder Structure Generation.>
+#  <Blender Project Starter is made for automatic Project Folder Generation.>
 #    Copyright (C) <2021>  <Steven Scott>
 #    Mofified <2021> <Blender Defender>
 #
@@ -22,8 +22,6 @@
 
 import bpy
 from bpy.utils import previews
-C = bpy.context
-D = bpy.data
 
 import os
 from os import path as p
@@ -38,6 +36,9 @@ from .json_functions import (
     encode_json,
     get_element
 )
+
+C = bpy.context
+D = bpy.data
 
 
 def build_file_folders(context, prop):
@@ -75,7 +76,10 @@ def is_file_in_project_folder(context, filepath):
         return False
 
     filepath = p.normpath(filepath)
-    project_folder = p.normpath(p.join(context.scene.project_location, context.scene.project_name))
+    project_folder = p.normpath(p.join(context.scene.project_location,
+                                       context.scene.project_name
+                                       )
+                                )
     return filepath.startswith(project_folder)
 
 
@@ -107,7 +111,9 @@ def get_file_subfolder(context, options, item):
 
 
 def subfolder_enum():
-    tooltip = "Select Folder as target folder for your Blender File. Uses Folders from Automatic Setup. If you choose an invalid folder, the Root Folder will be selected."
+    tooltip = "Select Folder as target folder for your Blender File. \
+Uses Folders from Automatic Setup. If you choose an invalid folder, \
+the Root Folder will be selected."
     default = [("Root", "Root", tooltip)]
     index = 0
 

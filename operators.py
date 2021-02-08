@@ -1,6 +1,6 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
-#  <Blender Project Starter is an addon for automatic Project Folder Structure Generation.>
+#  <Blender Project Starter is made for automatic Project Folder Generation.>
 #    Copyright (C) <2021>  <Steven Scott>
 #    Mofified <2021> <Blender Defender>
 #
@@ -28,8 +28,6 @@ from bpy.props import (
 )
 from bpy.types import Operator
 
-C = bpy.context
-
 import os
 from os import path as p
 
@@ -52,6 +50,9 @@ from .functions.register_functions import (
     unregister_automatic_folders
 )
 
+C = bpy.context
+
+
 class BLENDER_PROJECT_STARTER_OT_Build_Project(Operator):
     bl_idname = "blender_project_starter.build_project"
     bl_label = "Build Project"
@@ -61,8 +62,10 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(Operator):
     def execute(self, context):
 
         D = bpy.data
+        scene = context.scene
         prefs = C.preferences.addons[__package__].preferences
-        path = p.join(context.scene.project_location, context.scene.project_name)
+        path = p.join(context.scene.project_location,
+                      context.scene.project_name)
         filename = context.scene.save_file_name
 
         if not p.isdir(path):
@@ -71,20 +74,25 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(Operator):
         if context.scene.project_setup == "Automatic_Setup":
             for index, folder in enumerate(prefs.automatic_folders):
                 try:
-                    # print(folder[context.scene.project_setup])
-                    build_file_folders(context, folder[context.scene.project_setup])
+
+                    build_file_folders(context,
+                                       folder[context.scene.project_setup])
                 except:
                     pass
-            subfolder = get_file_subfolder(context.scene.project_setup, prefs.automatic_folders, prefs.save_folder)
+            subfolder = get_file_subfolder(context.scene.project_setup,
+                                           prefs.automatic_folders,
+                                           prefs.save_folder)
         else:
             for index, folder in enumerate(prefs.custom_folders):
                 try:
-                    # print(folder[context.scene.project_setup])
-                    build_file_folders(context, folder[context.scene.project_setup])
+
+                    build_file_folders(context,
+                                       folder[context.scene.project_setup])
                 except:
                     pass
-            subfolder = get_file_subfolder(context.scene.project_setup, prefs.custom_folders, prefs.save_folder)
-
+            subfolder = get_file_subfolder(context.scene.project_setup,
+                                           prefs.custom_folders,
+                                           prefs.save_folder)
 
         if context.scene.save_blender_file:
             if D.filepath == "":
@@ -96,25 +104,33 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(Operator):
                 if context.scene.save_file_with_new_name:
                     save_file(context, filename, subfolder)
                 else:
-                    save_file(context, p.basename(D.filepath).split(".blend")[0], subfolder)
+                    save_file(context,
+                              p.basename(D.filepath).split(".blend")[0],
+                              subfolder)
 
                 if context.scene.cut_or_copy:
                     os.remove(old_file_path)
 
             elif context.scene.save_blender_file_versioned:
-                filepath = p.dirname(D.filepath)
-                filename = p.basename(D.filepath).split(".blen")[0].split("_v0")[0]
-                version = generate_file_version_number(p.join(filepath, filename))
+                path = D.filepath
+                filepath = p.dirname(path)
+                filename = p.basename(path).split(".blen")[0].split("_v0")[0]
+                version = generate_file_version_number(p.join(filepath,
+                                                              filename))
 
                 filename += version
 
                 save_file(context, filename, subfolder)
             else:
-                bpy.ops.wm.save_as_mainfile(filepath=D.filepath, compress=context.scene.compress_save, relative_remap=context.scene.remap_relative)
+                bpy.ops.wm.save_as_mainfile(filepath=D.filepath,
+                                            compress=scene.compress_save,
+                                            relative_remap=scene.remap_relative
+                                            )
 
         if context.scene.open_directory:
 
-                OpenLocation = p.join(context.scene.project_location, context.scene.project_name)
+                OpenLocation = p.join(context.scene.project_location,
+                                      context.scene.project_name)
                 OpenLocation = p.realpath(OpenLocation)
 
                 open_directory(OpenLocation)
@@ -125,7 +141,8 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(Operator):
 class BLENDER_PROJECT_STARTER_OT_add_folder(Operator):
     bl_idname = "blender_project_starter.add_folder"
     bl_label = "Add Folder"
-    bl_description = "Add a Folder with the subfolder Layout Folder>>Subfolder>>Subsubfolder."
+    bl_description = "Add a Folder with the subfolder \
+Layout Folder>>Subfolder>>Subsubfolder."
 
     coming_from: StringProperty()
 
@@ -168,12 +185,14 @@ classes = (
 
 
 def register():
-    register_automatic_folders(C.preferences.addons[__package__].preferences.automatic_folders)
+    folders = C.preferences.addons[__package__].preferences.automatic_folders
+    register_automatic_folders(folders)
     for cls in classes:
         bpy.utils.register_class(cls)
 
 
 def unregister():
-    unregister_automatic_folders(C.preferences.addons[__package__].preferences.automatic_folders)
+    folders = C.preferences.addons[__package__].preferences.automatic_folders
+    unregister_automatic_folders(folders)
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)

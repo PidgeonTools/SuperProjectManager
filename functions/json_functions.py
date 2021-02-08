@@ -2,6 +2,7 @@ from os import path as p
 
 import json
 
+
 def decode_json(path):
     with open(path) as f:
         j = json.load(f)
@@ -13,8 +14,13 @@ def encode_json(j, path):
         json.dump(j, f, indent=4)
     return j
 
+
 def get_element(name):
-    path = p.join(p.expanduser("~"), "Blender Addons Data", "blender-project-starter", "BPS.json")
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter",
+                  "BPS.json"
+                  )
 
     data = decode_json(path)
 

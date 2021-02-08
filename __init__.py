@@ -1,6 +1,6 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
-#  <Blender Project Starter is an addon for automatic Project Folder Structure Generation.>
+#  <Blender Project Starter is made for automatic Project Folder Generation.>
 #    Copyright (C) <2021>  <Steven Scott>
 #    Mofified <2021> <Blender Defender>
 #
@@ -20,18 +20,6 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-bl_info = {
-    "name": "Blender Project Starter",
-    "description": "",
-    "author": "Steven Scott, Blender Defender",
-    "version": (1, 1, 0),
-    "blender": (2, 83, 0),
-    "location": "Properties >> Scene Properties",
-    "warning": "",
-    "wiki_url": "https://www.youtube.com/watch?v=Jn-4Yjjn_5A",
-    "tracker_url": "https://github.com/BlenderDefender/blender_project_starter/issues",
-    "category": "System"
-}
 
 import os
 from os import path as p
@@ -53,12 +41,28 @@ from . import (
     panels
 )
 
+bl_info = {
+    "name": "Blender Project Starter",
+    "description": "",
+    "author": "Steven Scott, Blender Defender",
+    "version": (1, 1, 0),
+    "blender": (2, 83, 0),
+    "location": "Properties >> Scene Properties",
+    "warning": "",
+    "wiki_url": "https://www.youtube.com/watch?v=Jn-4Yjjn_5A",
+    "tracker_url": "https://github.com/BlenderDefender/\
+blender_project_starter/issues",
+    "category": "System"
+}
+
 
 def register():
-    path = p.join(p.expanduser("~"), "Blender Addons Data", "blender-project-starter")
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter")
 
     setup_addons_data()
-    if not "BPS.json" in os.listdir(path):
+    if "BPS.json" not in os.listdir(path):
         shutil.copyfile(p.join(p.dirname(__file__),
                                "functions",
                                "BPS.json"),

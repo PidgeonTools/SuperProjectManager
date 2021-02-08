@@ -1,6 +1,6 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
-#  <Blender Project Starter is an addon for automatic Project Folder Structure Generation.>
+#  <Blender Project Starter is made for automatic Project Folder Generation.>
 #    Copyright (C) <2021>  <Steven Scott>
 #    Mofified <2021> <Blender Defender>
 #
@@ -21,12 +21,14 @@
 # ##### END GPL LICENSE BLOCK #####
 
 import bpy
-C = bpy.context
+from bpy.types import Panel
 
 from .functions.main_functions import is_file_in_project_folder
 
+C = bpy.context
 
-class BLENDER_PROJECT_STARTER_PT_main_panel(bpy.types.Panel):
+
+class BLENDER_PROJECT_STARTER_PT_main_panel(Panel):
     bl_label = "Blender Starter Project"
     bl_idname = "blender_project_starter_PT__main_panel"
     bl_space_type = "PROPERTIES"
@@ -38,25 +40,34 @@ class BLENDER_PROJECT_STARTER_PT_main_panel(bpy.types.Panel):
             layout = self.layout
 
     def draw(self, context):
-
         prefs = C.preferences.addons[__package__].preferences
+        ic = context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id
 
         layout = self.layout
         row = layout.row(align=False)
         row.scale_x = 2.0
         row.scale_y = 2.0
         row.operator("blender_project_starter.build_project",
-                        text="BUILD PROJECT",
-                        icon_value=context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id)
+                     text="BUILD PROJECT",
+                     icon_value=ic)
 
         layout.separator(factor=1.0)
 
-        layout.prop(context.scene, "project_name", text="Project Name")
-        layout.prop(context.scene, "project_location", text="Project Location")
-        layout.prop(context.scene, "project_setup", text="Project Setup", expand=False,)
+        layout.prop(context.scene,
+                    "project_name",
+                    text="Project Name")
+        layout.prop(context.scene,
+                    "project_location",
+                    text="Project Location")
+        layout.prop(context.scene,
+                    "project_setup",
+                    text="Project Setup",
+                    expand=False)
 
         if context.scene.project_setup == "Custom_Setup":
-            layout.label(text="Custom Folder Setup", icon_value=689)
+            layout.label(text="Custom Folder Setup",
+                         icon="NEWFOLDER")
+
             for index, folder in enumerate(prefs.custom_folders):
                 row = layout.row()
                 split = row.split(factor=0.2)
@@ -64,7 +75,10 @@ class BLENDER_PROJECT_STARTER_PT_main_panel(bpy.types.Panel):
 
                 split.prop(folder, "Custom_Setup", text="")
 
-                op = row.operator("blender_project_starter.remove_folder", text="", emboss=False, icon="PANEL_CLOSE")
+                op = row.operator("blender_project_starter.remove_folder",
+                                  text="",
+                                  emboss=False,
+                                  icon="PANEL_CLOSE")
                 op.index = index
                 op.coming_from = "panel"
 
@@ -72,15 +86,19 @@ class BLENDER_PROJECT_STARTER_PT_main_panel(bpy.types.Panel):
             split = row.split(factor=0.2)
 
             split.separator()
-            op = split.operator("blender_project_starter.add_folder", text="", icon="PLUS")
+            op = split.operator("blender_project_starter.add_folder",
+                                icon="PLUS")
             op.coming_from = "panel"
 
         layout.separator(factor=1.0)
 
-        layout.prop(context.scene, "open_directory", text="Open Directory after Build", expand=False,)
+        layout.prop(context.scene,
+                    "open_directory",
+                    text="Open Directory after Build",
+                    expand=False)
 
 
-class BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel(bpy.types.Panel):
+class BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel(Panel):
     bl_label = "Save .blend File / Options"
     bl_idname = "blender_project_starter_PT_Blender_File_save_options_subpanel"
     bl_space_type = "PROPERTIES"
@@ -90,13 +108,12 @@ class BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel(bpy.types.Pa
 
     def draw_header(self, context):
         layout = self.layout
-        layout.prop(context.scene, "save_blender_file", text="")
-
+        layout.prop(context.scene, "save_blender_file")
 
     def draw(self, context):
-
-        prefs = C.preferences.addons[__package__].preferences
         D = bpy.data
+        prefs = C.preferences.addons[__package__].preferences
+
         layout = self.layout
         layout.enabled = context.scene.save_blender_file
 
@@ -106,29 +123,48 @@ class BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel(bpy.types.Pa
 
         elif not is_file_in_project_folder(context, D.filepath):
             if context.scene.cut_or_copy:
-                layout.prop(context.scene, "cut_or_copy", text="Change to Copy File", toggle=True)
+                layout.prop(context.scene,
+                            "cut_or_copy",
+                            text="Change to Copy File",
+                            toggle=True)
             else:
-                layout.prop(context.scene, "cut_or_copy", text="Change to Cut File", toggle=True)
+                layout.prop(context.scene,
+                            "cut_or_copy",
+                            text="Change to Cut File",
+                            toggle=True)
             layout.prop(prefs, "save_folder")
-            layout.prop(context.scene, "save_file_with_new_name", text="Save with new File Name")
+            layout.prop(context.scene,
+                        "save_file_with_new_name",
+                        text="Save with new File Name")
             if context.scene.save_file_with_new_name:
-                layout.prop(context.scene, "save_file_name", text="Save File Name")
-
+                layout.prop(context.scene,
+                            "save_file_name",
+                            text="Save File Name")
         else:
             layout.prop(context.scene, "save_blender_file_versioned")
 
         row = layout.row(align=False)
+        row.prop(context.scene,
+                 "remap_relative",
+                 icon="ERROR",
+                 text="Remap Relative")
+        row.prop(context.scene,
+                 "compress_save",
+                 icon="FILE_TICK",
+                 text="Compress File")
 
-        row.prop(context.scene, "remap_relative", icon_value=2, text="Remap Relative")
-        row.prop(context.scene, "compress_save", icon_value=70, text="Compress File")
 
+classes = (
+    BLENDER_PROJECT_STARTER_PT_main_panel,
+    BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel,
+)
 
 
 def register():
-    bpy.utils.register_class(BLENDER_PROJECT_STARTER_PT_main_panel)
-    bpy.utils.register_class(BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel)
+    for cls in classes:
+        bpy.utils.register_class(cls)
 
 
 def unregister():
-    bpy.utils.unregister_class(BLENDER_PROJECT_STARTER_PT_main_panel)
-    bpy.utils.unregister_class(BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel)
+    for cls in reversed(classes):
+        bpy.utils.unregister_class(cls)

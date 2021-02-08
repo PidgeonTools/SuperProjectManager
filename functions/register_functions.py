@@ -1,6 +1,6 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
-#  <Blender Project Starter is an addon for automatic Project Folder Structure Generation.>
+#  <Blender Project Starter is made for automatic Project Folder Generation.>
 #    Copyright (C) <2021>  <Steven Scott>
 #    Mofified <2021> <Blender Defender>
 #
@@ -27,9 +27,6 @@ from bpy.props import (
     StringProperty,
     EnumProperty
 )
-C = bpy.context
-D = bpy.data
-Scene_Prop = bpy.types.Scene
 
 import os
 from os import path as p
@@ -42,13 +39,20 @@ from .json_functions import (
     encode_json
 )
 
+C = bpy.context
+D = bpy.data
+Scene_Prop = bpy.types.Scene
+
 
 def register_icons():
     icons = ["BUILD_ICON", "TWITTER", "YOUTUBE", "GUMROAD"]
     Scene_Prop.blender_project_starter_icons = previews.new()
     icons_dir = p.join(p.dirname(p.dirname(__file__)), "icons")
     for icon in icons:
-        Scene_Prop.blender_project_starter_icons.load(icon, p.join(icons_dir, icon + ".png"), "IMAGE")
+        Scene_Prop.blender_project_starter_icons.load(icon,
+                                                      p.join(icons_dir,
+                                                             icon + ".png"),
+                                                      "IMAGE")
 
 
 def unregister_icons():
@@ -77,23 +81,17 @@ def register_properties():
         ]
     )
 
-
-
-
-
-
-
-
-
-    Scene_Prop.open_directory = BoolProperty(name="Open Directory", default=True)
+    Scene_Prop.open_directory = BoolProperty(name="Open Directory",
+                                             default=True)
     Scene_Prop.save_blender_file = BoolProperty(name="Save Blender File",
-                                                     description="Save Blender File on build. If disable"
-                                                     + "d, only the project folders are created",
+                                                     description="Save Blender \
+File on build. If disabled, only the project folders are created",
                                                      default=True)
 
     Scene_Prop.cut_or_copy = BoolProperty(
         name="Cut or Copy",
-        description="Decide, if you want to cut or copy your file from the current folder to the project folder.",
+        description="Decide, if you want to cut or copy your file from the \
+current folder to the project folder.",
     )
     Scene_Prop.save_file_with_new_name = BoolProperty(
         name="Save Blender File with another name",
@@ -103,11 +101,15 @@ def register_properties():
         description="Add a Version Number if the File already exists",
     )
     Scene_Prop.save_file_name = StringProperty(name="Save File Name")
-    Scene_Prop.remap_relative = BoolProperty(name="Remap Relative", default=True)
+    Scene_Prop.remap_relative = BoolProperty(name="Remap Relative",
+                                             default=True)
     Scene_Prop.compress_save = BoolProperty(name="Compress Save")
 
+
 def register_automatic_folders(folders):
-    path = p.join(p.expanduser("~"), "Blender Addons Data", "blender-project-starter", "BPS.json")
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter", "BPS.json")
 
     index = 0
     for folder in folders:
@@ -121,7 +123,10 @@ def register_automatic_folders(folders):
 
 
 def unregister_automatic_folders(folders):
-    path = p.join(p.expanduser("~"), "Blender Addons Data", "blender-project-starter", "BPS.json")
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter",
+                  "BPS.json")
     data = []
     original_json = decode_json(path)
 

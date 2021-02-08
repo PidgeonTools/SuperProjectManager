@@ -1,6 +1,6 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
-# <Blender Defender Util Functions>
+# <Blender Defender Utility Functions>
 #  Copyright (C) <2021>  <Blender Defender>
 #
 #  This program is free software; you can redistribute it and/or
@@ -27,6 +27,9 @@ import json
 
 
 def setup_addons_data():
-    path = p.join(p.expanduser("~"), "Blender Addons Data", "blender-project-starter")
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter"
+                  )
     if not p.isdir(path):
         os.makedirs(path)
