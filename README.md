@@ -9,8 +9,9 @@
 - [x] Fix: Subfolders aren't created on Linux
 - [x] Fix: Bring back property "Open Folder after Build"
 - [x] Fix: Error when trying to build without specifying any Folders within the Root Folder
-- [x] Fix:  Error when trying to save to subfolder
-- [ ] Codestyle: Enhance Codestyle
+- [x] Fix: Error when trying to save to subfolder
+- [ ] Fix: Correct Version Numbers
+- [x] Codestyle: Enhance Codestyle
 - [ ] Feature: Mark Project as open/unfinished
 - [x] Feature: Add option to prefix folders with the project name.
 - [x] Feature: Let the user decide, how many folders are in the Project Root Folder.
