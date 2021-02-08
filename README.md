@@ -10,7 +10,7 @@
 - [x] Fix: Bring back property "Open Folder after Build"
 - [ ] Codestyle: Enhance Codestyle
 - [ ] Feature: Mark Project as open/unfinished
-- [ ] Feature: Let the user decide, how many folders are in the Project Root Folder.
+- [x] Feature: Let the user decide, how many folders are in the Project Root Folder.
 - [x] Feature: Copy file to project/target folder, even if it already exists in another folder (Inform the user):
     - [x] Get File name
     - [x] Cut File Option
