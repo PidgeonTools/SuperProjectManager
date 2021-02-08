@@ -1,6 +1,6 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
-#  <Blender Project Starter is an addon for automatic Project Folder Structure Generation.>
+#  <Blender Project Starter is made for automatic Project Folder Generation.>
 #    Copyright (C) <2021>  <Steven Scott>
 #    Mofified <2021> <Blender Defender>
 #
@@ -28,9 +28,10 @@ from bpy.props import (
     BoolProperty,
     IntProperty
 )
-
-C = bpy.context
-D = bpy.data
+from bpy.types import (
+    PropertyGroup,
+    AddonPreferences
+)
 
 import os
 from os import path as p
@@ -41,23 +42,29 @@ from .functions.main_functions import (
     subfolder_enum,
 )
 
-class custom_folder(bpy.types.PropertyGroup):
+C = bpy.context
+D = bpy.data
+
+
+class custom_folder(PropertyGroup):
 
     Custom_Setup: StringProperty(
-        name = "Folder Name",
-        description = "Custom Setup Folder. Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
-        default = "")
+        name="Folder Name",
+        description="Custom Setup Folder. \
+Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
+        default="")
 
 
-class automatic_folder(bpy.types.PropertyGroup):
+class automatic_folder(PropertyGroup):
 
     Automatic_Setup: StringProperty(
-        name = "Folder Name",
-        description = "Automatic Setup Folder. Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
-        default = "")
+        name="Folder Name",
+        description="Automatic Setup Folder. \
+Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
+        default="")
 
 
-class BLENDER_PROJECT_STARTER_APT_Preferences(bpy.types.AddonPreferences):
+class BLENDER_PROJECT_STARTER_APT_Preferences(AddonPreferences):
     bl_idname = __package__
 
     custom_folders: CollectionProperty(type=custom_folder)
@@ -110,15 +117,15 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(bpy.types.AddonPreferences):
 
     def draw(self, context):
         layout = self.layout
+        ic = context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id
 
         layout.label(
             text="Blender Project Manager ",
-            icon_value=context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id
+            icon_value=ic
         )
 
         layout.prop(self, "default_path")
-        layout.separator(factor = 0.4)
-
+        layout.separator(factor=0.4)
 
         for index, folder in enumerate(self.automatic_folders):
             row = layout.row()
@@ -127,8 +134,9 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(bpy.types.AddonPreferences):
 
             split.prop(folder, "Automatic_Setup", text="")
 
-
-            op = row.operator("blender_project_starter.remove_folder", text="", emboss=False, icon="PANEL_CLOSE")
+            op = row.operator("blender_project_starter.remove_folder",
+                              emboss=False,
+                              icon="PANEL_CLOSE")
             op.index = index
             op.coming_from = "prefs"
 
@@ -136,10 +144,10 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(bpy.types.AddonPreferences):
         split = row.split(factor=0.2)
 
         split.separator()
-        op = split.operator("blender_project_starter.add_folder", text="", icon="PLUS")
+        op = split.operator("blender_project_starter.add_folder",
+                            icon="PLUS")
         op.coming_from = "prefs"
 
-        # col = layout.column() # works best if a column, or even just self.layout
         mainrow = layout.row()
         col = mainrow.column()
 
@@ -149,14 +157,16 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(bpy.types.AddonPreferences):
 
         # Alternate draw function, which is more condensed and can be
         # placed within an existing draw function. Only contains:
-        #   1) check for update/update now buttons
-        #   2) toggle for auto-check (interval will be equal to what is set above)
+        # 1) check for update/update now buttons
+        # 2) toggle for auto-check(interval will be equal to what is set above)
         # addon_updater_ops.update_settings_ui_condensed(self, context, col)
 
-        # Adding another column to help show the above condensed ui as one column
+        # Adding another column,
+        # to help show the above condensed ui as one column
         # col = mainrow.column()
         # col.scale_y = 2
-        # col.operator("wm.url_open","Open webpage ").url=addon_updater_ops.updater.website
+        # col.operator("wm.url_open","Open webpage ").url=\
+        # addon_updater_ops.updater.website
 
 
 classes = (
@@ -174,7 +184,7 @@ def register(bl_info):
 
     # register the example panel, to show updater buttons
     for cls in classes:
-        addon_updater_ops.make_annotations(cls)  # to avoid blender 2.8 warnings
+        addon_updater_ops.make_annotations(cls)  # avoid blender 2.8 warnings
         bpy.utils.register_class(cls)
 
 
