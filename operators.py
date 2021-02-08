@@ -71,26 +71,33 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(Operator):
         if not p.isdir(path):
             os.makedirs(path)
 
+        if prefs.prefix_with_project_name:
+            pre = context.scene.project_name + "_"
+        else:
+            pre = ""
+
         if context.scene.project_setup == "Automatic_Setup":
             for index, folder in enumerate(prefs.automatic_folders):
                 try:
-
                     build_file_folders(context,
+                                       pre + \
                                        folder[context.scene.project_setup])
                 except:
                     pass
-            subfolder = get_file_subfolder(context.scene.project_setup,
+            subfolder = pre + \
+                        get_file_subfolder(context.scene.project_setup,
                                            prefs.automatic_folders,
                                            prefs.save_folder)
         else:
             for index, folder in enumerate(prefs.custom_folders):
                 try:
-
                     build_file_folders(context,
+                                       pre + \
                                        folder[context.scene.project_setup])
                 except:
                     pass
-            subfolder = get_file_subfolder(context.scene.project_setup,
+            subfolder = pre + \
+                        get_file_subfolder(context.scene.project_setup,
                                            prefs.custom_folders,
                                            prefs.save_folder)
 

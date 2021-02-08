@@ -71,6 +71,12 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(AddonPreferences):
 
     automatic_folders: CollectionProperty(type=automatic_folder)
 
+    prefix_with_project_name = BoolProperty(
+        name="Project Name Prefix",
+        description="If enabled, use the project name as prefix for all folders.",
+        default=False,
+    )
+
     default_path: StringProperty(
         name="Default Project Location",
         subtype="DIR_PATH",
@@ -124,6 +130,7 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(AddonPreferences):
             icon_value=ic
         )
 
+        layout.prop(self, "prefix_with_project_name")
         layout.prop(self, "default_path")
         layout.separator(factor=0.4)
 
