@@ -57,8 +57,8 @@ from .functions.register_functions import (
 C = bpy.context
 
 
-class BLENDER_PROJECT_STARTER_OT_Build_Project(Operator):
-    bl_idname = "blender_project_starter.build_project"
+class BLENDER_PROJECT_MANAGER_OT_Build_Project(Operator):
+    bl_idname = "blender_project_manager.build_project"
     bl_label = "Build Project"
     bl_description = "Build Project Operator "
     bl_options = {"REGISTER", "UNDO"}
@@ -152,8 +152,8 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(Operator):
         return {"FINISHED"}
 
 
-class BLENDER_PROJECT_STARTER_OT_add_folder(Operator):
-    bl_idname = "blender_project_starter.add_folder"
+class BLENDER_PROJECT_MANAGER_OT_add_folder(Operator):
+    bl_idname = "blender_project_manager.add_folder"
     bl_label = "Add Folder"
     bl_description = "Add a Folder with the subfolder \
 Layout Folder>>Subfolder>>Subsubfolder."
@@ -172,8 +172,8 @@ Layout Folder>>Subfolder>>Subsubfolder."
         return {"FINISHED"}
 
 
-class BLENDER_PROJECT_STARTER_OT_remove_folder(Operator):
-    bl_idname = "blender_project_starter.remove_folder"
+class BLENDER_PROJECT_MANAGER_OT_remove_folder(Operator):
+    bl_idname = "blender_project_manager.remove_folder"
     bl_label = "Remove Folder"
     bl_description = "Remove the selected Folder."
 
@@ -192,8 +192,8 @@ class BLENDER_PROJECT_STARTER_OT_remove_folder(Operator):
         return {"FINISHED"}
 
 
-class BLENDER_PROJECT_STARTER_OT_add_project(Operator, ImportHelper):
-    bl_idname = "blender_project_starter.add_project"
+class BLENDER_PROJECT_MANAGER_OT_add_project(Operator, ImportHelper):
+    bl_idname = "blender_project_manager.add_project"
     bl_label = "Add Project"
     bl_description = "Add a Project"
 
@@ -204,7 +204,6 @@ class BLENDER_PROJECT_STARTER_OT_add_project(Operator, ImportHelper):
         add_open_project(path)
 
         message = "Successfully added project " + p.basename(path)
-        print(p.basename(path))
         self.report({'INFO'}, message)
         return {"FINISHED"}
 
@@ -214,8 +213,8 @@ class BLENDER_PROJECT_STARTER_OT_add_project(Operator, ImportHelper):
 
 
 
-class BLENDER_PROJECT_STARTER_OT_close_project(bpy.types.Operator):
-    bl_idname = "blender_project_starter.close_project"
+class BLENDER_PROJECT_MANAGER_OT_close_project(bpy.types.Operator):
+    bl_idname = "blender_project_manager.close_project"
     bl_label = "Close Project"
     bl_description = "Close the selected Project."
     bl_options = {'REGISTER', 'UNDO'}
@@ -242,8 +241,8 @@ class BLENDER_PROJECT_STARTER_OT_close_project(bpy.types.Operator):
         layout.label(text="but you might forget about this project and never finish it.")
 
 
-class BLENDER_PROJECT_STARTER_OT_redefine_project_path(Operator, ImportHelper):
-    bl_idname = "blender_project_starter.redefine_project_path"
+class BLENDER_PROJECT_MANAGER_OT_redefine_project_path(Operator, ImportHelper):
+    bl_idname = "blender_project_manager.redefine_project_path"
     bl_label = "Update Project path"
     bl_description = "Your project has changed location - \
 please update the project path"
@@ -268,8 +267,8 @@ please update the project path"
         layout.label(text=name)
 
 
-class BLENDER_PROJECT_STARTER_OT_open_project_path(Operator):
-    bl_idname = "blender_project_starter.open_project_path"
+class BLENDER_PROJECT_MANAGER_OT_open_project_path(Operator):
+    bl_idname = "blender_project_manager.open_project_path"
     bl_label = "Open Project path"
     bl_description = "Open your project folder."
 
@@ -283,13 +282,13 @@ class BLENDER_PROJECT_STARTER_OT_open_project_path(Operator):
 
 
 classes = (
-    BLENDER_PROJECT_STARTER_OT_add_folder,
-    BLENDER_PROJECT_STARTER_OT_remove_folder,
-    BLENDER_PROJECT_STARTER_OT_Build_Project,
-    BLENDER_PROJECT_STARTER_OT_add_project,
-    BLENDER_PROJECT_STARTER_OT_close_project,
-    BLENDER_PROJECT_STARTER_OT_redefine_project_path,
-    BLENDER_PROJECT_STARTER_OT_open_project_path
+    BLENDER_PROJECT_MANAGER_OT_add_folder,
+    BLENDER_PROJECT_MANAGER_OT_remove_folder,
+    BLENDER_PROJECT_MANAGER_OT_Build_Project,
+    BLENDER_PROJECT_MANAGER_OT_add_project,
+    BLENDER_PROJECT_MANAGER_OT_close_project,
+    BLENDER_PROJECT_MANAGER_OT_redefine_project_path,
+    BLENDER_PROJECT_MANAGER_OT_open_project_path
 )
 
 
