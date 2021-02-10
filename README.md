@@ -12,7 +12,7 @@
 - [x] Fix: Error when trying to save to subfolder
 - [x] Fix: Correct Version Numbers
 - [x] Codestyle: Enhance Codestyle
-- [ ] Feature: Mark Project as open/unfinished
+- [x] Feature: Mark Project as open/unfinished
 - [x] Feature: Add option to prefix folders with the project name.
 - [x] Feature: Let the user decide, how many folders are in the Project Root Folder.
 - [x] Feature: Copy file to project/target folder, even if it already exists in another folder (Inform the user):
@@ -20,6 +20,9 @@
     - [x] Cut File Option
     - [x] Copy File Option
     - [x] New Name Option
+- [ ] Updater: Update Addon Updater to latest version
+- [ ] Updater: Restrict Minimal Version to 1.0.2 (Rename of branch)
+- [ ] Codestyle: Rename Addon to Blender Project Manager, adjust class names
 
 
 ## Changelog:
