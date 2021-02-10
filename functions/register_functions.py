@@ -100,7 +100,8 @@ current folder to the project folder.",
         name="Add Version Number",
         description="Add a Version Number if the File already exists",
     )
-    Scene_Prop.save_file_name = StringProperty(name="Save File Name")
+    Scene_Prop.save_file_name = StringProperty(name="Save File Name",
+                                               default="My Blend")
     Scene_Prop.remap_relative = BoolProperty(name="Remap Relative",
                                              default=True)
     Scene_Prop.compress_save = BoolProperty(name="Compress Save")
