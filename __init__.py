@@ -32,7 +32,8 @@ from .functions.register_functions import (
 )
 
 from .functions.blenderdefender_functions import (
-    setup_addons_data
+    setup_addons_data,
+    update_json
 )
 
 from . import (
@@ -67,6 +68,8 @@ def register():
                                "functions",
                                "BPS.json"),
                         p.join(path, "BPS.json"))
+
+    update_json()
 
     prefs.register(bl_info)
     operators.register()
