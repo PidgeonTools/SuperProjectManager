@@ -17,6 +17,7 @@ Version 1.2.0
 * Fix: Error when trying to save to subfolder
 * Fix: Correct Version Numbers
 * Codestyle: Enhance Codestyle
+* Codestyle: Rename Addon to Blender Project Manager, adjust class names
 * Feature: Mark Project as open/unfinished
 * Feature: Add option to prefix folders with the project name.
 * Feature: Let the user decide, how many folders are in the Project Root Folder.
@@ -27,7 +28,6 @@ Version 1.2.0
     * New Name Option
 * Updater: Update Addon Updater to latest version
 * Updater: Restrict Minimal Version to 1.0.2 (Rename of branch)
-* Codestyle: Rename Addon to Blender Project Manager, adjust class names
 
 Version 1.1.0:
 * Feature: Add Addon Updater for Easy Updating
