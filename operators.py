@@ -27,6 +27,7 @@ from bpy.props import (
     EnumProperty
 )
 from bpy.types import Operator
+from bpy_extras.io_utils import ImportHelper
 
 import os
 from os import path as p
@@ -38,6 +39,9 @@ from .functions.main_functions import (
     open_directory,
     is_file_in_project_folder,
     save_file,
+    add_open_project,
+    close_project,
+    redefine_project_path
 )
 
 from .functions.json_functions import (
@@ -75,6 +79,9 @@ class BLENDER_PROJECT_STARTER_OT_Build_Project(Operator):
             pre = context.scene.project_name + "_"
         else:
             pre = ""
+
+        if context.scene.add_new_project:
+            add_open_project(path)
 
         if context.scene.project_setup == "Automatic_Setup":
             for index, folder in enumerate(prefs.automatic_folders):
@@ -184,10 +191,105 @@ class BLENDER_PROJECT_STARTER_OT_remove_folder(Operator):
 
         return {"FINISHED"}
 
+
+class BLENDER_PROJECT_STARTER_OT_add_project(Operator, ImportHelper):
+    bl_idname = "blender_project_starter.add_project"
+    bl_label = "Add Project"
+    bl_description = "Add a Project"
+
+    filter_glob: StringProperty(default='*.filterall', options={'HIDDEN'})
+
+    def execute(self, context):
+        path = p.dirname(self.filepath)
+        add_open_project(path)
+
+        message = "Successfully added project " + p.basename(path)
+        print(p.basename(path))
+        self.report({'INFO'}, message)
+        return {"FINISHED"}
+
+    def draw(self, context):
+        layout = self.layout
+        layout.label(text="Please select a project Directory")
+
+
+
+class BLENDER_PROJECT_STARTER_OT_close_project(bpy.types.Operator):
+    bl_idname = "blender_project_starter.close_project"
+    bl_label = "Close Project"
+    bl_description = "Close the selected Project."
+    bl_options = {'REGISTER', 'UNDO'}
+
+    index: IntProperty()
+
+    def execute(self, context):
+        close_project(self.index)
+        return {'FINISHED'}
+
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
+
+    def draw(self, context):
+        layout = self.layout
+        # layout.prop(self, "disable")
+
+        layout.label(text="Are you sure?")
+        layout.label(text="This will remove your project from the open projects list.")
+
+        layout.separator(factor=1)
+
+        layout.label(text="Don't worry, no file gets deleted, ")
+        layout.label(text="but you might forget about this project and never finish it.")
+
+
+class BLENDER_PROJECT_STARTER_OT_redefine_project_path(Operator, ImportHelper):
+    bl_idname = "blender_project_starter.redefine_project_path"
+    bl_label = "Update Project path"
+    bl_description = "Your project has changed location - \
+please update the project path"
+
+    name: StringProperty()
+    filter_glob: StringProperty(default='*.filterall', options={'HIDDEN'})
+    index: IntProperty()
+
+    def execute(self, context):
+        path = p.dirname(self.filepath)
+        redefine_project_path(self.index, path)
+
+        message = "Successfully changed project path: " + p.basename(path)
+        self.report({'INFO'}, message)
+        return {"FINISHED"}
+
+    def draw(self, context):
+        name = self.name
+
+        layout = self.layout
+        layout.label(text="Please select your project Directory for:")
+        layout.label(text=name)
+
+
+class BLENDER_PROJECT_STARTER_OT_open_project_path(Operator):
+    bl_idname = "blender_project_starter.open_project_path"
+    bl_label = "Open Project path"
+    bl_description = "Open your project folder."
+
+    path: StringProperty()
+
+    def execute(self, context):
+        path = self.path
+        open_directory(path)
+        self.report({'INFO'}, "Opened project path")
+        return {"FINISHED"}
+
+
 classes = (
     BLENDER_PROJECT_STARTER_OT_add_folder,
     BLENDER_PROJECT_STARTER_OT_remove_folder,
-    BLENDER_PROJECT_STARTER_OT_Build_Project
+    BLENDER_PROJECT_STARTER_OT_Build_Project,
+    BLENDER_PROJECT_STARTER_OT_add_project,
+    BLENDER_PROJECT_STARTER_OT_close_project,
+    BLENDER_PROJECT_STARTER_OT_redefine_project_path,
+    BLENDER_PROJECT_STARTER_OT_open_project_path
 )
 
 

@@ -128,3 +128,36 @@ the Root Folder will be selected."
         return default
 
     return default
+
+
+def add_open_project(project_path):
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter",
+                  "BPS.json")
+    data = decode_json(path)
+
+    data["unfinished_projects"].append(project_path)
+    encode_json(data, path)
+
+
+def close_project(index):
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter",
+                  "BPS.json")
+    data = decode_json(path)
+
+    data["unfinished_projects"].pop(index)
+    encode_json(data, path)
+
+
+def redefine_project_path(index, new_path):
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter",
+                  "BPS.json")
+    data = decode_json(path)
+
+    data["unfinished_projects"][index] = new_path
+    encode_json(data, path)
