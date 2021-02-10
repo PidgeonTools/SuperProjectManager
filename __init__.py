@@ -43,16 +43,16 @@ from . import (
 )
 
 bl_info = {
-    "name": "Blender Project Starter",
-    "description": "",
-    "author": "Steven Scott, Blender Defender",
-    "version": (1, 1, 0),
+    "name": "Blender Project Manager",
+    "description": "Manage and setup your projects the easy way!",
+    "author": "Blender Defender, Steven Scott",
+    "version": (1, 2, 0),
     "blender": (2, 83, 0),
     "location": "Properties >> Scene Properties",
     "warning": "",
-    "wiki_url": "https://www.youtube.com/watch?v=Jn-4Yjjn_5A",
+    "wiki_url": "https://github.com/BlenderDefender/blender_project_manager/wiki",
     "tracker_url": "https://github.com/BlenderDefender/\
-blender_project_starter/issues",
+blender_project_manager/issues",
     "category": "System"
 }
 

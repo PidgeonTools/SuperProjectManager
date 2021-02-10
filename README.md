@@ -5,27 +5,29 @@
 # Blender Project Starter
 
 ## Upcoming Version:
-- [x] Fix: Project Folder doesn't open on Linux
-- [x] Fix: Subfolders aren't created on Linux
-- [x] Fix: Bring back property "Open Folder after Build"
-- [x] Fix: Error when trying to build without specifying any Folders within the Root Folder
-- [x] Fix: Error when trying to save to subfolder
-- [x] Fix: Correct Version Numbers
-- [x] Codestyle: Enhance Codestyle
-- [x] Feature: Mark Project as open/unfinished
-- [x] Feature: Add option to prefix folders with the project name.
-- [x] Feature: Let the user decide, how many folders are in the Project Root Folder.
-- [x] Feature: Copy file to project/target folder, even if it already exists in another folder (Inform the user):
-    - [x] Get File name
-    - [x] Cut File Option
-    - [x] Copy File Option
-    - [x] New Name Option
-- [ ] Updater: Update Addon Updater to latest version
-- [ ] Updater: Restrict Minimal Version to 1.0.2 (Rename of branch)
-- [ ] Codestyle: Rename Addon to Blender Project Manager, adjust class names
-
+We've just hit another update. No features are planned so far. [Change this!](https://github.com/BlenderDefender/blender_project_manager/issues)
 
 ## Changelog:
+
+Version 1.2.0
+* Fix: Project Folder doesn't open on Linux
+* Fix: Subfolders aren't created on Linux
+* Fix: Bring back property "Open Folder after Build"
+* Fix: Error when trying to build without specifying any Folders within the Root Folder
+* Fix: Error when trying to save to subfolder
+* Fix: Correct Version Numbers
+* Codestyle: Enhance Codestyle
+* Feature: Mark Project as open/unfinished
+* Feature: Add option to prefix folders with the project name.
+* Feature: Let the user decide, how many folders are in the Project Root Folder.
+* Feature: Copy file to project/target folder, even if it already exists in another folder (Inform the user):
+    * Get File name
+    * Cut File Option
+    * Copy File Option
+    * New Name Option
+* Updater: Update Addon Updater to latest version
+* Updater: Restrict Minimal Version to 1.0.2 (Rename of branch)
+* Codestyle: Rename Addon to Blender Project Manager, adjust class names
 
 Version 1.1.0:
 * Feature: Add Addon Updater for Easy Updating
