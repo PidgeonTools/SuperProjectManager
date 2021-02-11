@@ -47,5 +47,5 @@ Version 1.1.0:
 | **OS** | **Blender** |
 | ------------- | ------------- |
 | OSX | Testing, please give feedback if it works for you. |
-| Windows | Blender 2.80+ |
-| Linux | Testing, please give feedback if it works for you. |
+| Windows | Blender 2.83+ |
+| Linux | Blender 2.83+ |
