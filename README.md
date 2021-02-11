@@ -2,7 +2,7 @@
 ![GitHub](https://img.shields.io/github/license/BlenderDefender/blender_project_starter?color=green&style=for-the-badge)
 ![GitHub issues](https://img.shields.io/github/issues/BlenderDefender/blender_project_starter?style=for-the-badge)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/BlenderDefender/blender_project_starter?style=for-the-badge)
-# Blender Project Starter
+# Blender Project Manager
 
 ## Upcoming Version:
 We've just hit another update. No features are planned so far. [Change this!](https://github.com/BlenderDefender/blender_project_manager/issues)
