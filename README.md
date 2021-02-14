@@ -5,7 +5,16 @@
 # Blender Project Manager
 
 ## Upcoming Version:
+- [ ] Improvement: Better icons
+- [ ] Improvement: Update subfolder enum without restart
+- [ ] Feature: Open .blend file with one click
+- [ ] Feature: Folder Structure Sets [#14](https://github.com/BlenderDefender/blender_project_manager/issues/14)
+
+
+
+<!--
 We've just hit another update. No features are planned so far. [Change this!](https://github.com/BlenderDefender/blender_project_manager/issues)
+-->
 
 ## Changelog:
 
