@@ -25,6 +25,11 @@ from os import path as p
 
 import json
 
+from .json_functions import (
+    decode_json,
+    encode_json
+)
+
 
 def setup_addons_data():
     path = p.join(p.expanduser("~"),
@@ -33,3 +38,17 @@ def setup_addons_data():
                   )
     if not p.isdir(path):
         os.makedirs(path)
+
+
+def update_json():
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter",
+                  "BPS.json")
+    data = decode_json(path)
+
+    try:
+        print(data["version"])
+    except:
+        data["version"] = 120
+        encode_json(data, path)

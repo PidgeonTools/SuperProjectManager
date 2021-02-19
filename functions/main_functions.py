@@ -55,11 +55,14 @@ def build_file_folders(context, prop):
 
 def generate_file_version_number(path):
     i = 1
+    number = "0001"
 
-    while p.exists(path + "_v" + str(i / 10000).split(".")[1] + ".blend"):
+    while p.exists(path + "_v" + number + ".blend"):
         i += 1
+        number = str(i)
+        number = "0" * (4 - len(number)) + number
 
-    return "_v" + str(i / 10000).split(".")[1]
+    return "_v" + number
 
 
 def open_directory(path):
@@ -125,3 +128,36 @@ the Root Folder will be selected."
         return default
 
     return default
+
+
+def add_open_project(project_path):
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter",
+                  "BPS.json")
+    data = decode_json(path)
+
+    data["unfinished_projects"].append(project_path)
+    encode_json(data, path)
+
+
+def close_project(index):
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter",
+                  "BPS.json")
+    data = decode_json(path)
+
+    data["unfinished_projects"].pop(index)
+    encode_json(data, path)
+
+
+def redefine_project_path(index, new_path):
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter",
+                  "BPS.json")
+    data = decode_json(path)
+
+    data["unfinished_projects"][index] = new_path
+    encode_json(data, path)

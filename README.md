@@ -1,24 +1,42 @@
-[![Donate](https://img.shields.io/badge/Funding%20Goal%3A%20%241000%20(1%20Week%20Developer%20Time)-%240-red?style=for-the-badge)](https://www.paypal.com/donate?hosted_button_id=TV9HL7YRHZR7U)  
+[![Donate](https://img.shields.io/badge/DONATE!%20Funding%20Goal%3A%20%241000%20(1%20Week%20Developer%20Time)-%2420-red?style=for-the-badge&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=DZE9NFSFPFMYS)  
 ![GitHub](https://img.shields.io/github/license/BlenderDefender/blender_project_starter?color=green&style=for-the-badge)
-![GitHub issues](https://img.shields.io/github/issues/BlenderDefender/blender_project_starter?style=for-the-badge)
+[![GitHub issues](https://img.shields.io/github/issues/BlenderDefender/blender_project_starter?style=for-the-badge)](https://github.com/BlenderDefender/blender_pm/issues)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/BlenderDefender/blender_project_starter?style=for-the-badge)
-# Blender Project Starter
+# Blender PM (Project Manager)
 
 ## Upcoming Version:
-- [x] Fix: Project Folder doesn't open on Linux
-- [x] Fix: Subfolders aren't created on Linux
-- [x] Fix: Bring back property "Open Folder after Build"
-- [ ] Codestyle: Enhance Codestyle
-- [ ] Feature: Mark Project as open/unfinished
-- [ ] Feature: Let the user decide, how many folders are in the Project Root Folder.
-- [x] Feature: Copy file to project/target folder, even if it already exists in another folder (Inform the user):
-    - [x] Get File name
-    - [x] Cut File Option
-    - [x] Copy File Option
-    - [x] New Name Option
+- [ ] Improvement: Better icons
+- [ ] Improvement: Update subfolder enum without restart
+- [ ] Feature: Open .blend file with one click
+- [ ] Feature: Folder Structure Sets [#14](https://github.com/BlenderDefender/blender_project_manager/issues/14)
 
+
+
+<!--
+We've just hit another update. No features are planned so far. [Change this!](https://github.com/BlenderDefender/blender_project_manager/issues)
+-->
 
 ## Changelog:
+
+Version 1.2.0
+* Fix: Project Folder doesn't open on Linux
+* Fix: Subfolders aren't created on Linux
+* Fix: Bring back property "Open Folder after Build"
+* Fix: Error when trying to build without specifying any Folders within the Root Folder
+* Fix: Error when trying to save to subfolder
+* Fix: Correct Version Numbers
+* Codestyle: Enhance Codestyle
+* Codestyle: Rename Addon to Blender Project Manager, adjust class names
+* Feature: Mark Project as open/unfinished
+* Feature: Add option to prefix folders with the project name.
+* Feature: Let the user decide, how many folders are in the Project Root Folder.
+* Feature: Copy file to project/target folder, even if it already exists in another folder (Inform the user):
+    * Get File name
+    * Cut File Option
+    * Copy File Option
+    * New Name Option
+* Updater: Update Addon Updater to latest version
+* Updater: Restrict Minimal Version to 1.0.2 (Rename of branch)
 
 Version 1.1.0:
 * Feature: Add Addon Updater for Easy Updating
@@ -38,5 +56,5 @@ Version 1.1.0:
 | **OS** | **Blender** |
 | ------------- | ------------- |
 | OSX | Testing, please give feedback if it works for you. |
-| Windows | Blender 2.80+ |
-| Linux | Testing, please give feedback if it works for you. |
+| Windows | Blender 2.83+ |
+| Linux | Blender 2.83+ |

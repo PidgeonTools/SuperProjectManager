@@ -23,31 +23,48 @@
 import bpy
 from bpy.types import Panel
 
+import os
+from os import path as p
+
 from .functions.main_functions import is_file_in_project_folder
+
+from .functions.json_functions import decode_json
 
 C = bpy.context
 
 
-class BLENDER_PROJECT_STARTER_PT_main_panel(Panel):
-    bl_label = "Blender Starter Project"
-    bl_idname = "blender_project_starter_PT__main_panel"
+class BLENDER_PROJECT_MANAGER_PT_main_panel(Panel):
+    bl_label = "Blender Project Manager"
+    bl_idname = "blender_project_manager_PT__main_panel"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "scene"
     bl_order = 0
+
+    def draw(self, context):
+        pass
+
+
+class BLENDER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
+    bl_label = "Project Starter"
+    bl_idname = "blender_project_manager_PT_starter_main_panel"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "scene"
+    bl_parent_id = "blender_project_manager_PT__main_panel"
 
     def draw_header(self, context):
             layout = self.layout
 
     def draw(self, context):
         prefs = C.preferences.addons[__package__].preferences
-        ic = context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id
+        ic = context.scene.blender_project_manager_icons["BUILD_ICON"].icon_id
 
         layout = self.layout
         row = layout.row(align=False)
         row.scale_x = 2.0
         row.scale_y = 2.0
-        row.operator("blender_project_starter.build_project",
+        row.operator("blender_project_manager.build_project",
                      text="BUILD PROJECT",
                      icon_value=ic)
 
@@ -75,7 +92,7 @@ class BLENDER_PROJECT_STARTER_PT_main_panel(Panel):
 
                 split.prop(folder, "Custom_Setup", text="")
 
-                op = row.operator("blender_project_starter.remove_folder",
+                op = row.operator("blender_project_manager.remove_folder",
                                   text="",
                                   emboss=False,
                                   icon="PANEL_CLOSE")
@@ -86,11 +103,16 @@ class BLENDER_PROJECT_STARTER_PT_main_panel(Panel):
             split = row.split(factor=0.2)
 
             split.separator()
-            op = split.operator("blender_project_starter.add_folder",
+            op = split.operator("blender_project_manager.add_folder",
                                 icon="PLUS")
             op.coming_from = "panel"
 
         layout.separator(factor=1.0)
+
+        layout.prop(context.scene,
+                    "add_new_project",
+                    text="Add project to unfinished projects list.",
+                    expand=False)
 
         layout.prop(context.scene,
                     "open_directory",
@@ -98,17 +120,17 @@ class BLENDER_PROJECT_STARTER_PT_main_panel(Panel):
                     expand=False)
 
 
-class BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel(Panel):
-    bl_label = "Save .blend File / Options"
-    bl_idname = "blender_project_starter_PT_Blender_File_save_options_subpanel"
+class BLENDER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel(Panel):
+    bl_label = " "
+    bl_idname = "blender_project_manager_PT_Blender_File_save_options_subpanel"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "scene"
-    bl_parent_id = "blender_project_starter_PT__main_panel"
+    bl_parent_id = "blender_project_manager_PT_starter_main_panel"
 
     def draw_header(self, context):
         layout = self.layout
-        layout.prop(context.scene, "save_blender_file")
+        layout.prop(context.scene, "save_blender_file", text="Save Blender File / Options")
 
     def draw(self, context):
         D = bpy.data
@@ -154,9 +176,67 @@ class BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel(Panel):
                  text="Compress File")
 
 
+class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
+    bl_label = "Project Manager"
+    bl_idname = "blender_project_manager_PT_Open_Projects_subpanel"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "scene"
+    bl_parent_id = "blender_project_manager_PT__main_panel"
+
+    def draw(self, context):
+        layout = self.layout
+
+        layout.label(text="Here are your unfinished projects:")
+        path = p.join(p.expanduser("~"),
+                    "Blender Addons Data",
+                    "blender-project-starter",
+                    "BPS.json")
+        data = decode_json(path)["unfinished_projects"]
+
+        if len(data) == 0:
+            url = "https://www.brograph.com/randorender"
+
+            layout.separator(factor=0.25)
+            layout.label(text="Nothing to do.", icon="CHECKMARK")
+            layout.operator("wm.url_open", text="Find a project idea").url=url
+            layout.separator(factor=0.75)
+
+        for index, project in enumerate(data):
+            project_name = p.basename(project)
+
+            row = layout.row()
+
+            row.label(text=project_name)
+            op = row.operator("blender_project_manager.open_project_path",
+                            text="",
+                            emboss=False,
+                            icon="WORKSPACE")
+            op.path = project
+
+            op = row.operator("blender_project_manager.close_project",
+                            text="",
+                            emboss=False,
+                            icon="PANEL_CLOSE")
+            op.index = index
+
+            if not p.exists(project):
+                op = row.operator("blender_project_manager.redefine_project_path",
+                                text="",
+                                icon="ERROR")
+                op.index = index
+                op.name = project_name
+
+        layout.operator("blender_project_manager.add_project",
+                        text="Add unfinished project",
+                        icon="PLUS")
+
+
 classes = (
-    BLENDER_PROJECT_STARTER_PT_main_panel,
-    BLENDER_PROJECT_STARTER_PT_Blender_File_save_options_subpanel,
+    BLENDER_PROJECT_MANAGER_PT_main_panel,
+    BLENDER_PROJECT_MANAGER_PT_starter_main_panel,
+    BLENDER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel,
+    BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel
 )
 
 

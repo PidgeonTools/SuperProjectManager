@@ -64,12 +64,18 @@ Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
         default="")
 
 
-class BLENDER_PROJECT_STARTER_APT_Preferences(AddonPreferences):
+class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     bl_idname = __package__
 
     custom_folders: CollectionProperty(type=custom_folder)
 
     automatic_folders: CollectionProperty(type=automatic_folder)
+
+    prefix_with_project_name = BoolProperty(
+        name="Project Name Prefix",
+        description="If enabled, use the project name as prefix for all folders.",
+        default=False,
+    )
 
     default_path: StringProperty(
         name="Default Project Location",
@@ -117,13 +123,14 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(AddonPreferences):
 
     def draw(self, context):
         layout = self.layout
-        ic = context.scene.blender_project_starter_icons["BUILD_ICON"].icon_id
+        ic = context.scene.blender_project_manager_icons["BUILD_ICON"].icon_id
 
         layout.label(
             text="Blender Project Manager ",
             icon_value=ic
         )
 
+        layout.prop(self, "prefix_with_project_name")
         layout.prop(self, "default_path")
         layout.separator(factor=0.4)
 
@@ -134,7 +141,7 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(AddonPreferences):
 
             split.prop(folder, "Automatic_Setup", text="")
 
-            op = row.operator("blender_project_starter.remove_folder",
+            op = row.operator("blender_project_manager.remove_folder",
                               text="",
                               emboss=False,
                               icon="PANEL_CLOSE")
@@ -145,7 +152,7 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(AddonPreferences):
         split = row.split(factor=0.2)
 
         split.separator()
-        op = split.operator("blender_project_starter.add_folder",
+        op = split.operator("blender_project_manager.add_folder",
                             icon="PLUS")
         op.coming_from = "prefs"
 
@@ -173,7 +180,7 @@ class BLENDER_PROJECT_STARTER_APT_Preferences(AddonPreferences):
 classes = (
     custom_folder,
     automatic_folder,
-    BLENDER_PROJECT_STARTER_APT_Preferences
+    BLENDER_PROJECT_MANAGER_APT_Preferences
 )
 
 

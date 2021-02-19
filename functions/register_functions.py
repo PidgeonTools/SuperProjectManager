@@ -46,17 +46,17 @@ Scene_Prop = bpy.types.Scene
 
 def register_icons():
     icons = ["BUILD_ICON", "TWITTER", "YOUTUBE", "GUMROAD"]
-    Scene_Prop.blender_project_starter_icons = previews.new()
+    Scene_Prop.blender_project_manager_icons = previews.new()
     icons_dir = p.join(p.dirname(p.dirname(__file__)), "icons")
     for icon in icons:
-        Scene_Prop.blender_project_starter_icons.load(icon,
+        Scene_Prop.blender_project_manager_icons.load(icon,
                                                       p.join(icons_dir,
                                                              icon + ".png"),
                                                       "IMAGE")
 
 
 def unregister_icons():
-    previews.remove(Scene_Prop.blender_project_starter_icons)
+    previews.remove(Scene_Prop.blender_project_manager_icons)
 
 
 def register_properties():
@@ -83,6 +83,8 @@ def register_properties():
 
     Scene_Prop.open_directory = BoolProperty(name="Open Directory",
                                              default=True)
+    Scene_Prop.add_new_project = BoolProperty(name="New unfinished project",
+                                             default=True)
     Scene_Prop.save_blender_file = BoolProperty(name="Save Blender File",
                                                      description="Save Blender \
 File on build. If disabled, only the project folders are created",
@@ -100,7 +102,8 @@ current folder to the project folder.",
         name="Add Version Number",
         description="Add a Version Number if the File already exists",
     )
-    Scene_Prop.save_file_name = StringProperty(name="Save File Name")
+    Scene_Prop.save_file_name = StringProperty(name="Save File Name",
+                                               default="My Blend")
     Scene_Prop.remap_relative = BoolProperty(name="Remap Relative",
                                              default=True)
     Scene_Prop.compress_save = BoolProperty(name="Compress Save")
