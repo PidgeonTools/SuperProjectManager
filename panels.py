@@ -186,13 +186,13 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
 
     def draw(self, context):
         layout = self.layout
-
-        layout.label(text="Here are your unfinished projects:")
         path = p.join(p.expanduser("~"),
                     "Blender Addons Data",
                     "blender-project-starter",
                     "BPS.json")
         data = decode_json(path)["unfinished_projects"]
+
+        layout.label(text="Here are your {} unfinished projects:".format(len(data)))
 
         if len(data) == 0:
             url = "https://www.brograph.com/randorender"
