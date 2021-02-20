@@ -34,7 +34,7 @@ C = bpy.context
 
 
 class BLENDER_PROJECT_MANAGER_PT_main_panel(Panel):
-    bl_label = "Blender Project Manager"
+    bl_label = "Blender PM (Project Manager)"
     bl_idname = "blender_project_manager_PT__main_panel"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
