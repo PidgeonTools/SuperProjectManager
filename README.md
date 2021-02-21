@@ -5,6 +5,7 @@
 # Blender PM (Project Manager)
 
 ## Upcoming Version:
+- [x] Fix: Open Finder ([Issue #16](https://github.com/BlenderDefender/blender_pm/issues/16))
 - [ ] Improvement: Better icons
 - [ ] Improvement: Update subfolder enum without restart
 - [ ] Feature: Open .blend file with one click
