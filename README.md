@@ -1,11 +1,20 @@
-[![Donate](https://img.shields.io/badge/DONATE!%20Funding%20Goal%3A%20%241000%20(1%20Week%20Developer%20Time)-%240-red?style=for-the-badge&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=DZE9NFSFPFMYS)  
+[![Donate](https://img.shields.io/badge/DONATE!%20Funding%20Goal%3A%20%241000%20(1%20Week%20Developer%20Time)-%2425-red?style=for-the-badge&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=DZE9NFSFPFMYS)  
 ![GitHub](https://img.shields.io/github/license/BlenderDefender/blender_project_starter?color=green&style=for-the-badge)
-![GitHub issues](https://img.shields.io/github/issues/BlenderDefender/blender_project_starter?style=for-the-badge)
+[![GitHub issues](https://img.shields.io/github/issues/BlenderDefender/blender_project_starter?style=for-the-badge)](https://github.com/BlenderDefender/blender_pm/issues)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/BlenderDefender/blender_project_starter?style=for-the-badge)
-# Blender Project Manager
+# Blender PM (Project Manager)
 
 ## Upcoming Version:
+- [ ] Improvement: Better icons
+- [ ] Improvement: Update subfolder enum without restart
+- [ ] Feature: Open .blend file with one click
+- [ ] Feature: Folder Structure Sets [#14](https://github.com/BlenderDefender/blender_project_manager/issues/14)
+
+
+
+<!--
 We've just hit another update. No features are planned so far. [Change this!](https://github.com/BlenderDefender/blender_project_manager/issues)
+-->
 
 ## Changelog:
 

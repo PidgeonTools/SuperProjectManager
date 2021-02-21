@@ -71,7 +71,7 @@ def open_directory(path):
     elif sys.platform == "linux":
         subprocess.call('xdg-open "{}"'.format(path), shell=True)
     elif sys.platform == "darwin":
-        subprocess.call('open "{}"'.format(path), shell=True)
+        subprocess.call(["open", path])
 
 
 def is_file_in_project_folder(context, filepath):

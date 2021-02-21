@@ -208,6 +208,21 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
             row = layout.row()
 
             row.label(text=project_name)
+
+            if not p.exists(project):
+                op = row.operator("blender_project_manager.redefine_project_path",
+                                text="",
+                                icon="ERROR")
+                op.index = index
+                op.name = project_name
+
+
+            op = row.operator("wm.open_mainfile",
+                            text="",
+                            emboss=False,
+                            icon="BLENDER")
+#            op.filepath = find_blendfile(project)
+
             op = row.operator("blender_project_manager.open_project_path",
                             text="",
                             emboss=False,
@@ -220,12 +235,7 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                             icon="PANEL_CLOSE")
             op.index = index
 
-            if not p.exists(project):
-                op = row.operator("blender_project_manager.redefine_project_path",
-                                text="",
-                                icon="ERROR")
-                op.index = index
-                op.name = project_name
+
 
         layout.operator("blender_project_manager.add_project",
                         text="Add unfinished project",
