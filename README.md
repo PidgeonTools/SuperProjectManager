@@ -1,4 +1,4 @@
-[![Donate](https://img.shields.io/badge/DONATE!%20Funding%20Goal%3A%20%241000%20(1%20Week%20Developer%20Time)-%2420-red?style=for-the-badge&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=DZE9NFSFPFMYS)  
+[![Donate](https://img.shields.io/badge/DONATE!%20Funding%20Goal%3A%20%241000%20(1%20Week%20Developer%20Time)-%2425-red?style=for-the-badge&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=DZE9NFSFPFMYS)  
 ![GitHub](https://img.shields.io/github/license/BlenderDefender/blender_project_starter?color=green&style=for-the-badge)
 [![GitHub issues](https://img.shields.io/github/issues/BlenderDefender/blender_project_starter?style=for-the-badge)](https://github.com/BlenderDefender/blender_pm/issues)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/BlenderDefender/blender_project_starter?style=for-the-badge)
