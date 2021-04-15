@@ -54,7 +54,7 @@ class BLENDER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
     bl_parent_id = "blender_project_manager_PT__main_panel"
 
     def draw_header(self, context):
-            layout = self.layout
+        layout = self.layout
 
     def draw(self, context):
         prefs = C.preferences.addons[__package__].preferences
@@ -130,7 +130,8 @@ class BLENDER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel(Panel):
 
     def draw_header(self, context):
         layout = self.layout
-        layout.prop(context.scene, "save_blender_file", text="Save Blender File / Options")
+        layout.prop(context.scene, "save_blender_file",
+                    text="Save Blender File / Options")
 
     def draw(self, context):
         D = bpy.data
@@ -187,19 +188,21 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
     def draw(self, context):
         layout = self.layout
         path = p.join(p.expanduser("~"),
-                    "Blender Addons Data",
-                    "blender-project-starter",
-                    "BPS.json")
+                      "Blender Addons Data",
+                      "blender-project-starter",
+                      "BPS.json")
         data = decode_json(path)["unfinished_projects"]
 
-        layout.label(text="Here are your {} unfinished projects:".format(len(data)))
+        layout.label(
+            text="Here are your {} unfinished projects:".format(len(data)))
 
         if len(data) == 0:
             url = "https://www.brograph.com/randorender"
 
             layout.separator(factor=0.25)
             layout.label(text="Nothing to do.", icon="CHECKMARK")
-            layout.operator("wm.url_open", text="Find a project idea").url=url
+            layout.operator(
+                "wm.url_open", text="Find a project idea").url = url
             layout.separator(factor=0.75)
 
         for index, project in enumerate(data):
@@ -211,31 +214,28 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
 
             if not p.exists(project):
                 op = row.operator("blender_project_manager.redefine_project_path",
-                                text="",
-                                icon="ERROR")
+                                  text="",
+                                  icon="ERROR")
                 op.index = index
                 op.name = project_name
 
-
             op = row.operator("wm.open_mainfile",
-                            text="",
-                            emboss=False,
-                            icon="BLENDER")
+                              text="",
+                              emboss=False,
+                              icon="BLENDER")
 #            op.filepath = find_blendfile(project)
 
             op = row.operator("blender_project_manager.open_project_path",
-                            text="",
-                            emboss=False,
-                            icon="WORKSPACE")
+                              text="",
+                              emboss=False,
+                              icon="FOLDER_REDIRECT")
             op.path = project
 
             op = row.operator("blender_project_manager.close_project",
-                            text="",
-                            emboss=False,
-                            icon="PANEL_CLOSE")
+                              text="",
+                              emboss=False,
+                              icon="PANEL_CLOSE")
             op.index = index
-
-
 
         layout.operator("blender_project_manager.add_project",
                         text="Add unfinished project",
