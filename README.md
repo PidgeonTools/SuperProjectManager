@@ -14,7 +14,7 @@ Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you
 - [ ] Feature: Hidden Project info file, as a base for these features:
     - [ ] Open .blend file with one click
     - [ ] More precise differentiation between Blender Files that are part of a project and Blender Files, that aren't part of a project
-    - [ ] More options to handle Files that are/arn't part of a project:
+    - [ ] More options to handle Files that are/aren't part of a project:
         1. Cut an existing file (The file is not part / part of a project)
         2. Copy an existing file (The file is not part / part of a project)
         3. Rename an existing project folder in place (The file is part of a project)
