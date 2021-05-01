@@ -134,6 +134,9 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         layout.prop(self, "default_path")
         layout.separator(factor=0.4)
 
+        # TODO: Enum Property, enabling the user to decide, which set of Automatic Folders the
+        # user wants.
+
         for index, folder in enumerate(self.automatic_folders):
             row = layout.row()
             split = row.split(factor=0.2)
