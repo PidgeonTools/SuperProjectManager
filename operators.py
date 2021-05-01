@@ -38,10 +38,11 @@ from .functions.main_functions import (
     get_file_subfolder,
     open_directory,
     is_file_in_project_folder,
-    save_file,
+    save_filepath,
     add_open_project,
     close_project,
-    redefine_project_path
+    redefine_project_path,
+    write_project_info
 )
 
 from .functions.json_functions import (
@@ -68,86 +69,67 @@ class BLENDER_PROJECT_MANAGER_OT_Build_Project(Operator):
         D = bpy.data
         scene = context.scene
         prefs = C.preferences.addons[__package__].preferences
-        path = p.join(context.scene.project_location,
-                      context.scene.project_name)
+        projectpath = p.join(context.scene.project_location,
+                             context.scene.project_name)
         filename = context.scene.save_file_name
 
-        if not p.isdir(path):
-            os.makedirs(path)
-
+        prefix = ""
         if prefs.prefix_with_project_name:
-            pre = context.scene.project_name + "_"
-        else:
-            pre = ""
+            prefix = context.scene.project_name + "_"
 
-        if context.scene.add_new_project:
-            add_open_project(path)
+        folders = prefs.automatic_folders
+        if context.scene.project_setup == "Custom_Setup":
+            folders = prefs.custom_folders
 
-        if context.scene.project_setup == "Automatic_Setup":
-            for index, folder in enumerate(prefs.automatic_folders):
-                try:
-                    build_file_folders(context,
-                                       pre + \
-                                       folder[context.scene.project_setup])
-                except:
-                    pass
-            subfolder = pre + \
-                        get_file_subfolder(context.scene.project_setup,
-                                           prefs.automatic_folders,
-                                           prefs.save_folder)
-        else:
-            for index, folder in enumerate(prefs.custom_folders):
-                try:
-                    build_file_folders(context,
-                                       pre + \
-                                       folder[context.scene.project_setup])
-                except:
-                    pass
-            subfolder = pre + \
-                        get_file_subfolder(context.scene.project_setup,
-                                           prefs.custom_folders,
-                                           prefs.save_folder)
+        if not p.isdir(projectpath):
+            os.makedirs(projectpath)
+
+        for index, folder in enumerate(folders):
+            try:
+                build_file_folders(context,
+                                   prefix +
+                                   folder[context.scene.project_setup])
+            except:
+                pass
+        subfolder = prefix + \
+            get_file_subfolder(context.scene.project_setup,
+                               folders,
+                               prefs.save_folder)
+
+        filepath = D.filepath
+        old_filepath = None
+        if filepath == "":
+            filepath = save_filepath(context, filename, subfolder)
+        elif not is_file_in_project_folder(context, D.filepath):
+            old_filepath = D.filepath
+            filepath = save_filepath(context, filename, subfolder)
+            if not context.scene.save_file_with_new_name:
+                filepath = save_filepath(context, p.basename(
+                    D.filepath).split(".blend")[0], subfolder)
+        elif context.scene.save_blender_file_versioned:
+            filepath = generate_file_version_number(
+                D.filepath.split(".blen")[0].split("_v0")[0])
 
         if context.scene.save_blender_file:
-            if D.filepath == "":
-                save_file(context, filename, subfolder)
+            bpy.ops.wm.save_as_mainfile(filepath=filepath,
+                                        compress=scene.compress_save,
+                                        relative_remap=scene.remap_relative
+                                        )
 
-            elif not is_file_in_project_folder(context, D.filepath):
-                old_file_path = D.filepath
+            if context.scene.cut_or_copy and old_filepath:
+                os.remove(old_filepath)
 
-                if context.scene.save_file_with_new_name:
-                    save_file(context, filename, subfolder)
-                else:
-                    save_file(context,
-                              p.basename(D.filepath).split(".blend")[0],
-                              subfolder)
+        if context.scene.add_new_project:
+            add_open_project(projectpath)
 
-                if context.scene.cut_or_copy:
-                    os.remove(old_file_path)
-
-            elif context.scene.save_blender_file_versioned:
-                path = D.filepath
-                filepath = p.dirname(path)
-                filename = p.basename(path).split(".blen")[0].split("_v0")[0]
-                version = generate_file_version_number(p.join(filepath,
-                                                              filename))
-
-                filename += version
-
-                save_file(context, filename, subfolder)
-            else:
-                bpy.ops.wm.save_as_mainfile(filepath=D.filepath,
-                                            compress=scene.compress_save,
-                                            relative_remap=scene.remap_relative
-                                            )
+        write_project_info(projectpath, filepath)
 
         if context.scene.open_directory:
+            OpenLocation = p.join(context.scene.project_location,
+                                  context.scene.project_name)
+            OpenLocation = p.realpath(OpenLocation)
 
-                OpenLocation = p.join(context.scene.project_location,
-                                      context.scene.project_name)
-                OpenLocation = p.realpath(OpenLocation)
-
-                open_directory(OpenLocation)
+            open_directory(OpenLocation)
 
         return {"FINISHED"}
 
@@ -200,17 +182,16 @@ class BLENDER_PROJECT_MANAGER_OT_add_project(Operator, ImportHelper):
     filter_glob: StringProperty(default='*.filterall', options={'HIDDEN'})
 
     def execute(self, context):
-        path = p.dirname(self.filepath)
-        add_open_project(path)
+        projectpath = p.dirname(self.filepath)
+        add_open_project(projectpath)
 
-        message = "Successfully added project " + p.basename(path)
+        message = "Successfully added project " + p.basename(projectpath)
         self.report({'INFO'}, message)
         return {"FINISHED"}
 
     def draw(self, context):
         layout = self.layout
         layout.label(text="Please select a project Directory")
-
 
 
 class BLENDER_PROJECT_MANAGER_OT_close_project(bpy.types.Operator):
@@ -233,12 +214,14 @@ class BLENDER_PROJECT_MANAGER_OT_close_project(bpy.types.Operator):
         # layout.prop(self, "disable")
 
         layout.label(text="Are you sure?")
-        layout.label(text="This will remove your project from the open projects list.")
+        layout.label(
+            text="This will remove your project from the open projects list.")
 
         layout.separator(factor=1)
 
         layout.label(text="Don't worry, no file gets deleted, ")
-        layout.label(text="but you might forget about this project and never finish it.")
+        layout.label(
+            text="but you might forget about this project and never finish it.")
 
 
 class BLENDER_PROJECT_MANAGER_OT_redefine_project_path(Operator, ImportHelper):
@@ -252,10 +235,11 @@ please update the project path"
     index: IntProperty()
 
     def execute(self, context):
-        path = p.dirname(self.filepath)
-        redefine_project_path(self.index, path)
+        projectpath = p.dirname(self.filepath)
+        redefine_project_path(self.index, projectpath)
 
-        message = "Successfully changed project path: " + p.basename(path)
+        message = "Successfully changed project path: " + \
+            p.basename(projectpath)
         self.report({'INFO'}, message)
         return {"FINISHED"}
 
@@ -272,11 +256,11 @@ class BLENDER_PROJECT_MANAGER_OT_open_project_path(Operator):
     bl_label = "Open Project path"
     bl_description = "Open your project folder."
 
-    path: StringProperty()
+    projectpath: StringProperty()
 
     def execute(self, context):
-        path = self.path
-        open_directory(path)
+        projectpath = self.projectpath
+        open_directory(projectpath)
         self.report({'INFO'}, "Opened project path")
         return {"FINISHED"}
 

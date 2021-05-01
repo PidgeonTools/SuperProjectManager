@@ -57,12 +57,12 @@ def generate_file_version_number(path):
     i = 1
     number = "0001"
 
-    while p.exists(path + "_v" + number + ".blend"):
+    while p.exists("{}_v{}.blend".format(path, number)):
         i += 1
         number = str(i)
         number = "0" * (4 - len(number)) + number
 
-    return "_v" + number
+    return "{}_v{}.blend".format(path, number)
 
 
 def open_directory(path):
@@ -86,17 +86,15 @@ def is_file_in_project_folder(context, filepath):
     return filepath.startswith(project_folder)
 
 
-def save_file(context, filename, subfolder):
-    bpy.ops.wm.save_as_mainfile(
-        filepath=p.join(
-            context.scene.project_location,
-            context.scene.project_name,
-            subfolder,
-            filename
-        ) + ".blend",
-        compress=context.scene.compress_save,
-        relative_remap=context.scene.remap_relative
-    )
+def save_filepath(context, filename, subfolder):
+    path = p.join(
+        context.scene.project_location,
+        context.scene.project_name,
+        subfolder,
+        filename
+    ) + ".blend"
+
+    return path
 
 
 def get_file_subfolder(context, options, item):

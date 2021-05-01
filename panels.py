@@ -53,9 +53,6 @@ class BLENDER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
     bl_context = "scene"
     bl_parent_id = "blender_project_manager_PT__main_panel"
 
-    def draw_header(self, context):
-        layout = self.layout
-
     def draw(self, context):
         prefs = C.preferences.addons[__package__].preferences
         ic = context.scene.blender_project_manager_icons["BUILD_ICON"].icon_id
@@ -219,17 +216,17 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                 op.index = index
                 op.name = project_name
 
-            op = row.operator("wm.open_mainfile",
+            op = row.operator("blender_project_manager.open_blender_file",
                               text="",
                               emboss=False,
                               icon="BLENDER")
-#            op.filepath = find_blendfile(project)
+            op.projectpath = project
 
             op = row.operator("blender_project_manager.open_project_path",
                               text="",
                               emboss=False,
                               icon="FOLDER_REDIRECT")
-            op.path = project
+            op.projectpath = project
 
             op = row.operator("blender_project_manager.close_project",
                               text="",
