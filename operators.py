@@ -265,6 +265,59 @@ class BLENDER_PROJECT_MANAGER_OT_open_project_path(Operator):
         return {"FINISHED"}
 
 
+class BLENDER_PROJECT_MANAGER_OT_open_blender_file(Operator):
+    """Open the latest Blender-File of a project"""
+    bl_idname = "blender_project_manager.open_blender_file"
+    bl_label = "Open Blender File"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    projectpath: StringProperty()
+
+    def execute(self, context):
+        project_info = p.join(self.projectpath, ".blender_pm")
+        if not p.exists(project_info):
+            self.report(
+                {"WARNING"}, "Your project is not a Blender PM Project.")
+            # MESSAGE (Dialog for Project info): Convert the project into a Blender PM Project. Don't worry,
+            # this won't delete or overwrite any Files.
+            # TODO: Open a dialog, to convert the Folder into a Blender Project. Store the .blender_pm file in the given root folder
+            # and let the User pick the location of the Blender File.
+            # Edge Case: Only allow files that end with .blend
+
+            # In progress: Create a function create_project(root_path, blender_file_path):
+            # endswith("blend") Yes | No Create File | Return Message not Blender File selected
+            # write_to_json(data)
+            # hide_file()
+            return {'FINISHED'}
+
+        if self.path_to_blend():
+            bpy.ops.wm.open_mainfile(filepath=self.path_to_blend())
+            return {"FINISHED"}
+
+        self.report(
+            {"ERROR"}, "No Blender File found in this project! Please select the latest project file.")
+        # TODO: Insert a function that Updates the Blender PM Info File with the latest Blender File.
+        return {'FINISHED'}
+
+    # Return the path to the latest Blender File. If the latest
+    def path_to_blend(self):
+        blender_files = decode_json(
+            p.join(self.projectpath, ".blender_pm"))["blender_files"]
+        filepath = blender_files["main_file"]
+        if p.exists(filepath):
+            self.report(
+                {"INFO"}, "Opened the project file found in {}".format(filepath))
+            return filepath
+
+        for filepath in blender_files["other_files"][::-1]:
+            if p.exists(filepath):
+                self.report(
+                    {"WARNING"}, "The latest File is unavailable. Opening the newest version available: {}".format(filepath))
+                return filepath
+
+        return
+
+
 classes = (
     BLENDER_PROJECT_MANAGER_OT_add_folder,
     BLENDER_PROJECT_MANAGER_OT_remove_folder,
@@ -272,7 +325,8 @@ classes = (
     BLENDER_PROJECT_MANAGER_OT_add_project,
     BLENDER_PROJECT_MANAGER_OT_close_project,
     BLENDER_PROJECT_MANAGER_OT_redefine_project_path,
-    BLENDER_PROJECT_MANAGER_OT_open_project_path
+    BLENDER_PROJECT_MANAGER_OT_open_project_path,
+    BLENDER_PROJECT_MANAGER_OT_open_blender_file
 )
 
 

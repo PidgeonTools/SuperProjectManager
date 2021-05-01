@@ -30,6 +30,7 @@ import sys
 import subprocess
 
 import json
+import time
 
 from .json_functions import (
     decode_json,
@@ -159,3 +160,30 @@ def redefine_project_path(index, new_path):
 
     data["unfinished_projects"][index] = new_path
     encode_json(data, path)
+
+
+def write_project_info(root_path, blend_file_path):
+    if not blend_file_path.endswith(".blend"):
+        return {"WARNING"}, "Can't create a Blender PM project! Please select a Blender file and try again."
+    data = {
+        "blender_files": {
+            "main_file": None,
+            "other_files": []
+        },
+    }
+    project_info_path = p.join(root_path, ".blender_pm")
+    if p.exists(project_info_path):
+        data = decode_json(project_info_path)
+
+    bfiles = data["blender_files"]
+    if bfiles["main_file"] and bfiles["main_file"] != blend_file_path:
+        bfiles["other_files"].append(bfiles["main_file"])
+    bfiles["main_file"] = blend_file_path
+
+    ct = time.localtime()  # Current time
+    data["build_date"] = [ct.tm_year, ct.tm_mon,
+                          ct.tm_mday, ct.tm_hour, ct.tm_min, ct.tm_sec]
+
+    encode_json(data, project_info_path)
+
+    return {"INFO"}, "Successfully created a Blender PM project!"
