@@ -11,6 +11,7 @@ created and the Blender File is saved into the right folder.
 Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you want to [learn more](https://github.com/BlenderDefender/blender_pm/wiki)
 
 ## Upcoming Version:
+- [ ] Feature: Automatically Set Render Output Path
 - [ ] Feature: Hidden Project info file, as a base for these features:
     - [ ] Open .blend file with one click
     - [ ] More precise differentiation between Blender Files that are part of a project and Blender Files, that aren't part of a project
