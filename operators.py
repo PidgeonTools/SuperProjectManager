@@ -110,6 +110,9 @@ class BLENDER_PROJECT_MANAGER_OT_Build_Project(Operator):
             filepath = generate_file_version_number(
                 D.filepath.split(".blen")[0].split("_v0")[0])
 
+        # TODO:  C.scene.render.filepath = relpath(blend_file_path, Render Output Path) --> Set the
+        # render Output path automatically.
+
         if context.scene.save_blender_file:
             bpy.ops.wm.save_as_mainfile(filepath=filepath,
                                         compress=scene.compress_save,
@@ -284,10 +287,6 @@ class BLENDER_PROJECT_MANAGER_OT_open_blender_file(Operator):
             # and let the User pick the location of the Blender File.
             # Edge Case: Only allow files that end with .blend
 
-            # In progress: Create a function create_project(root_path, blender_file_path):
-            # endswith("blend") Yes | No Create File | Return Message not Blender File selected
-            # write_to_json(data)
-            # hide_file()
             return {'FINISHED'}
 
         if self.path_to_blend():
