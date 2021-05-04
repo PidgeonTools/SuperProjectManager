@@ -174,6 +174,9 @@ def write_project_info(root_path, blend_file_path):
     project_info_path = p.join(root_path, ".blender_pm")
     if p.exists(project_info_path):
         data = decode_json(project_info_path)
+        if sys.platform == "win32":
+            subprocess.call(
+                'attrib -h "{}"'.format(project_info_path), shell=True)
 
     bfiles = data["blender_files"]
     if bfiles["main_file"] and bfiles["main_file"] != blend_file_path:
@@ -185,5 +188,8 @@ def write_project_info(root_path, blend_file_path):
                           ct.tm_mday, ct.tm_hour, ct.tm_min, ct.tm_sec]
 
     encode_json(data, project_info_path)
+
+    if sys.platform == "win32":
+        subprocess.call('attrib +h "{}"'.format(project_info_path), shell=True)
 
     return {"INFO"}, "Successfully created a Blender PM project!"
