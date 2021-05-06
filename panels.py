@@ -82,10 +82,16 @@ class BLENDER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
             layout.label(text="Custom Folder Setup",
                          icon="NEWFOLDER")
 
+            render_outpath_active = True in [e.render_outputpath for e in prefs.custom_folders]
+
             for index, folder in enumerate(prefs.custom_folders):
                 row = layout.row()
                 split = row.split(factor=0.2)
                 split.label(text="Folder {}".format(index + 1))
+                if prefs.auto_set_render_outputpath:
+                    col = split.column()
+                    col.enabled = folder.render_outputpath or not render_outpath_active
+                    col.prop(folder, "render_outputpath")
                 split.prop(folder, "folder_name", text="")
 
                 op = row.operator("blender_project_manager.remove_folder",
@@ -171,6 +177,12 @@ class BLENDER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel(Panel):
                  "compress_save",
                  icon="FILE_TICK",
                  text="Compress File")
+        if prefs.auto_set_render_outputpath:
+            row = layout.row()
+            row.prop(context.scene,
+            "set_render_output",
+            icon="OUTPUT",
+            text="Set Render Output")
 
 
 class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):

@@ -107,6 +107,7 @@ current folder to the project folder.",
     Scene_Prop.remap_relative = BoolProperty(name="Remap Relative",
                                              default=True)
     Scene_Prop.compress_save = BoolProperty(name="Compress Save")
+    Scene_Prop.set_render_output = BoolProperty(name="Set the Render Output")
 
 
 def register_automatic_folders(folders):

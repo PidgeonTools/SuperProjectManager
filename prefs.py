@@ -72,6 +72,12 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         default=False,
     )
 
+    auto_set_render_outputpath = BoolProperty(
+        name="Auto Set Render Output Path",
+        description="If enabled, the Auto Set render Output path feature can be used.",
+        default=False,
+    )
+
     default_path: StringProperty(
         name="Default Project Location",
         subtype="DIR_PATH",
@@ -126,6 +132,7 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         )
 
         layout.prop(self, "prefix_with_project_name")
+        layout.prop(self, "auto_set_render_outputpath")
         layout.prop(self, "default_path")
         layout.separator(factor=0.4)
 
@@ -141,6 +148,10 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
             split = row.split(factor=0.2)
             split.label(text="Folder {}".format(index + 1))
 
+            if self.auto_set_render_outputpath:
+                col = split.column()
+                col.enabled = folder.render_outputpath or not render_outpath_active
+                col.prop(folder, "render_outputpath")
             split.prop(folder, "folder_name", text="")
 
             op = row.operator("blender_project_manager.remove_folder",
