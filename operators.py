@@ -98,8 +98,7 @@ class BLENDER_PROJECT_MANAGER_OT_Build_Project(Operator):
             except:
                 pass
         subfolder = prefix + \
-            get_file_subfolder(context.scene.project_setup,
-                               folders,
+            get_file_subfolder(folders,
                                prefs.save_folder)
 
         filepath = D.filepath

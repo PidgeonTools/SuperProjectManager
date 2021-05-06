@@ -107,15 +107,11 @@ def save_filepath(context, filename, subfolder):
     return path
 
 
-def get_file_subfolder(context, options, item):
+def get_file_subfolder(options, item):
     try:
         for index, subfolder in enumerate(options):
             if index == int(item):
-                prop = subfolder[context].split(">>")
-                subfolder = ""
-                for i in prop:
-                    subfolder = p.join(subfolder, i)
-                return subfolder
+                return convert_input_to_filepath(input=subfolder.folder_name)
         return ""
     except:
         return ""
