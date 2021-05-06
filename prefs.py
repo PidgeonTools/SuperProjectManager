@@ -46,18 +46,13 @@ C = bpy.context
 D = bpy.data
 
 
-class custom_folder(PropertyGroup):
+class project_folder_props(PropertyGroup):
 
-    Custom_Setup: StringProperty(
-        name="Folder Name",
-        description="Custom Setup Folder. \
-Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
-        default="")
-
-
-class automatic_folder(PropertyGroup):
-
-    Automatic_Setup: StringProperty(
+    render_outputpath = BoolProperty(
+        name="Render Output",
+        description="Output path for your renders.",
+        default=False)
+    folder_name = StringProperty(
         name="Folder Name",
         description="Automatic Setup Folder. \
 Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
@@ -67,9 +62,9 @@ Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
 class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     bl_idname = __package__
 
-    custom_folders: CollectionProperty(type=custom_folder)
+    custom_folders: CollectionProperty(type=project_folder_props)
 
-    automatic_folders: CollectionProperty(type=automatic_folder)
+    automatic_folders: CollectionProperty(type=project_folder_props)
 
     prefix_with_project_name = BoolProperty(
         name="Project Name Prefix",
@@ -137,12 +132,16 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         # TODO: Enum Property, enabling the user to decide, which set of Automatic Folders the
         # user wants.
 
+        render_outpath_active = True in [
+            e.render_outputpath for e in self.automatic_folders]
+        # print(self.automatic_folders[1].render_outputpath)  # ["render_outputpath"])
+
         for index, folder in enumerate(self.automatic_folders):
             row = layout.row()
             split = row.split(factor=0.2)
             split.label(text="Folder {}".format(index + 1))
 
-            split.prop(folder, "Automatic_Setup", text="")
+            split.prop(folder, "folder_name", text="")
 
             op = row.operator("blender_project_manager.remove_folder",
                               text="",
@@ -181,8 +180,7 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
 
 classes = (
-    custom_folder,
-    automatic_folder,
+    project_folder_props,
     BLENDER_PROJECT_MANAGER_APT_Preferences
 )
 

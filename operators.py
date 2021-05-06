@@ -88,7 +88,7 @@ class BLENDER_PROJECT_MANAGER_OT_Build_Project(Operator):
             try:
                 build_file_folders(context,
                                    prefix +
-                                   folder[context.scene.project_setup])
+                                   folder.folder_name)
             except:
                 pass
         subfolder = prefix + \

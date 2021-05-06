@@ -86,8 +86,7 @@ class BLENDER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
                 row = layout.row()
                 split = row.split(factor=0.2)
                 split.label(text="Folder {}".format(index + 1))
-
-                split.prop(folder, "Custom_Setup", text="")
+                split.prop(folder, "folder_name", text="")
 
                 op = row.operator("blender_project_manager.remove_folder",
                                   text="",

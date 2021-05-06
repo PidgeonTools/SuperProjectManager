@@ -84,7 +84,7 @@ def register_properties():
     Scene_Prop.open_directory = BoolProperty(name="Open Directory",
                                              default=True)
     Scene_Prop.add_new_project = BoolProperty(name="New unfinished project",
-                                             default=True)
+                                              default=True)
     Scene_Prop.save_blender_file = BoolProperty(name="Save Blender File",
                                                      description="Save Blender \
 File on build. If disabled, only the project folders are created",
@@ -122,7 +122,7 @@ def register_automatic_folders(folders):
 
     for folder in data["automatic_folders"]:
         f = folders.add()
-        f["Automatic_Setup"] = folder
+        f["folder_name"] = folder
 
 
 def unregister_automatic_folders(folders):
@@ -134,7 +134,7 @@ def unregister_automatic_folders(folders):
     original_json = decode_json(path)
 
     for index, folder in enumerate(folders):
-        data.append(folder["Automatic_Setup"])
+        data.append(folder["folder_name"])
 
     original_json["automatic_folders"] = data
 
