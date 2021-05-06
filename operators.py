@@ -34,6 +34,7 @@ from os import path as p
 
 from .functions.main_functions import (
     build_file_folders,
+    convert_input_to_filepath,
     generate_file_version_number,
     get_file_subfolder,
     open_directory,
@@ -81,6 +82,11 @@ class BLENDER_PROJECT_MANAGER_OT_Build_Project(Operator):
         if context.scene.project_setup == "Custom_Setup":
             folders = prefs.custom_folders
 
+        is_render_outputfolder_set = [e.render_outputpath for e in folders]
+        render_outputfolder = None
+        if True in is_render_outputfolder_set:
+            render_outputfolder = convert_input_to_filepath(
+                context, folders[is_render_outputfolder_set.index(True)].folder_name)
         if not p.isdir(projectpath):
             os.makedirs(projectpath)
 

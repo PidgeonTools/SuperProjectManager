@@ -42,13 +42,22 @@ C = bpy.context
 D = bpy.data
 
 
+def convert_input_to_filepath(context=None, input=""):
+    parts = input.split(">>")
+    path = ""
+    if context:
+        path = p.join(context.scene.project_location,
+                      context.scene.project_name)
+
+    for i in parts:
+        path = p.join(path, i)
+
+    return path
+
+
 def build_file_folders(context, prop):
 
-    prop = prop.split(">>")
-    path = p.join(context.scene.project_location, context.scene.project_name)
-
-    for i in prop:
-        path = p.join(path, i)
+    path = convert_input_to_filepath(context, prop)
 
     if not p.isdir(path):
         os.makedirs(path)
