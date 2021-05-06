@@ -115,8 +115,10 @@ class BLENDER_PROJECT_MANAGER_OT_Build_Project(Operator):
             filepath = generate_file_version_number(
                 D.filepath.split(".blen")[0].split("_v0")[0])
 
-        # TODO:  C.scene.render.filepath = relpath(blend_file_path, Render Output Path) --> Set the
-        # render Output path automatically.
+        # Set the render Output path automatically.
+        if prefs.auto_set_render_outputpath and render_outputfolder and context.scene.set_render_output:
+            context.scene.render.filepath = "//" + \
+                p.relpath(render_outputfolder, p.dirname(filepath)) + "\\"
 
         if context.scene.save_blender_file:
             bpy.ops.wm.save_as_mainfile(filepath=filepath,
