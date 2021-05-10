@@ -204,8 +204,8 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
         layout.label(
             text="Here are your {} unfinished projects:".format(len(data)))
 
-        if len(data) == 0:
-            url = "https://www.brograph.com/randorender"
+        if project_count == 0:
+            url = "https://blenderdefender.github.io/BlenderDefender/pages/randorender.html"
 
             layout.separator(factor=0.25)
             layout.label(text="Nothing to do.", icon="CHECKMARK")
