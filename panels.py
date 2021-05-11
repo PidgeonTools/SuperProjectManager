@@ -202,8 +202,9 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                       "BPS.json")
         data = decode_json(path)["unfinished_projects"]
 
+        project_count = len([e for e in data if e[0] == "project"])
         layout.label(
-            text="Here are your {} unfinished projects:".format(len(data)))
+            text="Here are your {} unfinished projects:".format(project_count))
 
         if project_count == 0:
             url = "https://blenderdefender.github.io/BlenderDefender/pages/randorender.html"
@@ -214,37 +215,49 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                 "wm.url_open", text="Find a project idea").url = url
             layout.separator(factor=0.75)
 
-        for index, project in enumerate(data):
-            project_name = p.basename(project)
+        for index, entry in enumerate(data):
+            type = entry[0]
+            content = entry[1]
 
-            row = layout.row()
+            if type == "project":
+                project = content
+                project_name = p.basename(project)
 
-            row.label(text=project_name)
+                row = layout.row()
 
-            if not p.exists(project):
-                op = row.operator("blender_project_manager.redefine_project_path",
+                row.label(text=project_name)
+
+                if not p.exists(project):
+                    op = row.operator("blender_project_manager.redefine_project_path",
+                                      text="",
+                                      icon="ERROR")
+                    op.index = index
+                    op.name = project_name
+
+                op = row.operator("blender_project_manager.open_blender_file",
                                   text="",
-                                  icon="ERROR")
+                                  emboss=False,
+                                  icon="BLENDER")
+                op.projectpath = project
+
+                op = row.operator("blender_project_manager.open_project_path",
+                                  text="",
+                                  emboss=False,
+                                  icon="FOLDER_REDIRECT")
+                op.projectpath = project
+
+                op = row.operator("blender_project_manager.close_project",
+                                  text="",
+                                  emboss=False,
+                                  icon="PANEL_CLOSE")
                 op.index = index
-                op.name = project_name
 
-            op = row.operator("blender_project_manager.open_blender_file",
-                              text="",
-                              emboss=False,
-                              icon="BLENDER")
-            op.projectpath = project
-
-            op = row.operator("blender_project_manager.open_project_path",
-                              text="",
-                              emboss=False,
-                              icon="FOLDER_REDIRECT")
-            op.projectpath = project
-
-            op = row.operator("blender_project_manager.close_project",
-                              text="",
-                              emboss=False,
-                              icon="PANEL_CLOSE")
-            op.index = index
+            if type == "label":
+                label = content
+                row = layout.row()
+                row.label(text="")
+                row = layout.row()
+                row.label(text=label)
 
         layout.operator("blender_project_manager.add_project",
                         text="Add unfinished project",

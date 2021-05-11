@@ -11,7 +11,7 @@ created and the Blender File is saved into the right folder.
 Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you want to [learn more](https://github.com/BlenderDefender/blender_pm/wiki)
 
 ## Upcoming Version:
-- [ ] Feature: Update BPS.json to work with the new features.
+- [x] Feature: Update BPS.json to work with the new features.
 - [x] Feature: Automatically Set Render Output Path
 - [x] Feature: Hidden Project info file, as a base for these features:
     - [x] Open .blend file with one click
@@ -22,7 +22,6 @@ Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you
         3. Rename an existing project folder in place (The file is part of a project)
         4. Rename and move an existing project folder (and move the .blend file in the inside) (The file is part of a project)
 - [ ] Feature: Folder Structure Sets [#14](https://github.com/BlenderDefender/blender_project_manager/issues/14)
-- [ ] Improvement: Update subfolder enum without restart
 - [ ] Improvement: Project display:
     - [ ] Option to rearrange Projects
     - [ ] Option to Sort Project in Categories

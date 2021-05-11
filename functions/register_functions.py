@@ -110,7 +110,7 @@ current folder to the project folder.",
     Scene_Prop.set_render_output = BoolProperty(name="Set the Render Output")
 
 
-def register_automatic_folders(folders):
+def register_automatic_folders(folders, folderset="default_folders"):
     path = p.join(p.expanduser("~"),
                   "Blender Addons Data",
                   "blender-project-starter", "BPS.json")
@@ -121,12 +121,13 @@ def register_automatic_folders(folders):
 
     data = decode_json(path)
 
-    for folder in data["automatic_folders"]:
+    for folder in data["automatic_folders"][folderset]:
         f = folders.add()
-        f["folder_name"] = folder
+        f["render_outputpath"] = folder[0]
+        f["folder_name"] = folder[1]
 
 
-def unregister_automatic_folders(folders):
+def unregister_automatic_folders(folders, folderset="default_folders"):
     path = p.join(p.expanduser("~"),
                   "Blender Addons Data",
                   "blender-project-starter",
@@ -135,8 +136,9 @@ def unregister_automatic_folders(folders):
     original_json = decode_json(path)
 
     for index, folder in enumerate(folders):
-        data.append(folder["folder_name"])
+        data.append([folder["render_outputpath"],
+                     folder["folder_name"]])
 
-    original_json["automatic_folders"] = data
+    original_json["automatic_folders"][folderset] = data
 
     encode_json(original_json, path)

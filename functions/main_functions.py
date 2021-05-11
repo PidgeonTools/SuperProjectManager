@@ -141,7 +141,7 @@ def add_open_project(project_path):
                   "BPS.json")
     data = decode_json(path)
 
-    data["unfinished_projects"].append(project_path)
+    data["unfinished_projects"].append(["project", project_path])
     encode_json(data, path)
 
 
