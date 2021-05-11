@@ -86,7 +86,7 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
     save_folder: EnumProperty(
         name="Save to",
-        items=subfolder_enum(),
+        items=subfolder_enum
     )
 
     auto_check_update = BoolProperty(
@@ -141,7 +141,6 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
         render_outpath_active = True in [
             e.render_outputpath for e in self.automatic_folders]
-        # print(self.automatic_folders[1].render_outputpath)  # ["render_outputpath"])
 
         for index, folder in enumerate(self.automatic_folders):
             row = layout.row()

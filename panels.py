@@ -82,7 +82,8 @@ class BLENDER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
             layout.label(text="Custom Folder Setup",
                          icon="NEWFOLDER")
 
-            render_outpath_active = True in [e.render_outputpath for e in prefs.custom_folders]
+            render_outpath_active = True in [
+                e.render_outputpath for e in prefs.custom_folders]
 
             for index, folder in enumerate(prefs.custom_folders):
                 row = layout.row()
@@ -180,9 +181,9 @@ class BLENDER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel(Panel):
         if prefs.auto_set_render_outputpath:
             row = layout.row()
             row.prop(context.scene,
-            "set_render_output",
-            icon="OUTPUT",
-            text="Set Render Output")
+                     "set_render_output",
+                     icon="OUTPUT",
+                     text="Set Render Output")
 
 
 class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):

@@ -35,7 +35,6 @@ import time
 from .json_functions import (
     decode_json,
     encode_json,
-    get_element
 )
 
 C = bpy.context
@@ -117,21 +116,22 @@ def get_file_subfolder(options, item):
         return ""
 
 
-def subfolder_enum():
+def subfolder_enum(self, context):
     tooltip = "Select Folder as target folder for your Blender File. \
 Uses Folders from Automatic Setup. If you choose an invalid folder, \
 the Root Folder will be selected."
-    default = [("Root", "Root", tooltip)]
-    index = 0
+    items = [("Root", "Root", tooltip)]
 
+    folders = self.automatic_folders
+    if context.scene.project_setup == "Custom_Setup":
+        folders = self.custom_folders
     try:
-        for folder in get_element("automatic_folders"):
-            default.append((str(index), folder, tooltip))
-            index += 1
+        for index, folder in enumerate(folders):
+            items.append((str(index), folder.folder_name, tooltip))
     except:
-        return default
+        print("Error in main_functions.py, line 128")
 
-    return default
+    return items
 
 
 def add_open_project(project_path):

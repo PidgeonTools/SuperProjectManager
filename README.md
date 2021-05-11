@@ -27,6 +27,7 @@ Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you
     - [ ] Option to rearrange Projects
     - [ ] Option to Sort Project in Categories
     - [x] Display the number of unfinished projects (You've got n unfinished projects)
+- [x] Improvement: Update subfolder enum without restart
 - [x] Improvement: Better icons
 - [x] Fix: Open Finder ([Issue #16](https://github.com/BlenderDefender/blender_pm/issues/16))
 
