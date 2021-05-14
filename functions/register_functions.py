@@ -109,6 +109,9 @@ current folder to the project folder.",
     Scene_Prop.compress_save = BoolProperty(name="Compress Save")
     Scene_Prop.set_render_output = BoolProperty(name="Set the Render Output")
 
+    Scene_Prop.project_display_mode = BoolProperty(
+        name="Switch to Rearrange Mode")
+
 
 def register_automatic_folders(folders, folderset="default_folders"):
     path = p.join(p.expanduser("~"),

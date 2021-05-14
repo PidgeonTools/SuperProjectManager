@@ -42,7 +42,6 @@ from .functions.main_functions import (
     save_filepath,
     add_open_project,
     close_project,
-    redefine_project_path,
     write_project_info
 )
 
@@ -246,7 +245,7 @@ please update the project path"
 
     def execute(self, context):
         projectpath = p.dirname(self.filepath)
-        redefine_project_path(self.index, projectpath)
+        self.redefine_project_path(self.index, projectpath)
 
         message = "Successfully changed project path: " + \
             p.basename(projectpath)
@@ -259,6 +258,16 @@ please update the project path"
         layout = self.layout
         layout.label(text="Please select your project Directory for:")
         layout.label(text=name)
+
+    def redefine_project_path(index, new_path):
+        path = p.join(p.expanduser("~"),
+                      "Blender Addons Data",
+                      "blender-project-starter",
+                      "BPS.json")
+        data = decode_json(path)
+
+        data["unfinished_projects"][index] = new_path
+        encode_json(data, path)
 
 
 class BLENDER_PROJECT_MANAGER_OT_open_project_path(Operator):
@@ -281,47 +290,47 @@ class BLENDER_PROJECT_MANAGER_OT_open_blender_file(Operator):
     bl_label = "Open Blender File"
     bl_options = {'REGISTER', 'UNDO'}
 
+    filepath: StringProperty()
+    message_type: StringProperty()
+    message: StringProperty()
+
+    def execute(self, context):
+
+        bpy.ops.wm.open_mainfile(filepath=self.filepath)
+        self.report(
+            {self.message_type}, self.message)
+        return {"FINISHED"}
+
+
+class BLENDER_PROJECT_MANAGER_ot_define_blend_file_location(bpy.types.Operator, ImportHelper):
+    """This Operator is used to (re)define the location of the projects main Blender File"""
+    bl_idname = "blender_project_manager.define_blend_file_location"
+    bl_label = "Define Project Blender File Path"
+    bl_options = {'REGISTER', 'UNDO'}
+    bl_description = "Can't find the right path to the Blender File. \
+Please select the latest Blender File of you Project."
+
+    filter_glob: StringProperty(default='*.blend', options={'HIDDEN'})
+    message_type: StringProperty()
+    message: StringProperty()
     projectpath: StringProperty()
 
     def execute(self, context):
-        project_info = p.join(self.projectpath, ".blender_pm")
-        if not p.exists(project_info):
-            self.report(
-                {"WARNING"}, "Your project is not a Blender PM Project.")
-            # MESSAGE (Dialog for Project info): Convert the project into a Blender PM Project. Don't worry,
-            # this won't delete or overwrite any Files.
-            # TODO: Open a dialog, to convert the Folder into a Blender Project. Store the .blender_pm file in the given root folder
-            # and let the User pick the location of the Blender File.
-            # Edge Case: Only allow files that end with .blend
+        print(self.filepath)
+        write_project_info(self.projectpath, self.filepath)
 
-            return {'FINISHED'}
+        message = "Successfully defined Blender Filepath: " + \
+            p.basename(self.filepath)
+        self.report({'INFO'}, message)
+        return {"FINISHED"}
 
-        if self.path_to_blend():
-            bpy.ops.wm.open_mainfile(filepath=self.path_to_blend())
-            return {"FINISHED"}
+    def draw(self, context):
+        name = p.basename(self.projectpath)
 
-        self.report(
-            {"ERROR"}, "No Blender File found in this project! Please select the latest project file.")
-        # TODO: Insert a function that Updates the Blender PM Info File with the latest Blender File.
-        return {'FINISHED'}
-
-    # Return the path to the latest Blender File. If the latest
-    def path_to_blend(self):
-        blender_files = decode_json(
-            p.join(self.projectpath, ".blender_pm"))["blender_files"]
-        filepath = blender_files["main_file"]
-        if p.exists(filepath):
-            self.report(
-                {"INFO"}, "Opened the project file found in {}".format(filepath))
-            return filepath
-
-        for filepath in blender_files["other_files"][::-1]:
-            if p.exists(filepath):
-                self.report(
-                    {"WARNING"}, "The latest File is unavailable. Opening the newest version available: {}".format(filepath))
-                return filepath
-
-        return
+        layout = self.layout
+        layout.label(text=self.message_type + ": " + self.message)
+        layout.label(text="Please select your project Directory for:")
+        layout.label(text=name)
 
 
 classes = (
@@ -332,7 +341,8 @@ classes = (
     BLENDER_PROJECT_MANAGER_OT_close_project,
     BLENDER_PROJECT_MANAGER_OT_redefine_project_path,
     BLENDER_PROJECT_MANAGER_OT_open_project_path,
-    BLENDER_PROJECT_MANAGER_OT_open_blender_file
+    BLENDER_PROJECT_MANAGER_OT_open_blender_file,
+    BLENDER_PROJECT_MANAGER_ot_define_blend_file_location
 )
 
 

@@ -156,17 +156,6 @@ def close_project(index):
     encode_json(data, path)
 
 
-def redefine_project_path(index, new_path):
-    path = p.join(p.expanduser("~"),
-                  "Blender Addons Data",
-                  "blender-project-starter",
-                  "BPS.json")
-    data = decode_json(path)
-
-    data["unfinished_projects"][index] = new_path
-    encode_json(data, path)
-
-
 def write_project_info(root_path, blend_file_path):
     if not blend_file_path.endswith(".blend"):
         return {"WARNING"}, "Can't create a Blender PM project! Please select a Blender file and try again."

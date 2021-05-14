@@ -20,6 +20,7 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+# import operators
 import bpy
 from bpy.types import Panel
 
@@ -234,11 +235,20 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                     op.index = index
                     op.name = project_name
 
-                op = row.operator("blender_project_manager.open_blender_file",
+                operator = "blender_project_manager.open_blender_file"
+                if not self.path_to_blend(project)[0]:
+                    operator = "blender_project_manager.define_blend_file_location"
+                op = row.operator(operator,
                                   text="",
                                   emboss=False,
                                   icon="BLENDER")
-                op.projectpath = project
+                project_details = self.path_to_blend(project)
+                if project_details[0]:
+                    op.filepath = project_details[0]
+                else:
+                    op.projectpath = project
+                op.message_type = project_details[1]
+                op.message = project_details[2]
 
                 op = row.operator("blender_project_manager.open_project_path",
                                   text="",
@@ -259,9 +269,34 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                 row = layout.row()
                 row.label(text=label)
 
+        layout.prop(context.scene, "project_display_mode",
+                    text="Not functional yet!", toggle=True)
         layout.operator("blender_project_manager.add_project",
                         text="Add unfinished project",
                         icon="PLUS")
+
+    # Return the path to the latest Blender File.
+    # If the latest Blender File is unavailable, the path to an older File
+    # is returned. If no file is available, None is returned.
+    def path_to_blend(self, projectpath):
+        if not p.exists(p.join(projectpath, ".blender_pm")):
+            return None, "WARNING", "Your project is not a Blender PM Project."
+
+        blender_files = decode_json(
+            p.join(projectpath, ".blender_pm"))["blender_files"]
+        filepath = blender_files["main_file"]
+        if p.exists(filepath):
+            # self.report(
+            #     {"INFO"}, "Opened the project file found in {}".format(filepath))
+            return filepath, "INFO", "Opened the project file found in {}".format(filepath)
+
+        for filepath in blender_files["other_files"][::-1]:
+            if p.exists(filepath):
+                # self.report(
+                #     {"WARNING"}, "The latest File is unavailable. Opening the newest version available: {}".format(filepath))
+                return filepath, "WARNING", "The latest File is unavailable. Opening the newest version available: {}".format(filepath)
+
+        return None, "ERROR", "No Blender File found in this project! Please select the latest project file."
 
 
 classes = (
