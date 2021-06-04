@@ -15,7 +15,7 @@ Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you
 - [x] Feature: Automatically Set Render Output Path
 - [x] Feature: Hidden Project info file, as a base for these features:
     - [x] Open .blend file with one click
-    - [ ] More precise differentiation between Blender Files that are part of a project and Blender Files, that aren't part of a project
+<!--    - [ ] More precise differentiation between Blender Files that are part of a project and Blender Files, that aren't part of a project  Not sure!-->
     - [ ] More options to handle Files that are/aren't part of a project:
         1. Cut an existing file (The file is not part / part of a project)
         2. Copy an existing file (The file is not part / part of a project)
