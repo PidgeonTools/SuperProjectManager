@@ -215,7 +215,48 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
             layout.operator(
                 "wm.url_open", text="Find a project idea").url = url
             layout.separator(factor=0.75)
+        if context.scene.project_rearrange_mode:
+            self.draw_rearrange(context, data)
+            layout.operator("blender_project_manager.add_label",
+                            text="Add Category Label",
+                            icon="PLUS")
+            layout.prop(context.scene, "project_rearrange_mode",
+                        text="Switch to Project Display", toggle=True)
+        else:
+            self.draw_normal(context, data)
+            layout.prop(context.scene, "project_rearrange_mode",
+                        text="Switch to Rearrange Mode", toggle=True)
 
+        layout.operator("blender_project_manager.add_project",
+                        text="Add unfinished project",
+                        icon="PLUS")
+
+    # Return the path to the latest Blender File.
+    # If the latest Blender File is unavailable, the path to an older File
+    # is returned. If no file is available, None is returned.
+    def path_to_blend(self, projectpath):
+        if not p.exists(p.join(projectpath, ".blender_pm")):
+            return None, "WARNING", "Your project is not a Blender PM Project."
+
+        blender_files = decode_json(
+            p.join(projectpath, ".blender_pm"))["blender_files"]
+        filepath = blender_files["main_file"]
+        if p.exists(filepath):
+            # self.report(
+            #     {"INFO"}, "Opened the project file found in {}".format(filepath))
+            return filepath, "INFO", "Opened the project file found in {}".format(filepath)
+
+        for filepath in blender_files["other_files"][::-1]:
+            if p.exists(filepath):
+                # self.report(
+                #     {"WARNING"}, "The latest File is unavailable. Opening the newest version available: {}".format(filepath))
+                return filepath, "WARNING", "The latest File is unavailable. Opening the newest version available: {}".format(filepath)
+
+        return None, "ERROR", "No Blender File found in this project! Please select the latest project file."
+
+    # Drawing Function for the regular project display mode.
+    def draw_normal(self, context, data):
+        layout = self.layout
         for index, entry in enumerate(data):
             type = entry[0]
             content = entry[1]
@@ -269,34 +310,52 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                 row = layout.row()
                 row.label(text=label)
 
-        layout.prop(context.scene, "project_display_mode",
-                    text="Not functional yet!", toggle=True)
-        layout.operator("blender_project_manager.add_project",
-                        text="Add unfinished project",
-                        icon="PLUS")
+    # Drawing Function for the project rearrange mode.
+    def draw_rearrange(self, context, data):
+        layout = self.layout
+        for index, entry in enumerate(data):
+            type = entry[0]
+            content = entry[1]
 
-    # Return the path to the latest Blender File.
-    # If the latest Blender File is unavailable, the path to an older File
-    # is returned. If no file is available, None is returned.
-    def path_to_blend(self, projectpath):
-        if not p.exists(p.join(projectpath, ".blender_pm")):
-            return None, "WARNING", "Your project is not a Blender PM Project."
+            content = p.basename(content)
+            row = layout.row()
+            row.label(text=content)
 
-        blender_files = decode_json(
-            p.join(projectpath, ".blender_pm"))["blender_files"]
-        filepath = blender_files["main_file"]
-        if p.exists(filepath):
-            # self.report(
-            #     {"INFO"}, "Opened the project file found in {}".format(filepath))
-            return filepath, "INFO", "Opened the project file found in {}".format(filepath)
+            if type == "label":
+                op = row.operator("blender_project_manager.remove_label",
+                                text="",
+                                emboss=False,
+                                icon="PANEL_CLOSE")
+                op.index = index
+                op = row.operator("blender_project_manager.change_label",
+                                text="",
+                                emboss=False,
+                                icon="FILE_TEXT")
+                op.index = index
 
-        for filepath in blender_files["other_files"][::-1]:
-            if p.exists(filepath):
-                # self.report(
-                #     {"WARNING"}, "The latest File is unavailable. Opening the newest version available: {}".format(filepath))
-                return filepath, "WARNING", "The latest File is unavailable. Opening the newest version available: {}".format(filepath)
+            op = row.operator("blender_project_manager.rearrange_to_top",
+                              text="",
+                              emboss=False,
+                              icon="EXPORT")
+            op.index = index
 
-        return None, "ERROR", "No Blender File found in this project! Please select the latest project file."
+            op = row.operator("blender_project_manager.rearrange_up",
+                              text="",
+                              emboss=False,
+                              icon="SORT_DESC")
+            op.index = index
+
+            op = row.operator("blender_project_manager.rearrange_down",
+                              text="",
+                              emboss=False,
+                              icon="SORT_ASC")
+            op.index = index
+
+            op = row.operator("blender_project_manager.rearrange_to_bottom",
+                              text="",
+                              emboss=False,
+                              icon="IMPORT")
+            op.index = index
 
 
 classes = (

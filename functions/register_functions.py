@@ -109,7 +109,7 @@ current folder to the project folder.",
     Scene_Prop.compress_save = BoolProperty(name="Compress Save")
     Scene_Prop.set_render_output = BoolProperty(name="Set the Render Output")
 
-    Scene_Prop.project_display_mode = BoolProperty(
+    Scene_Prop.project_rearrange_mode = BoolProperty(
         name="Switch to Rearrange Mode")
 
 

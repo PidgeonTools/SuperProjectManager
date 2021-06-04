@@ -333,6 +333,180 @@ Please select the latest Blender File of you Project."
         layout.label(text=name)
 
 
+class BLENDER_PROJECT_MANAGER_ot_rearrange_up(bpy.types.Operator):
+    """Rearrange a Project or Label one step up."""
+    bl_idname = "blender_project_manager.rearrange_up"
+    bl_label = "Rearrange Up"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    index: IntProperty()
+
+    def execute(self, context):
+        index = self.index
+        path = p.join(p.expanduser("~"),
+                      "Blender Addons Data",
+                      "blender-project-starter",
+                      "BPS.json")
+        data = decode_json(path)
+
+        data["unfinished_projects"][index], data["unfinished_projects"][index -
+                                                                        1] = data["unfinished_projects"][index - 1], data["unfinished_projects"][index]
+
+        encode_json(data, path)
+        return {'FINISHED'}
+
+
+class BLENDER_PROJECT_MANAGER_ot_rearrange_down(bpy.types.Operator):
+    """Rearrange a Project or Label one step down."""
+    bl_idname = "blender_project_manager.rearrange_down"
+    bl_label = "Rearrange Down"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    index: IntProperty()
+
+    def execute(self, context):
+        index = self.index
+        path = p.join(p.expanduser("~"),
+                      "Blender Addons Data",
+                      "blender-project-starter",
+                      "BPS.json")
+        data = decode_json(path)
+
+        data["unfinished_projects"][index], data["unfinished_projects"][index +
+                                                                        1] = data["unfinished_projects"][index + 1], data["unfinished_projects"][index]
+
+        encode_json(data, path)
+        return {'FINISHED'}
+
+
+class BLENDER_PROJECT_MANAGER_ot_rearrange_to_top(bpy.types.Operator):
+    """Rearrange a Project or Label to the top."""
+    bl_idname = "blender_project_manager.rearrange_to_top"
+    bl_label = "Rearrange to Top"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    index: IntProperty()
+
+    def execute(self, context):
+        index = self.index
+        path = p.join(p.expanduser("~"),
+                      "Blender Addons Data",
+                      "blender-project-starter",
+                      "BPS.json")
+        data = decode_json(path)
+
+        element = data["unfinished_projects"].pop(index)
+
+        data["unfinished_projects"].insert(0, element)
+
+        encode_json(data, path)
+        return {'FINISHED'}
+
+
+class BLENDER_PROJECT_MANAGER_ot_rearrange_to_bottom(bpy.types.Operator):
+    """Rearrange a Project or Label to the bottom."""
+    bl_idname = "blender_project_manager.rearrange_to_bottom"
+    bl_label = "Rearrange to Bottom"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    index: IntProperty()
+
+    def execute(self, context):
+        index = self.index
+        path = p.join(p.expanduser("~"),
+                      "Blender Addons Data",
+                      "blender-project-starter",
+                      "BPS.json")
+        data = decode_json(path)
+
+        element = data["unfinished_projects"].pop(index)
+
+        data["unfinished_projects"].append(element)
+
+        encode_json(data, path)
+        return {'FINISHED'}
+
+
+class BLENDER_PROJECT_MANAGER_ot_add_label(bpy.types.Operator):
+    """Add a category Label to the open projects list."""
+    bl_idname = "blender_project_manager.add_label"
+    bl_label = "Add Label"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    label = StringProperty()
+
+    def execute(self, context):
+        path = p.join(p.expanduser("~"),
+                      "Blender Addons Data",
+                      "blender-project-starter",
+                      "BPS.json")
+        data = decode_json(path)
+
+        data["unfinished_projects"].append(["label", self.label])
+
+        encode_json(data, path)
+        return {'FINISHED'}
+
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
+
+    def draw(self, context):
+        layout = self.layout
+
+        layout.prop(self, "label", text="Category Label Text:")
+
+
+class BLENDER_PROJECT_MANAGER_ot_remove_label(bpy.types.Operator):
+    """Remove a category Label from the open projects list."""
+    bl_idname = "blender_project_manager.remove_label"
+    bl_label = "Remove Label"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    index = IntProperty()
+
+    def execute(self, context):
+        path = p.join(p.expanduser("~"),
+                      "Blender Addons Data",
+                      "blender-project-starter",
+                      "BPS.json")
+        data = decode_json(path)
+
+        data["unfinished_projects"].pop(self.index)
+
+        encode_json(data, path)
+        return {'FINISHED'}
+
+
+class BLENDER_PROJECT_MANAGER_ot_change_label(bpy.types.Operator):
+    """Change a category Label from the open projects list."""
+    bl_idname = "blender_project_manager.change_label"
+    bl_label = "Change Label"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    index = IntProperty()
+    label = StringProperty()
+
+    def execute(self, context):
+        path = p.join(p.expanduser("~"),
+                      "Blender Addons Data",
+                      "blender-project-starter",
+                      "BPS.json")
+        data = decode_json(path)
+
+        data["unfinished_projects"][self.index] = ["label", self.label]
+
+        encode_json(data, path)
+        return {'FINISHED'}
+
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
+
+    def draw(self, context):
+        layout = self.layout
+
+        layout.prop(self, "label", text="Category Label Text:")
+
+
 classes = (
     BLENDER_PROJECT_MANAGER_OT_add_folder,
     BLENDER_PROJECT_MANAGER_OT_remove_folder,
@@ -342,7 +516,14 @@ classes = (
     BLENDER_PROJECT_MANAGER_OT_redefine_project_path,
     BLENDER_PROJECT_MANAGER_OT_open_project_path,
     BLENDER_PROJECT_MANAGER_OT_open_blender_file,
-    BLENDER_PROJECT_MANAGER_ot_define_blend_file_location
+    BLENDER_PROJECT_MANAGER_ot_define_blend_file_location,
+    BLENDER_PROJECT_MANAGER_ot_rearrange_up,
+    BLENDER_PROJECT_MANAGER_ot_rearrange_down,
+    BLENDER_PROJECT_MANAGER_ot_rearrange_to_top,
+    BLENDER_PROJECT_MANAGER_ot_rearrange_to_bottom,
+    BLENDER_PROJECT_MANAGER_ot_add_label,
+    BLENDER_PROJECT_MANAGER_ot_remove_label,
+    BLENDER_PROJECT_MANAGER_ot_change_label
 )
 
 

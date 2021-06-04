@@ -22,9 +22,10 @@ Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you
         3. Rename an existing project folder in place (The file is part of a project)
         4. Rename and move an existing project folder (and move the .blend file in the inside) (The file is part of a project)
 - [ ] Feature: Folder Structure Sets [#14](https://github.com/BlenderDefender/blender_project_manager/issues/14)
-- [ ] Improvement: Project display:
-    - [ ] Option to rearrange Projects
-    - [ ] Option to Sort Project in Categories
+- [ ] Improvement: Multiple subfolders in one Folder (e.g.: Folder>>(Subfolder1; Subfolder2))
+- [x] Improvement: Project display:
+    - [x] Option to rearrange Projects
+    - [x] Option to Sort Project in Categories
     - [x] Display the number of unfinished projects (You've got n unfinished projects)
 - [x] Improvement: Update subfolder enum without restart
 - [x] Improvement: Better icons
