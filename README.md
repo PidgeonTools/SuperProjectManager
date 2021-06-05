@@ -15,11 +15,6 @@ Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you
 - [x] Feature: Automatically Set Render Output Path
 - [x] Feature: Hidden Project info file, as a base for these features:
     - [x] Open .blend file with one click
-    - [ ] More options to handle Files that are/aren't part of a project:
-        1. Cut an existing file (The file is not part / part of a project)
-        2. Copy an existing file (The file is not part / part of a project)
-        3. Rename an existing project folder in place (The file is part of a project)
-        4. Rename and move an existing project folder (and move the .blend file in the inside) (The file is part of a project)
 - [ ] Feature: Folder Structure Sets [#14](https://github.com/BlenderDefender/blender_project_manager/issues/14)
 - [ ] Improvement: Multiple subfolders in one Folder (e.g.: Folder>>(Subfolder1; Subfolder2))
 - [x] Improvement: Project display:
@@ -30,6 +25,11 @@ Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you
 - [x] Improvement: Better icons
 - [x] Fix: Open Finder ([Issue #16](https://github.com/BlenderDefender/blender_pm/issues/16))
 <!--    - [ ] More precise differentiation between Blender Files that are part of a project and Blender Files, that aren't part of a project  Not sure!-->
+<!-- - [ ] More options to handle Files that are/aren't part of a project:
+        1. Cut an existing file (The file is not part / part of a project)
+        2. Copy an existing file (The file is not part / part of a project)
+        3. Rename an existing project folder in place (The file is part of a project)
+        4. Rename and move an existing project folder (and move the .blend file in the inside) (The file is part of a project) -->
 
 <!--
 We've just hit another update. No features are planned so far. [Change this!](https://github.com/BlenderDefender/blender_pm/issues/new/choose)
