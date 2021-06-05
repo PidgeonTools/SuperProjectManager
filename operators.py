@@ -259,14 +259,14 @@ please update the project path"
         layout.label(text="Please select your project Directory for:")
         layout.label(text=name)
 
-    def redefine_project_path(index, new_path):
+    def redefine_project_path(self, index, new_path):
         path = p.join(p.expanduser("~"),
                       "Blender Addons Data",
                       "blender-project-starter",
                       "BPS.json")
         data = decode_json(path)
 
-        data["unfinished_projects"][index] = new_path
+        data["unfinished_projects"][index][1] = new_path
         encode_json(data, path)
 
 
