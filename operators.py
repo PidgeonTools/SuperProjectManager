@@ -510,6 +510,68 @@ class BLENDER_PROJECT_MANAGER_ot_change_label(bpy.types.Operator):
         layout.prop(self, "label", text="Category Label Text:")
 
 
+class BLENDER_PROJECT_MANAGER_ot_add_structure_set(bpy.types.Operator):
+    """Adds a new folder structure set."""
+    bl_idname = "blender_project_manager.add_structure_set"
+    bl_label = "Add Folder Structure Set"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    name = StringProperty()
+
+    def execute(self, context):
+        prefs = context.preferences.addons[__package__].preferences
+
+        path = p.join(p.expanduser("~"),
+                      "Blender Addons Data",
+                      "blender-project-starter",
+                      "BPS.json")
+        data = decode_json(path)
+
+        data["automatic_folders"][self.name] = []
+
+        encode_json(data, path)
+
+        prefs.folder_structure_sets = self.name
+
+        return {'FINISHED'}
+
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
+
+    def draw(self, context):
+        layout = self.layout
+
+        layout.prop(self, "name", text="Folder Structure Set Name:")
+
+
+class BLENDER_PROJECT_MANAGER_ot_remove_structure_set(bpy.types.Operator):
+    """Remove a folder structure set"""
+    bl_idname = "blender_project_manager.remove_structure_set"
+    bl_label = "Remove Set"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    structure_set: StringProperty()
+
+    def execute(self, context):
+        prefs = context.preferences.addons[__package__].preferences
+        prefs.folder_structure_sets = "Default Folder Set"
+
+        if self.structure_set == "Default Folder Set":
+            return {'FINISHED'}
+
+        path = p.join(p.expanduser("~"),
+                      "Blender Addons Data",
+                      "blender-project-starter",
+                      "BPS.json")
+        data = decode_json(path)
+
+        data["automatic_folders"].pop(self.structure_set)
+
+        encode_json(data, path)
+
+        return {'FINISHED'}
+
+
 classes = (
     BLENDER_PROJECT_MANAGER_OT_add_folder,
     BLENDER_PROJECT_MANAGER_OT_remove_folder,
@@ -526,19 +588,21 @@ classes = (
     BLENDER_PROJECT_MANAGER_ot_rearrange_to_bottom,
     BLENDER_PROJECT_MANAGER_ot_add_label,
     BLENDER_PROJECT_MANAGER_ot_remove_label,
-    BLENDER_PROJECT_MANAGER_ot_change_label
+    BLENDER_PROJECT_MANAGER_ot_change_label,
+    BLENDER_PROJECT_MANAGER_ot_add_structure_set,
+    BLENDER_PROJECT_MANAGER_ot_remove_structure_set
 )
 
 
 def register():
-    folders = C.preferences.addons[__package__].preferences.automatic_folders
-    register_automatic_folders(folders)
+    prefs = C.preferences.addons[__package__].preferences
+    register_automatic_folders(prefs.automatic_folders, prefs.previous_set)
     for cls in classes:
         bpy.utils.register_class(cls)
 
 
 def unregister():
-    folders = C.preferences.addons[__package__].preferences.automatic_folders
-    unregister_automatic_folders(folders)
+    prefs = C.preferences.addons[__package__].preferences
+    unregister_automatic_folders(prefs.automatic_folders, prefs.previous_set)
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)

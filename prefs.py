@@ -40,6 +40,8 @@ from . import addon_updater_ops
 
 from .functions.main_functions import (
     subfolder_enum,
+    structure_sets_enum,
+    structure_sets_enum_update
 )
 
 C = bpy.context
@@ -61,10 +63,18 @@ Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
 
 class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     bl_idname = __package__
+    previous_set: StringProperty(default="Default Folder Set")
 
     custom_folders: CollectionProperty(type=project_folder_props)
 
     automatic_folders: CollectionProperty(type=project_folder_props)
+
+    folder_structure_sets = EnumProperty(
+        name="Folder Structure Set",
+        description="A list of all available folder sets.",
+        items=structure_sets_enum,
+        update=structure_sets_enum_update
+    )
 
     prefix_with_project_name = BoolProperty(
         name="Project Name Prefix",
@@ -136,12 +146,16 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         layout.prop(self, "default_path")
         layout.separator(factor=0.4)
 
-        # TODO: Enum Property, enabling the user to decide, which set of Automatic Folders the
-        # user wants.
-
         render_outpath_active = True in [
             e.render_outputpath for e in self.automatic_folders]
 
+        row = layout.row(align=True)
+        row.prop(self, "folder_structure_sets")
+        row.operator("blender_project_manager.add_structure_set",
+                     text="", icon="ADD")
+        op = row.operator(
+            "blender_project_manager.remove_structure_set", text="", icon="REMOVE")
+        op.structure_set = self.previous_set
         for index, folder in enumerate(self.automatic_folders):
             row = layout.row()
             split = row.split(factor=0.2)

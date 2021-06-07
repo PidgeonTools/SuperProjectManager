@@ -32,6 +32,11 @@ import subprocess
 import json
 import time
 
+from .register_functions import (
+    register_automatic_folders,
+    unregister_automatic_folders
+)
+
 from .json_functions import (
     decode_json,
     encode_json,
@@ -131,6 +136,28 @@ Uses Folders from Automatic Setup."
         print("Error in main_functions.py, line 128")
 
     return items
+
+
+def structure_sets_enum(self, context):
+    tooltip = "Select a folder Structure Set."
+    items = []
+
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter",
+                  "BPS.json")
+
+    for i in decode_json(path)["automatic_folders"]:
+        items.append((i, i, tooltip))
+
+    return items
+
+
+def structure_sets_enum_update(self, context):
+    unregister_automatic_folders(self.automatic_folders, self.previous_set)
+    register_automatic_folders(
+        self.automatic_folders, self.folder_structure_sets)
+    self.previous_set = self.folder_structure_sets
 
 
 def add_open_project(project_path):

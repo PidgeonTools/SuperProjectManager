@@ -11,21 +11,21 @@ created and the Blender File is saved into the right folder.
 Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you want to [learn more](https://github.com/BlenderDefender/blender_pm/wiki)
 
 ## Upcoming Version:
+- [x] Fix: Open Finder ([Issue #16](https://github.com/BlenderDefender/blender_pm/issues/16))
 - [x] Feature: Update BPS.json to work with the new features.
 - [x] Feature: Automatically Set Render Output Path
 - [x] Feature: Hidden Project info file, as a base for these features:
     - [x] Open .blend file with one click
-- [ ] Feature: Folder Structure Sets [#14](https://github.com/BlenderDefender/blender_project_manager/issues/14)
-- [ ] Improvement: Multiple subfolders in one Folder (e.g.: Folder>>(Subfolder1; Subfolder2))
+- [x] Feature: Folder Structure Sets [#14](https://github.com/BlenderDefender/blender_project_manager/issues/14)
 - [x] Improvement: Project display:
     - [x] Option to rearrange Projects
     - [x] Option to Sort Project in Categories
     - [x] Display the number of unfinished projects (You've got n unfinished projects)
 - [x] Improvement: Update subfolder enum without restart
 - [x] Improvement: Better icons
-- [x] Fix: Open Finder ([Issue #16](https://github.com/BlenderDefender/blender_pm/issues/16))
-<!--    - [ ] More precise differentiation between Blender Files that are part of a project and Blender Files, that aren't part of a project  Not sure!-->
-<!-- - [ ] More options to handle Files that are/aren't part of a project:
+- [ ] Improvement: Multiple subfolders in one Folder (e.g.: Folder>>(Subfolder1; Subfolder2))
+  <!--    - [ ] More precise differentiation between Blender Files that are part of a project and Blender Files, that aren't part of a project  Not sure!-->
+  <!-- - [ ] More options to handle Files that are/aren't part of a project:
         1. Cut an existing file (The file is not part / part of a project)
         2. Copy an existing file (The file is not part / part of a project)
         3. Rename an existing project folder in place (The file is part of a project)

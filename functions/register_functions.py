@@ -138,9 +138,9 @@ def unregister_automatic_folders(folders, folderset="Default Folder Set"):
     data = []
     original_json = decode_json(path)
 
-    for index, folder in enumerate(folders):
-        data.append([folder["render_outputpath"],
-                     folder["folder_name"]])
+    for folder in folders:
+        data.append([int(folder.render_outputpath),
+                     folder.folder_name])
 
     original_json["automatic_folders"][folderset] = data
 
