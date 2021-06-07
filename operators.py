@@ -323,7 +323,8 @@ Please select the latest Blender File of you Project."
             p.basename(self.filepath)
         self.report({'INFO'}, message)
 
-        bpy.ops.blender_project_manager.open_blender_file(filepath=self.filepath, message_type="INFO", message=f"Opened the project file found in {self.filepath}")
+        bpy.ops.blender_project_manager.open_blender_file(
+            filepath=self.filepath, message_type="INFO", message=f"Opened the project file found in {self.filepath}")
         return {"FINISHED"}
 
     def draw(self, context):
