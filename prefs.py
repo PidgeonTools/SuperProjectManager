@@ -50,11 +50,11 @@ D = bpy.data
 
 class project_folder_props(PropertyGroup):
 
-    render_outputpath = BoolProperty(
+    render_outputpath: BoolProperty(
         name="Render Output",
         description="Output path for your renders.",
         default=False)
-    folder_name = StringProperty(
+    folder_name: StringProperty(
         name="Folder Name",
         description="Automatic Setup Folder. \
 Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
@@ -69,20 +69,20 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
     automatic_folders: CollectionProperty(type=project_folder_props)
 
-    folder_structure_sets = EnumProperty(
+    folder_structure_sets: EnumProperty(
         name="Folder Structure Set",
         description="A list of all available folder sets.",
         items=structure_sets_enum,
         update=structure_sets_enum_update
     )
 
-    prefix_with_project_name = BoolProperty(
+    prefix_with_project_name: BoolProperty(
         name="Project Name Prefix",
         description="If enabled, use the project name as prefix for all folders.",
         default=False,
     )
 
-    auto_set_render_outputpath = BoolProperty(
+    auto_set_render_outputpath: BoolProperty(
         name="Auto Set Render Output Path",
         description="If enabled, the Auto Set render Output path feature can be used.",
         default=False,
@@ -99,32 +99,32 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         items=subfolder_enum
     )
 
-    auto_check_update = BoolProperty(
+    auto_check_update: BoolProperty(
         name="Auto-check for Update",
         description="If enabled, auto-check for updates using an interval",
         default=True,
     )
-    updater_intrval_months = IntProperty(
+    updater_intrval_months: IntProperty(
         name="Months",
         description="Number of months between checking for updates",
         default=0,
         min=0
     )
-    updater_intrval_days = IntProperty(
+    updater_intrval_days: IntProperty(
         name="Days",
         description="Number of days between checking for updates",
         default=7,
         min=0,
         max=31
     )
-    updater_intrval_hours = IntProperty(
+    updater_intrval_hours: IntProperty(
         name="Hours",
         description="Number of hours between checking for updates",
         default=0,
         min=0,
         max=23
     )
-    updater_intrval_minutes = IntProperty(
+    updater_intrval_minutes: IntProperty(
         name="Minutes",
         description="Number of minutes between checking for updates",
         default=0,

@@ -86,9 +86,9 @@ def register_properties():
     Scene_Prop.add_new_project = BoolProperty(name="New unfinished project",
                                               default=True)
     Scene_Prop.save_blender_file = BoolProperty(name="Save Blender File",
-                                                     description="Save Blender \
+                                                description="Save Blender \
 File on build. If disabled, only the project folders are created",
-                                                     default=True)
+                                                default=True)
 
     Scene_Prop.cut_or_copy = BoolProperty(
         name="Cut or Copy",

@@ -436,7 +436,7 @@ class BLENDER_PROJECT_MANAGER_ot_add_label(bpy.types.Operator):
     bl_label = "Add Label"
     bl_options = {'REGISTER', 'UNDO'}
 
-    label = StringProperty()
+    label: StringProperty()
 
     def execute(self, context):
         path = p.join(p.expanduser("~"),
@@ -465,7 +465,7 @@ class BLENDER_PROJECT_MANAGER_ot_remove_label(bpy.types.Operator):
     bl_label = "Remove Label"
     bl_options = {'REGISTER', 'UNDO'}
 
-    index = IntProperty()
+    index: IntProperty()
 
     def execute(self, context):
         path = p.join(p.expanduser("~"),
@@ -486,8 +486,8 @@ class BLENDER_PROJECT_MANAGER_ot_change_label(bpy.types.Operator):
     bl_label = "Change Label"
     bl_options = {'REGISTER', 'UNDO'}
 
-    index = IntProperty()
-    label = StringProperty()
+    index: IntProperty()
+    label: StringProperty()
 
     def execute(self, context):
         path = p.join(p.expanduser("~"),
@@ -516,7 +516,7 @@ class BLENDER_PROJECT_MANAGER_ot_add_structure_set(bpy.types.Operator):
     bl_label = "Add Folder Structure Set"
     bl_options = {'REGISTER', 'UNDO'}
 
-    name = StringProperty()
+    name: StringProperty()
 
     def execute(self, context):
         prefs = context.preferences.addons[__package__].preferences
