@@ -118,8 +118,7 @@ def get_file_subfolder(options, item):
 
 def subfolder_enum(self, context):
     tooltip = "Select Folder as target folder for your Blender File. \
-Uses Folders from Automatic Setup. If you choose an invalid folder, \
-the Root Folder will be selected."
+Uses Folders from Automatic Setup."
     items = [("Root", "Root", tooltip)]
 
     folders = self.automatic_folders

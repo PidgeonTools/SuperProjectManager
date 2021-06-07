@@ -52,7 +52,7 @@ def update_to_130(data):
         default_folders.append([False, folder])
 
     data["automatic_folders"] = {}
-    data["automatic_folders"]["default_folders"] = default_folders
+    data["automatic_folders"]["Default Folder Set"] = default_folders
 
     for i in range(len(data["unfinished_projects"])):
         data["unfinished_projects"][i] = [

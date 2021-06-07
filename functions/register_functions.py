@@ -113,7 +113,7 @@ current folder to the project folder.",
         name="Switch to Rearrange Mode")
 
 
-def register_automatic_folders(folders, folderset="default_folders"):
+def register_automatic_folders(folders, folderset="Default Folder Set"):
     path = p.join(p.expanduser("~"),
                   "Blender Addons Data",
                   "blender-project-starter", "BPS.json")
@@ -130,7 +130,7 @@ def register_automatic_folders(folders, folderset="default_folders"):
         f["folder_name"] = folder[1]
 
 
-def unregister_automatic_folders(folders, folderset="default_folders"):
+def unregister_automatic_folders(folders, folderset="Default Folder Set"):
     path = p.join(p.expanduser("~"),
                   "Blender Addons Data",
                   "blender-project-starter",
