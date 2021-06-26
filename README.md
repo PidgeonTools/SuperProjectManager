@@ -23,9 +23,9 @@ Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you
     - [x] Display the number of unfinished projects (You've got n unfinished projects)
 - [x] Improvement: Update subfolder enum without restart
 - [x] Improvement: Better icons
-- [ ] Improvement: Multiple subfolders in one Folder (Syntax: Folder>>((Subfolder1>>Subsubfolder))++Subfolder2)
-<!-- - [ ] Feature: More precise differentiation between Blender Files that are part of a project and Blender Files, that aren't part of a project  Not sure! -->
-<!-- - [ ] Feature: More options to handle Files that are/aren't part of a project:
+- [x] Improvement: Multiple subfolders in one Folder (Syntax: Folder>>((Subfolder1>>Subsubfolder))++Subfolder2)
+  <!-- - [ ] Feature: More precise differentiation between Blender Files that are part of a project and Blender Files, that aren't part of a project  Not sure! -->
+  <!-- - [ ] Feature: More options to handle Files that are/aren't part of a project:
         1. Cut an existing file (The file is not part / part of a project)
         2. Copy an existing file (The file is not part / part of a project)
         3. Rename an existing project folder in place (The file is part of a project)

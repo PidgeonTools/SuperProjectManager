@@ -44,6 +44,10 @@ from .functions.main_functions import (
     structure_sets_enum_update
 )
 
+from .functions.path_generator import (
+    Subfolders
+)
+
 C = bpy.context
 D = bpy.data
 
@@ -97,6 +101,12 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     save_folder: EnumProperty(
         name="Save to",
         items=subfolder_enum
+    )
+
+    preview_subfolders: BoolProperty(
+        name="Preview compiled Subfolders and warnings.",
+        description="Show the compiled subfolder-strings and their warnings in the preferences.",
+        default=True
     )
 
     auto_check_update: BoolProperty(
@@ -156,6 +166,10 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         op = row.operator(
             "blender_project_manager.remove_structure_set", text="", icon="REMOVE")
         op.structure_set = self.previous_set
+
+        row = layout.row()
+        row.prop(self, "preview_subfolders", toggle=True)
+
         for index, folder in enumerate(self.automatic_folders):
             row = layout.row()
             split = row.split(factor=0.2)
@@ -173,6 +187,19 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
                               icon="PANEL_CLOSE")
             op.index = index
             op.coming_from = "prefs"
+
+            if self.preview_subfolders:
+                box = layout.box()
+                for path in Subfolders(folder.folder_name).paths:
+                    path = path.replace("/", ">")
+                    path = path.replace("\\", ">>")
+
+                    row = box.row()
+                    row.label(text=path)
+
+                for warning in Subfolders(folder.folder_name).warnings:
+                    row = box.row()
+                    row.label(text=warning, icon="ERROR")
 
         row = layout.row()
         split = row.split(factor=0.2)

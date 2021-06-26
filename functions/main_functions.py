@@ -42,6 +42,10 @@ from .json_functions import (
     encode_json,
 )
 
+from .path_generator import (
+    Subfolders
+)
+
 C = bpy.context
 D = bpy.data
 
@@ -59,12 +63,16 @@ def convert_input_to_filepath(context=None, input=""):
     return path
 
 
-def build_file_folders(context, prop):
+def build_file_folders(context, prefix, unparsed_string):
 
-    path = convert_input_to_filepath(context, prop)
+    for path in Subfolders(unparsed_string).paths:
+        top_level_path = p.join(context.scene.project_location,
+                                context.scene.project_name)
+        path = prefix + path
+        path = p.join(top_level_path, path)
 
-    if not p.isdir(path):
-        os.makedirs(path)
+        if not p.isdir(path):
+            os.makedirs(path)
 
 
 def generate_file_version_number(path):
@@ -111,16 +119,6 @@ def save_filepath(context, filename, subfolder):
     return path
 
 
-def get_file_subfolder(options, item):
-    try:
-        for index, subfolder in enumerate(options):
-            if index == int(item):
-                return convert_input_to_filepath(input=subfolder.folder_name)
-        return ""
-    except:
-        return ""
-
-
 def subfolder_enum(self, context):
     tooltip = "Select Folder as target folder for your Blender File. \
 Uses Folders from Automatic Setup."
@@ -130,8 +128,11 @@ Uses Folders from Automatic Setup."
     if context.scene.project_setup == "Custom_Setup":
         folders = self.custom_folders
     try:
-        for index, folder in enumerate(folders):
-            items.append((str(index), folder.folder_name, tooltip))
+        for folder in folders:
+            for path in Subfolders(folder.folder_name).paths:
+                folder = path.replace("\\", ">>")
+                folder = folder.replace("/", ">")
+                items.append((folder, folder, tooltip))
     except:
         print("Error in main_functions.py, line 128")
 

@@ -36,7 +36,6 @@ from .functions.main_functions import (
     build_file_folders,
     convert_input_to_filepath,
     generate_file_version_number,
-    get_file_subfolder,
     open_directory,
     is_file_in_project_folder,
     save_filepath,
@@ -53,6 +52,10 @@ from .functions.json_functions import (
 from .functions.register_functions import (
     register_automatic_folders,
     unregister_automatic_folders
+)
+
+from .functions.path_generator import (
+    Subfolders
 )
 
 C = bpy.context
@@ -73,32 +76,42 @@ class BLENDER_PROJECT_MANAGER_OT_Build_Project(Operator):
                              context.scene.project_name)
         filename = context.scene.save_file_name
 
+        # Set the prefix.
         prefix = ""
         if prefs.prefix_with_project_name:
             prefix = context.scene.project_name + "_"
 
+        # Set the list of Subfolders.
         folders = prefs.automatic_folders
         if context.scene.project_setup == "Custom_Setup":
             folders = prefs.custom_folders
 
         is_render_outputfolder_set = [e.render_outputpath for e in folders]
         render_outputfolder = None
+
         if True in is_render_outputfolder_set:
+            unparsed_string = folders[is_render_outputfolder_set.index(
+                True)].folder_name
+            output_path = Subfolders(
+                unparsed_string).paths[-1]  # Use last path.
             render_outputfolder = convert_input_to_filepath(
-                context, folders[is_render_outputfolder_set.index(True)].folder_name)
+                context, output_path)
+
+        # Create the Project Folder.
         if not p.isdir(projectpath):
             os.makedirs(projectpath)
 
-        for index, folder in enumerate(folders):
+        # Build all Project Folders
+        for folder in folders:
             try:
                 build_file_folders(context,
-                                   prefix +
+                                   prefix,
                                    folder.folder_name)
             except:
                 pass
-        subfolder = prefix + \
-            get_file_subfolder(folders,
-                               prefs.save_folder)
+
+        # Set the subfolder of the Blender file.
+        subfolder = prefix + convert_input_to_filepath(input=prefs.save_folder)
 
         filepath = D.filepath
         old_filepath = None
