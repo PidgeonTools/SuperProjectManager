@@ -1,0 +1,178 @@
+{
+    "path_tests": [
+        {
+            "case": "Folder>>Subfolder++((Subfolder2>>Subsubfolder))++Subfolder3",
+            "expected_result": {
+                "folders": [
+                    "Folder",
+                    "Folder\\Subfolder",
+                    "Folder\\Subfolder2",
+                    "Folder\\Subfolder2\\Subsubfolder",
+                    "Folder\\Subfolder3"
+                ],
+                "warnings": []
+            },
+            "NR": 1
+        },
+        {
+            "case": "Folder++Folder2++>>Test>>Amazing",
+            "expected_result": {
+                "folders": [
+                    "Folder",
+                    "Folder2",
+                    "Folder2\\Test",
+                    "Folder2\\Test\\Amazing"
+                ],
+                "warnings": [
+                    "A ++ can't be used until at least one Folder name is specified and one >> is used. This also applies for Brackets!",
+                    "A ++ can't be followed by >>"
+                ]
+            },
+            "NR": 2
+        },
+        {
+            "case": "Folder>>Subfolder>>Subsubfolder",
+            "expected_result": {
+                "folders": [
+                    "Folder",
+                    "Folder\\Subfolder",
+                    "Folder\\Subfolder\\Subsubfolder"
+                ],
+                "warnings": []
+            },
+            "NR": 3
+        },
+        {
+            "case": "Folder>>Subfolder1++Subfolder2>>Subsubfolder",
+            "expected_result": {
+                "folders": [
+                    "Folder",
+                    "Folder\\Subfolder1",
+                    "Folder\\Subfolder2",
+                    "Folder\\Subfolder2\\Subsubfolder"
+                ],
+                "warnings": []
+            },
+            "NR": 4
+        },
+        {
+            "case": "Folder>>((Subfolder1>>Subsubfolder1))++Subfolder2>>Subsubfolder2",
+            "expected_result": {
+                "folders": [
+                    "Folder",
+                    "Folder\\Subfolder1",
+                    "Folder\\Subfolder1\\Subsubfolder1",
+                    "Folder\\Subfolder2",
+                    "Folder\\Subfolder2\\Subsubfolder2"
+                ],
+                "warnings": []
+            },
+            "NR": 5
+        },
+        {
+            "case": "Folder>>Subfolder1>>++Subfolder2",
+            "expected_result": {
+                "folders": [
+                    "Folder",
+                    "Folder\\Subfolder1",
+                    "Folder\\Subfolder1\\Subfolder2"
+                ],
+                "warnings": [
+                    "A >> can't be followed by ++"
+                ]
+            },
+            "NR": 6
+        },
+        {
+            "case": "Folder>>((Subfolder>>Subsubfolder1++Subfolder2",
+            "expected_result": {
+                "folders": [
+                    "Folder",
+                    "Folder\\Subfolder",
+                    "Folder\\Subfolder\\Subsubfolder1",
+                    "Folder\\Subfolder\\Subfolder2"
+                ],
+                "warnings": [
+                    "Unmatched Brackets detected! This might lead to unexpected behaviour when compiling paths!"
+                ]
+            },
+            "NR": 7
+        },
+        {
+            "case": "Folder((>>Subfolder>>Subsubfolder1++Subfolder2",
+            "expected_result": {
+                "folders": [
+                    "Folder",
+                    "Subfolder",
+                    "Subfolder\\Subsubfolder1",
+                    "Subfolder\\Subfolder2"
+                ],
+                "warnings": [
+                    "A >> can't be used until at least one Folder name is specified. This also applies for Brackets!",
+                    "Unmatched Brackets detected! This might lead to unexpected behaviour when compiling paths!"
+                ]
+            },
+            "NR": 8
+        },
+        {
+            "case": "Folder((++Subfolder>>Subsubfolder1++Subfolder2",
+            "expected_result": {
+                "folders": [
+                    "Folder",
+                    "Subfolder",
+                    "Subfolder\\Subsubfolder1",
+                    "Subfolder\\Subfolder2"
+                ],
+                "warnings": [
+                    "A ++ can't be used until at least one Folder name is specified and one >> is used. This also applies for Brackets!",
+                    "Unmatched Brackets detected! This might lead to unexpected behaviour when compiling paths!"
+                ]
+            },
+            "NR": 9
+        },
+        {
+            "case": "Folder++Subfolder>>Subsubfolder1++Subfolder2>>",
+            "expected_result": {
+                "folders": [
+                    "Folder",
+                    "Subfolder",
+                    "Subfolder\\Subsubfolder1",
+                    "Subfolder\\Subfolder2"
+                ],
+                "warnings": [
+                    "A ++ can't be used until at least one Folder name is specified and one >> is used. This also applies for Brackets!",
+                    "A string should end with a folder name, not with >> or ++!"
+                ]
+            },
+            "NR": 10
+        },
+        {
+            "case": "Folder>>Subfolder>>Subsubfolder1))++Subfolder2",
+            "expected_result": {
+                "folders": [
+                    "Folder",
+                    "Folder\\Subfolder",
+                    "Folder\\Subfolder\\Subsubfolder1"
+                ],
+                "warnings": [
+                    "Unmatched Brackets detected! This might lead to unexpected behaviour when compiling paths!"
+                ]
+            },
+            "NR": 11
+        },
+        {
+            "case": "((Folder>>Subfolder++Subfolder2))>>Subsubfolder1++Subsubfolder2",
+            "expected_result": {
+                "folders": [
+                    "Folder",
+                    "Folder\\Subfolder",
+                    "Folder\\Subfolder2",
+                    "Folder\\Subfolder2\\Subsubfolder1",
+                    "Folder\\Subfolder2\\Subsubfolder2"
+                ],
+                "warnings": []
+            },
+            "NR": 12
+        }
+    ]
+}
