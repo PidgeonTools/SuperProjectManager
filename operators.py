@@ -39,7 +39,7 @@ from .functions.main_functions import (
     open_directory,
     is_file_in_project_folder,
     save_filepath,
-    add_open_project,
+    add_unfinished_project,
     close_project,
     write_project_info
 )
@@ -86,13 +86,14 @@ class BLENDER_PROJECT_MANAGER_OT_Build_Project(Operator):
         if context.scene.project_setup == "Custom_Setup":
             folders = prefs.custom_folders
 
+        # Set the render outputfolder FULL path.
         is_render_outputfolder_set = [e.render_outputpath for e in folders]
         render_outputfolder = None
 
         if True in is_render_outputfolder_set:
             unparsed_string = folders[is_render_outputfolder_set.index(
                 True)].folder_name
-            output_path = Subfolders(
+            output_path = prefix + Subfolders(
                 unparsed_string).paths[-1]  # Use last path.
             render_outputfolder = convert_input_to_filepath(
                 context, output_path)
@@ -112,7 +113,10 @@ class BLENDER_PROJECT_MANAGER_OT_Build_Project(Operator):
 
         # Set the subfolder of the Blender file.
         subfolder = prefix + convert_input_to_filepath(input=prefs.save_folder)
+        if prefs.save_folder == "Root":
+            subfolder = ""
 
+        # Set the path the Blender File gets saved to.
         filepath = D.filepath
         old_filepath = None
         if filepath == "":
@@ -141,17 +145,20 @@ class BLENDER_PROJECT_MANAGER_OT_Build_Project(Operator):
             if context.scene.cut_or_copy and old_filepath:
                 os.remove(old_filepath)
 
+        # Add the project to the list of unfinished projects.
         if context.scene.add_new_project:
-            add_open_project(projectpath)
+            add_unfinished_project(projectpath)
 
+        # Store all the necessary data in the project info file
         write_project_info(projectpath, filepath)
 
+        # Open the project directory in the explorer, if wanted.
         if context.scene.open_directory:
-            OpenLocation = p.join(context.scene.project_location,
-                                  context.scene.project_name)
-            OpenLocation = p.realpath(OpenLocation)
+            open_location = p.join(context.scene.project_location,
+                                   context.scene.project_name)
+            open_location = p.realpath(open_location)
 
-            open_directory(OpenLocation)
+            open_directory(open_location)
 
         return {"FINISHED"}
 
@@ -205,7 +212,7 @@ class BLENDER_PROJECT_MANAGER_OT_add_project(Operator, ImportHelper):
 
     def execute(self, context):
         projectpath = p.dirname(self.filepath)
-        add_open_project(projectpath)
+        add_unfinished_project(projectpath)
 
         message = "Successfully added project " + p.basename(projectpath)
         self.report({'INFO'}, message)

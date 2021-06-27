@@ -161,7 +161,7 @@ def structure_sets_enum_update(self, context):
     self.previous_set = self.folder_structure_sets
 
 
-def add_open_project(project_path):
+def add_unfinished_project(project_path):
     path = p.join(p.expanduser("~"),
                   "Blender Addons Data",
                   "blender-project-starter",

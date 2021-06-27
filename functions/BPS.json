@@ -7,15 +7,7 @@
             ],
             [
                 0,
-                "Textures"
-            ],
-            [
-                1,
-                "Rendered Images"
-            ],
-            [
-                0,
-                "References"
+                "Images>>Textures++References++Rendered Images"
             ],
             [
                 0,
