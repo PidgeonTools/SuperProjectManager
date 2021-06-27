@@ -11,6 +11,7 @@ class Subfolders():
         self.tokens = self.tokenize()
         self.tokens = self.stack_tokens()
         self.paths = self.compile_paths(self.tokens)
+        self.display_paths = self.compile_display_paths(self.paths)
 
         if self.recursion_level != 0:
             self.warnings.append(
@@ -110,3 +111,15 @@ class Subfolders():
                 compiled_paths.append(token)
 
         return compiled_paths
+
+    def compile_display_paths(self, paths):
+        display_paths = []
+
+        for path in paths:
+            display_path = path.replace("\\", ">>")
+            display_path = display_path.replace("//", ">>")
+            display_path = display_path.replace("/", ">>")
+
+            display_paths.append(display_path)
+
+        return display_paths

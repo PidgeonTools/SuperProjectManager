@@ -174,5 +174,34 @@
             },
             "NR": 12
         }
+    ],
+    "display_paths_tests": [
+        {
+            "case": [
+                "Folder//Subfolder//Subfolder3"
+            ],
+            "expected_result": [
+                "Folder>>Subfolder>>Subfolder3"
+            ],
+            "NR": 1
+        },
+        {
+            "case": [
+                "Folder/Subfolder/Subfolder3"
+            ],
+            "expected_result": [
+                "Folder>>Subfolder>>Subfolder3"
+            ],
+            "NR": 2
+        },
+        {
+            "case": [
+                "Folder\\Subfolder\\Subfolder3"
+            ],
+            "expected_result": [
+                "Folder>>Subfolder>>Subfolder3"
+            ],
+            "NR": 3
+        }
     ]
 }

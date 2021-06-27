@@ -212,10 +212,9 @@ class BLENDER_PROJECT_MANAGER_OT_add_project(Operator, ImportHelper):
 
     def execute(self, context):
         projectpath = p.dirname(self.filepath)
-        add_unfinished_project(projectpath)
 
-        message = "Successfully added project " + p.basename(projectpath)
-        self.report({'INFO'}, message)
+        message_type, message = add_unfinished_project(projectpath)
+        self.report(message_type, message)
         return {"FINISHED"}
 
     def draw(self, context):

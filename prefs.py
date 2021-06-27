@@ -190,10 +190,7 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
             if self.preview_subfolders:
                 box = layout.box()
-                for path in Subfolders(folder.folder_name).paths:
-                    path = path.replace("/", ">")
-                    path = path.replace("\\", ">>")
-
+                for path in Subfolders(folder.folder_name).display_paths:
                     row = box.row()
                     row.label(text=path)
 

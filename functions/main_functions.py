@@ -129,9 +129,7 @@ Uses Folders from Automatic Setup."
         folders = self.custom_folders
     try:
         for folder in folders:
-            for path in Subfolders(folder.folder_name).paths:
-                folder = path.replace("\\", ">>")
-                folder = folder.replace("/", ">")
+            for folder in Subfolders(folder.folder_name).display_paths:
                 items.append((folder, folder, tooltip))
     except:
         print("Error in main_functions.py, line 128")
@@ -168,8 +166,13 @@ def add_unfinished_project(project_path):
                   "BPS.json")
     data = decode_json(path)
 
+    if ["project", project_path] in data["unfinished_projects"]:
+        return {'WARNING'}, f"The Project {p.basename(project_path)} already exists in the list of unfinished Projects!"
+
     data["unfinished_projects"].append(["project", project_path])
     encode_json(data, path)
+
+    return {'INFO'}, f"Successfully added project {p.basename(project_path)} to the list of unfinished projects."
 
 
 def close_project(index):
