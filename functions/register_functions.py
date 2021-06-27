@@ -2,7 +2,7 @@
 #
 #  <Blender Project Starter is made for automatic Project Folder Generation.>
 #    Copyright (C) <2021>  <Steven Scott>
-#    Mofified <2021> <Blender Defender>
+#    Modified <2021> <Blender Defender>
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License

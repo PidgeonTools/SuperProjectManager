@@ -2,7 +2,7 @@
 #
 #  <Blender Project Starter is made for automatic Project Folder Generation.>
 #    Copyright (C) <2021>  <Steven Scott>
-#    Mofified <2021> <Blender Defender>
+#    Modified <2021> <Blender Defender>
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -215,7 +215,8 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
             layout.operator(
                 "wm.url_open", text="Find a project idea").url = url
             layout.separator(factor=0.75)
-        if context.scene.project_rearrange_mode:
+
+        elif context.scene.project_rearrange_mode:
             self.draw_rearrange(context, data)
             layout.operator("blender_project_manager.add_label",
                             text="Add Category Label",
@@ -323,14 +324,14 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
 
             if type == "label":
                 op = row.operator("blender_project_manager.remove_label",
-                                text="",
-                                emboss=False,
-                                icon="PANEL_CLOSE")
+                                  text="",
+                                  emboss=False,
+                                  icon="PANEL_CLOSE")
                 op.index = index
                 op = row.operator("blender_project_manager.change_label",
-                                text="",
-                                emboss=False,
-                                icon="FILE_TEXT")
+                                  text="",
+                                  emboss=False,
+                                  icon="FILE_TEXT")
                 op.index = index
 
             op = row.operator("blender_project_manager.rearrange_to_top",
