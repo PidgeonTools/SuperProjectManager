@@ -1,13 +1,20 @@
 {
-    "automatic_folders": [
-        "Blender Files",
-        "Textures",
-        "Rendered Images",
-        "References",
-        "Sounds"
-    ],
-    "unfinished_projects": [
-        
-    ],
-    "version": 120
+    "automatic_folders": {
+        "Default Folder Set": [
+            [
+                0,
+                "Blender Files"
+            ],
+            [
+                1,
+                "Images>>Textures++References++Rendered Images"
+            ],
+            [
+                0,
+                "Sounds"
+            ]
+        ]
+    },
+    "unfinished_projects": [],
+    "version": 130
 }

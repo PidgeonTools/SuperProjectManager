@@ -2,7 +2,7 @@
 #
 #  <Blender Project Starter is made for automatic Project Folder Generation.>
 #    Copyright (C) <2021>  <Steven Scott>
-#    Mofified <2021> <Blender Defender>
+#    Modified <2021> <Blender Defender>
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -84,11 +84,11 @@ def register_properties():
     Scene_Prop.open_directory = BoolProperty(name="Open Directory",
                                              default=True)
     Scene_Prop.add_new_project = BoolProperty(name="New unfinished project",
-                                             default=True)
+                                              default=True)
     Scene_Prop.save_blender_file = BoolProperty(name="Save Blender File",
-                                                     description="Save Blender \
+                                                description="Save Blender \
 File on build. If disabled, only the project folders are created",
-                                                     default=True)
+                                                default=True)
 
     Scene_Prop.cut_or_copy = BoolProperty(
         name="Cut or Copy",
@@ -107,9 +107,13 @@ current folder to the project folder.",
     Scene_Prop.remap_relative = BoolProperty(name="Remap Relative",
                                              default=True)
     Scene_Prop.compress_save = BoolProperty(name="Compress Save")
+    Scene_Prop.set_render_output = BoolProperty(name="Set the Render Output")
+
+    Scene_Prop.project_rearrange_mode = BoolProperty(
+        name="Switch to Rearrange Mode")
 
 
-def register_automatic_folders(folders):
+def register_automatic_folders(folders, folderset="Default Folder Set"):
     path = p.join(p.expanduser("~"),
                   "Blender Addons Data",
                   "blender-project-starter", "BPS.json")
@@ -120,12 +124,13 @@ def register_automatic_folders(folders):
 
     data = decode_json(path)
 
-    for folder in data["automatic_folders"]:
+    for folder in data["automatic_folders"][folderset]:
         f = folders.add()
-        f["Automatic_Setup"] = folder
+        f["render_outputpath"] = folder[0]
+        f["folder_name"] = folder[1]
 
 
-def unregister_automatic_folders(folders):
+def unregister_automatic_folders(folders, folderset="Default Folder Set"):
     path = p.join(p.expanduser("~"),
                   "Blender Addons Data",
                   "blender-project-starter",
@@ -133,9 +138,10 @@ def unregister_automatic_folders(folders):
     data = []
     original_json = decode_json(path)
 
-    for index, folder in enumerate(folders):
-        data.append(folder["Automatic_Setup"])
+    for folder in folders:
+        data.append([int(folder.render_outputpath),
+                     folder.folder_name])
 
-    original_json["automatic_folders"] = data
+    original_json["automatic_folders"][folderset] = data
 
     encode_json(original_json, path)

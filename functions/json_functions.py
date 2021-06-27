@@ -13,15 +13,3 @@ def encode_json(j, path):
     with open(path, "w") as f:
         json.dump(j, f, indent=4)
     return j
-
-
-def get_element(name):
-    path = p.join(p.expanduser("~"),
-                  "Blender Addons Data",
-                  "blender-project-starter",
-                  "BPS.json"
-                  )
-
-    data = decode_json(path)
-
-    return data[name]

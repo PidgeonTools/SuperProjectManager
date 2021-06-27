@@ -2,7 +2,7 @@
 #
 #  <Blender Project Starter is made for automatic Project Folder Generation.>
 #    Copyright (C) <2021>  <Steven Scott>
-#    Mofified <2021> <Blender Defender>
+#    Modified <2021> <Blender Defender>
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -30,39 +30,61 @@ import sys
 import subprocess
 
 import json
+import time
+
+from .register_functions import (
+    register_automatic_folders,
+    unregister_automatic_folders
+)
 
 from .json_functions import (
     decode_json,
     encode_json,
-    get_element
+)
+
+from .path_generator import (
+    Subfolders
 )
 
 C = bpy.context
 D = bpy.data
 
 
-def build_file_folders(context, prop):
+def convert_input_to_filepath(context=None, input=""):
+    parts = input.split(">>")
+    path = ""
+    if context:
+        path = p.join(context.scene.project_location,
+                      context.scene.project_name)
 
-    prop = prop.split(">>")
-    path = p.join(context.scene.project_location, context.scene.project_name)
-
-    for i in prop:
+    for i in parts:
         path = p.join(path, i)
 
-    if not p.isdir(path):
-        os.makedirs(path)
+    return path
+
+
+def build_file_folders(context, prefix, unparsed_string):
+
+    for path in Subfolders(unparsed_string).paths:
+        top_level_path = p.join(context.scene.project_location,
+                                context.scene.project_name)
+        path = prefix + path
+        path = p.join(top_level_path, path)
+
+        if not p.isdir(path):
+            os.makedirs(path)
 
 
 def generate_file_version_number(path):
     i = 1
     number = "0001"
 
-    while p.exists(path + "_v" + number + ".blend"):
+    while p.exists("{}_v{}.blend".format(path, number)):
         i += 1
         number = str(i)
         number = "0" * (4 - len(number)) + number
 
-    return "_v" + number
+    return "{}_v{}.blend".format(path, number)
 
 
 def open_directory(path):
@@ -86,59 +108,71 @@ def is_file_in_project_folder(context, filepath):
     return filepath.startswith(project_folder)
 
 
-def save_file(context, filename, subfolder):
-    bpy.ops.wm.save_as_mainfile(
-        filepath=p.join(
-            context.scene.project_location,
-            context.scene.project_name,
-            subfolder,
-            filename
-        ) + ".blend",
-        compress=context.scene.compress_save,
-        relative_remap=context.scene.remap_relative
-    )
+def save_filepath(context, filename, subfolder):
+    path = p.join(
+        context.scene.project_location,
+        context.scene.project_name,
+        subfolder,
+        filename
+    ) + ".blend"
+
+    return path
 
 
-def get_file_subfolder(context, options, item):
-    try:
-        for index, subfolder in enumerate(options):
-            if index == int(item):
-                prop = subfolder[context].split(">>")
-                subfolder = ""
-                for i in prop:
-                    subfolder = p.join(subfolder, i)
-                return subfolder
-        return ""
-    except:
-        return ""
-
-
-def subfolder_enum():
+def subfolder_enum(self, context):
     tooltip = "Select Folder as target folder for your Blender File. \
-Uses Folders from Automatic Setup. If you choose an invalid folder, \
-the Root Folder will be selected."
-    default = [("Root", "Root", tooltip)]
-    index = 0
+Uses Folders from Automatic Setup."
+    items = [("Root", "Root", tooltip)]
 
+    folders = self.automatic_folders
+    if context.scene.project_setup == "Custom_Setup":
+        folders = self.custom_folders
     try:
-        for folder in get_element("automatic_folders"):
-            default.append((str(index), folder, tooltip))
-            index += 1
+        for folder in folders:
+            for folder in Subfolders(folder.folder_name).display_paths:
+                items.append((folder, folder, tooltip))
     except:
-        return default
+        print("Error in main_functions.py, line 128")
 
-    return default
+    return items
 
 
-def add_open_project(project_path):
+def structure_sets_enum(self, context):
+    tooltip = "Select a folder Structure Set."
+    items = []
+
+    path = p.join(p.expanduser("~"),
+                  "Blender Addons Data",
+                  "blender-project-starter",
+                  "BPS.json")
+
+    for i in decode_json(path)["automatic_folders"]:
+        items.append((i, i, tooltip))
+
+    return items
+
+
+def structure_sets_enum_update(self, context):
+    unregister_automatic_folders(self.automatic_folders, self.previous_set)
+    register_automatic_folders(
+        self.automatic_folders, self.folder_structure_sets)
+    self.previous_set = self.folder_structure_sets
+
+
+def add_unfinished_project(project_path):
     path = p.join(p.expanduser("~"),
                   "Blender Addons Data",
                   "blender-project-starter",
                   "BPS.json")
     data = decode_json(path)
 
-    data["unfinished_projects"].append(project_path)
+    if ["project", project_path] in data["unfinished_projects"]:
+        return {'WARNING'}, f"The Project {p.basename(project_path)} already exists in the list of unfinished Projects!"
+
+    data["unfinished_projects"].append(["project", project_path])
     encode_json(data, path)
+
+    return {'INFO'}, f"Successfully added project {p.basename(project_path)} to the list of unfinished projects."
 
 
 def close_project(index):
@@ -152,12 +186,34 @@ def close_project(index):
     encode_json(data, path)
 
 
-def redefine_project_path(index, new_path):
-    path = p.join(p.expanduser("~"),
-                  "Blender Addons Data",
-                  "blender-project-starter",
-                  "BPS.json")
-    data = decode_json(path)
+def write_project_info(root_path, blend_file_path):
+    if not blend_file_path.endswith(".blend"):
+        return {"WARNING"}, "Can't create a Blender PM project! Please select a Blender file and try again."
+    data = {
+        "blender_files": {
+            "main_file": None,
+            "other_files": []
+        },
+    }
+    project_info_path = p.join(root_path, ".blender_pm")
+    if p.exists(project_info_path):
+        data = decode_json(project_info_path)
+        if sys.platform == "win32":
+            subprocess.call(
+                'attrib -h "{}"'.format(project_info_path), shell=True)
 
-    data["unfinished_projects"][index] = new_path
-    encode_json(data, path)
+    bfiles = data["blender_files"]
+    if bfiles["main_file"] and bfiles["main_file"] != blend_file_path:
+        bfiles["other_files"].append(bfiles["main_file"])
+    bfiles["main_file"] = blend_file_path
+
+    ct = time.localtime()  # Current time
+    data["build_date"] = [ct.tm_year, ct.tm_mon,
+                          ct.tm_mday, ct.tm_hour, ct.tm_min, ct.tm_sec]
+
+    encode_json(data, project_info_path)
+
+    if sys.platform == "win32":
+        subprocess.call('attrib +h "{}"'.format(project_info_path), shell=True)
+
+    return {"INFO"}, "Successfully created a Blender PM project!"

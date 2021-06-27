@@ -2,7 +2,7 @@
 #
 #  <Blender Project Starter is made for automatic Project Folder Generation.>
 #    Copyright (C) <2021>  <Steven Scott>
-#    Mofified <2021> <Blender Defender>
+#    Modified <2021> <Blender Defender>
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -40,24 +40,25 @@ from . import addon_updater_ops
 
 from .functions.main_functions import (
     subfolder_enum,
+    structure_sets_enum,
+    structure_sets_enum_update
+)
+
+from .functions.path_generator import (
+    Subfolders
 )
 
 C = bpy.context
 D = bpy.data
 
 
-class custom_folder(PropertyGroup):
+class project_folder_props(PropertyGroup):
 
-    Custom_Setup: StringProperty(
-        name="Folder Name",
-        description="Custom Setup Folder. \
-Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
-        default="")
-
-
-class automatic_folder(PropertyGroup):
-
-    Automatic_Setup: StringProperty(
+    render_outputpath: BoolProperty(
+        name="Render Output",
+        description="Output path for your renders.",
+        default=False)
+    folder_name: StringProperty(
         name="Folder Name",
         description="Automatic Setup Folder. \
 Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
@@ -66,14 +67,28 @@ Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
 
 class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     bl_idname = __package__
+    previous_set: StringProperty(default="Default Folder Set")
 
-    custom_folders: CollectionProperty(type=custom_folder)
+    custom_folders: CollectionProperty(type=project_folder_props)
 
-    automatic_folders: CollectionProperty(type=automatic_folder)
+    automatic_folders: CollectionProperty(type=project_folder_props)
 
-    prefix_with_project_name = BoolProperty(
+    folder_structure_sets: EnumProperty(
+        name="Folder Structure Set",
+        description="A list of all available folder sets.",
+        items=structure_sets_enum,
+        update=structure_sets_enum_update
+    )
+
+    prefix_with_project_name: BoolProperty(
         name="Project Name Prefix",
         description="If enabled, use the project name as prefix for all folders.",
+        default=False,
+    )
+
+    auto_set_render_outputpath: BoolProperty(
+        name="Auto Set Render Output Path",
+        description="If enabled, the Auto Set render Output path feature can be used.",
         default=False,
     )
 
@@ -85,35 +100,41 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
     save_folder: EnumProperty(
         name="Save to",
-        items=subfolder_enum(),
+        items=subfolder_enum
     )
 
-    auto_check_update = BoolProperty(
+    preview_subfolders: BoolProperty(
+        name="Preview compiled Subfolders and warnings.",
+        description="Show the compiled subfolder-strings and their warnings in the preferences.",
+        default=True
+    )
+
+    auto_check_update: BoolProperty(
         name="Auto-check for Update",
         description="If enabled, auto-check for updates using an interval",
         default=True,
     )
-    updater_intrval_months = IntProperty(
+    updater_intrval_months: IntProperty(
         name="Months",
         description="Number of months between checking for updates",
         default=0,
         min=0
     )
-    updater_intrval_days = IntProperty(
+    updater_intrval_days: IntProperty(
         name="Days",
         description="Number of days between checking for updates",
         default=7,
         min=0,
         max=31
     )
-    updater_intrval_hours = IntProperty(
+    updater_intrval_hours: IntProperty(
         name="Hours",
         description="Number of hours between checking for updates",
         default=0,
         min=0,
         max=23
     )
-    updater_intrval_minutes = IntProperty(
+    updater_intrval_minutes: IntProperty(
         name="Minutes",
         description="Number of minutes between checking for updates",
         default=0,
@@ -131,15 +152,34 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         )
 
         layout.prop(self, "prefix_with_project_name")
+        layout.prop(self, "auto_set_render_outputpath")
         layout.prop(self, "default_path")
         layout.separator(factor=0.4)
+
+        render_outpath_active = True in [
+            e.render_outputpath for e in self.automatic_folders]
+
+        row = layout.row(align=True)
+        row.prop(self, "folder_structure_sets")
+        row.operator("blender_project_manager.add_structure_set",
+                     text="", icon="ADD")
+        op = row.operator(
+            "blender_project_manager.remove_structure_set", text="", icon="REMOVE")
+        op.structure_set = self.previous_set
+
+        row = layout.row()
+        row.prop(self, "preview_subfolders", toggle=True)
 
         for index, folder in enumerate(self.automatic_folders):
             row = layout.row()
             split = row.split(factor=0.2)
             split.label(text="Folder {}".format(index + 1))
 
-            split.prop(folder, "Automatic_Setup", text="")
+            if self.auto_set_render_outputpath:
+                col = split.column()
+                col.enabled = folder.render_outputpath or not render_outpath_active
+                col.prop(folder, "render_outputpath")
+            split.prop(folder, "folder_name", text="")
 
             op = row.operator("blender_project_manager.remove_folder",
                               text="",
@@ -147,6 +187,16 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
                               icon="PANEL_CLOSE")
             op.index = index
             op.coming_from = "prefs"
+
+            if self.preview_subfolders:
+                box = layout.box()
+                for path in Subfolders(folder.folder_name).display_paths:
+                    row = box.row()
+                    row.label(text=path)
+
+                for warning in Subfolders(folder.folder_name).warnings:
+                    row = box.row()
+                    row.label(text=warning, icon="ERROR")
 
         row = layout.row()
         split = row.split(factor=0.2)
@@ -178,8 +228,7 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
 
 classes = (
-    custom_folder,
-    automatic_folder,
+    project_folder_props,
     BLENDER_PROJECT_MANAGER_APT_Preferences
 )
 

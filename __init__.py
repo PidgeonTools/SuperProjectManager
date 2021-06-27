@@ -2,7 +2,7 @@
 #
 #  <Blender Project Starter is made for automatic Project Folder Generation.>
 #    Copyright (C) <2021>  <Steven Scott>
-#    Mofified <2021> <Blender Defender>
+#    Modified <2021> <Blender Defender>
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -46,7 +46,7 @@ bl_info = {
     "name": "Blender PM (Project Manager)",
     "description": "Manage and setup your projects the easy way!",
     "author": "Blender Defender, Steven Scott",
-    "version": (1, 2, 0),
+    "version": (1, 3, 0),
     "blender": (2, 83, 0),
     "location": "Properties >> Scene Properties >> Blender PM (Project Manager)",
     "warning": "",

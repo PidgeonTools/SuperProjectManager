@@ -40,6 +40,29 @@ def setup_addons_data():
         os.makedirs(path)
 
 
+def update_to_120(data):
+    data["version"] = 120
+    return data
+
+
+def update_to_130(data):
+    default_folders = []
+    while data["automatic_folders"]:
+        folder = data["automatic_folders"].pop(0)
+        default_folders.append([False, folder])
+
+    data["automatic_folders"] = {}
+    data["automatic_folders"]["Default Folder Set"] = default_folders
+
+    for i in range(len(data["unfinished_projects"])):
+        data["unfinished_projects"][i] = [
+            "project", data["unfinished_projects"][i]]
+
+    data["version"] = 130
+
+    return data
+
+
 def update_json():
     path = p.join(p.expanduser("~"),
                   "Blender Addons Data",
@@ -48,7 +71,16 @@ def update_json():
     data = decode_json(path)
 
     try:
-        print(data["version"])
+        version = data["version"]
     except:
-        data["version"] = 120
-        encode_json(data, path)
+        version = 110
+
+    if version == 110:
+        data = update_to_120(data)
+        version = 120
+
+    if version == 120:
+        data = update_to_130(data)
+        version = 130
+
+    encode_json(data, path)
