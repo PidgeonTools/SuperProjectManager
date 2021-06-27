@@ -46,7 +46,7 @@ bl_info = {
     "name": "Blender PM (Project Manager)",
     "description": "Manage and setup your projects the easy way!",
     "author": "Blender Defender, Steven Scott",
-    "version": (1, 2, 0),
+    "version": (1, 3, 0),
     "blender": (2, 83, 0),
     "location": "Properties >> Scene Properties >> Blender PM (Project Manager)",
     "warning": "",
