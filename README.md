@@ -11,19 +11,9 @@ created and the Blender File is saved into the right folder.
 Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you want to [learn more](https://github.com/BlenderDefender/blender_pm/wiki)
 
 ## Upcoming Version:
-- [x] Fix: Open Finder ([Issue #16](https://github.com/BlenderDefender/blender_pm/issues/16))
-- [x] Feature: Update BPS.json to work with the new features.
-- [x] Feature: Automatically Set Render Output Path
-- [x] Feature: Hidden Project info file, as a base for these features:
-    - [x] Open .blend file with one click
-- [x] Feature: Folder Structure Sets [#14](https://github.com/BlenderDefender/blender_project_manager/issues/14)
-- [x] Improvement: Project display:
-    - [x] Option to rearrange Projects
-    - [x] Option to Sort Project in Categories
-    - [x] Display the number of unfinished projects (You've got n unfinished projects)
-- [x] Improvement: Update subfolder enum without restart
-- [x] Improvement: Better icons
-- [x] Improvement: Multiple subfolders in one Folder (Syntax: Folder>>((Subfolder1>>Subsubfolder))++Subfolder2)
+
+We've just hit another update. No features are planned so far. [Change this!](https://github.com/BlenderDefender/blender_pm/issues/new/choose)
+
   <!-- - [ ] Feature: More precise differentiation between Blender Files that are part of a project and Blender Files, that aren't part of a project  Not sure! -->
   <!-- - [ ] Feature: More options to handle Files that are/aren't part of a project:
         1. Cut an existing file (The file is not part / part of a project)
@@ -31,9 +21,21 @@ Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you
         3. Rename an existing project folder in place (The file is part of a project)
         4. Rename and move an existing project folder (and move the .blend file in the inside) (The file is part of a project) -->
 
-<!--
-We've just hit another update. No features are planned so far. [Change this!](https://github.com/BlenderDefender/blender_pm/issues/new/choose)
--->
+## New Features:
+* Fix: Open Finder ([Issue #16](https://github.com/BlenderDefender/blender_pm/issues/16))
+* Feature: Update BPS.json to work with the new features.
+* Feature: Automatically Set Render Output Path
+* Feature: Hidden Project info file, as a base for these features:
+* - Open .blend file with one click
+* Feature: Folder Structure Sets [#14](https://github.com/BlenderDefender/blender_project_manager/issues/14)
+* Improvement: Project display:
+* - Option to rearrange Projects
+* - Option to Sort Project in Categories
+* - Display the number of unfinished projects (You've got n unfinished projects)
+* Improvement: Update subfolder enum without restart
+* Improvement: Better icons
+* Improvement: Multiple subfolders in one Folder (Syntax: Folder>>((Subfolder1>>Subsubfolder))++Subfolder2)
+
 
 ## System requirements:
 | **OS** | **Blender** |
