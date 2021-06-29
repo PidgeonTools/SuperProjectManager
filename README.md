@@ -21,20 +21,8 @@ We've just hit another update. No features are planned so far. [Change this!](ht
         3. Rename an existing project folder in place (The file is part of a project)
         4. Rename and move an existing project folder (and move the .blend file in the inside) (The file is part of a project) -->
 
-## New Features:
-* Fix: Open Finder ([Issue #16](https://github.com/BlenderDefender/blender_pm/issues/16))
-* Feature: Update BPS.json to work with the new features.
-* Feature: Automatically Set Render Output Path
-* Feature: Hidden Project info file, as a base for these features:
-* - Open .blend file with one click
-* Feature: Folder Structure Sets [#14](https://github.com/BlenderDefender/blender_project_manager/issues/14)
-* Improvement: Project display:
-* - Option to rearrange Projects
-* - Option to Sort Project in Categories
-* - Display the number of unfinished projects (You've got n unfinished projects)
-* Improvement: Update subfolder enum without restart
-* Improvement: Better icons
-* Improvement: Multiple subfolders in one Folder (Syntax: Folder>>((Subfolder1>>Subsubfolder))++Subfolder2)
+<!-- ## New Features: -->
+
 
 
 ## System requirements:

@@ -1,3 +1,21 @@
+Version 1.3.1
+* Codestyle: Rename Addon to Super Project Manager, adjust class names
+
+Version 1.3.0
+* Fix: Open Finder ([Issue #16](https://github.com/BlenderDefender/blender_pm/issues/16))
+* Feature: Update BPS.json to work with the new features.
+* Feature: Automatically Set Render Output Path
+* Feature: Hidden Project info file, as a base for these features:
+* - Open .blend file with one click
+* Feature: Folder Structure Sets [#14](https://github.com/BlenderDefender/blender_project_manager/issues/14)
+* Improvement: Project display:
+* - Option to rearrange Projects
+* - Option to Sort Project in Categories
+* - Display the number of unfinished projects (You've got n unfinished projects)
+* Improvement: Update subfolder enum without restart
+* Improvement: Better icons
+* Improvement: Multiple subfolders in one Folder (Syntax: Folder>>((Subfolder1>>Subsubfolder))++Subfolder2)
+
 Version 1.2.0
 * Fix: Project Folder doesn't open on Linux
 * Fix: Subfolders aren't created on Linux

@@ -34,9 +34,9 @@ from .functions.json_functions import decode_json
 C = bpy.context
 
 
-class BLENDER_PROJECT_MANAGER_PT_main_panel(Panel):
+class SUPER_PROJECT_MANAGER_PT_main_panel(Panel):
     bl_label = "Blender PM (Project Manager)"
-    bl_idname = "blender_project_manager_PT__main_panel"
+    bl_idname = "super_project_manager_PT__main_panel"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "scene"
@@ -46,23 +46,23 @@ class BLENDER_PROJECT_MANAGER_PT_main_panel(Panel):
         pass
 
 
-class BLENDER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
+class SUPER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
     bl_label = "Project Starter"
-    bl_idname = "blender_project_manager_PT_starter_main_panel"
+    bl_idname = "super_project_manager_PT_starter_main_panel"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "scene"
-    bl_parent_id = "blender_project_manager_PT__main_panel"
+    bl_parent_id = "super_project_manager_PT__main_panel"
 
     def draw(self, context):
         prefs = C.preferences.addons[__package__].preferences
-        ic = context.scene.blender_project_manager_icons["BUILD_ICON"].icon_id
+        ic = context.scene.super_project_manager_icons["BUILD_ICON"].icon_id
 
         layout = self.layout
         row = layout.row(align=False)
         row.scale_x = 2.0
         row.scale_y = 2.0
-        row.operator("blender_project_manager.build_project",
+        row.operator("super_project_manager.build_project",
                      text="BUILD PROJECT",
                      icon_value=ic)
 
@@ -96,7 +96,7 @@ class BLENDER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
                     col.prop(folder, "render_outputpath")
                 split.prop(folder, "folder_name", text="")
 
-                op = row.operator("blender_project_manager.remove_folder",
+                op = row.operator("super_project_manager.remove_folder",
                                   text="",
                                   emboss=False,
                                   icon="PANEL_CLOSE")
@@ -107,7 +107,7 @@ class BLENDER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
             split = row.split(factor=0.2)
 
             split.separator()
-            op = split.operator("blender_project_manager.add_folder",
+            op = split.operator("super_project_manager.add_folder",
                                 icon="PLUS")
             op.coming_from = "panel"
 
@@ -124,13 +124,13 @@ class BLENDER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
                     expand=False)
 
 
-class BLENDER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel(Panel):
+class SUPER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel(Panel):
     bl_label = " "
-    bl_idname = "blender_project_manager_PT_Blender_File_save_options_subpanel"
+    bl_idname = "super_project_manager_PT_Blender_File_save_options_subpanel"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "scene"
-    bl_parent_id = "blender_project_manager_PT_starter_main_panel"
+    bl_parent_id = "super_project_manager_PT_starter_main_panel"
 
     def draw_header(self, context):
         layout = self.layout
@@ -187,13 +187,13 @@ class BLENDER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel(Panel):
                      text="Set Render Output")
 
 
-class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
+class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
     bl_label = "Project Manager"
-    bl_idname = "blender_project_manager_PT_Open_Projects_subpanel"
+    bl_idname = "super_project_manager_PT_Open_Projects_subpanel"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "scene"
-    bl_parent_id = "blender_project_manager_PT__main_panel"
+    bl_parent_id = "super_project_manager_PT__main_panel"
 
     def draw(self, context):
         layout = self.layout
@@ -218,7 +218,7 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
 
         elif context.scene.project_rearrange_mode:
             self.draw_rearrange(context, data)
-            layout.operator("blender_project_manager.add_label",
+            layout.operator("super_project_manager.add_label",
                             text="Add Category Label",
                             icon="PLUS")
             layout.prop(context.scene, "project_rearrange_mode",
@@ -228,7 +228,7 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
             layout.prop(context.scene, "project_rearrange_mode",
                         text="Switch to Rearrange Mode", toggle=True)
 
-        layout.operator("blender_project_manager.add_project",
+        layout.operator("super_project_manager.add_project",
                         text="Add unfinished project",
                         icon="PLUS")
 
@@ -271,15 +271,15 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                 row.label(text=project_name)
 
                 if not p.exists(project):
-                    op = row.operator("blender_project_manager.redefine_project_path",
+                    op = row.operator("super_project_manager.redefine_project_path",
                                       text="",
                                       icon="ERROR")
                     op.index = index
                     op.name = project_name
 
-                operator = "blender_project_manager.open_blender_file"
+                operator = "super_project_manager.open_blender_file"
                 if not self.path_to_blend(project)[0]:
-                    operator = "blender_project_manager.define_blend_file_location"
+                    operator = "super_project_manager.define_blend_file_location"
                 op = row.operator(operator,
                                   text="",
                                   emboss=False,
@@ -292,13 +292,13 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                 op.message_type = project_details[1]
                 op.message = project_details[2]
 
-                op = row.operator("blender_project_manager.open_project_path",
+                op = row.operator("super_project_manager.open_project_path",
                                   text="",
                                   emboss=False,
                                   icon="FOLDER_REDIRECT")
                 op.projectpath = project
 
-                op = row.operator("blender_project_manager.close_project",
+                op = row.operator("super_project_manager.close_project",
                                   text="",
                                   emboss=False,
                                   icon="PANEL_CLOSE")
@@ -323,36 +323,36 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
             row.label(text=content)
 
             if type == "label":
-                op = row.operator("blender_project_manager.remove_label",
+                op = row.operator("super_project_manager.remove_label",
                                   text="",
                                   emboss=False,
                                   icon="PANEL_CLOSE")
                 op.index = index
-                op = row.operator("blender_project_manager.change_label",
+                op = row.operator("super_project_manager.change_label",
                                   text="",
                                   emboss=False,
                                   icon="FILE_TEXT")
                 op.index = index
 
-            op = row.operator("blender_project_manager.rearrange_to_top",
+            op = row.operator("super_project_manager.rearrange_to_top",
                               text="",
                               emboss=False,
                               icon="EXPORT")
             op.index = index
 
-            op = row.operator("blender_project_manager.rearrange_up",
+            op = row.operator("super_project_manager.rearrange_up",
                               text="",
                               emboss=False,
                               icon="SORT_DESC")
             op.index = index
 
-            op = row.operator("blender_project_manager.rearrange_down",
+            op = row.operator("super_project_manager.rearrange_down",
                               text="",
                               emboss=False,
                               icon="SORT_ASC")
             op.index = index
 
-            op = row.operator("blender_project_manager.rearrange_to_bottom",
+            op = row.operator("super_project_manager.rearrange_to_bottom",
                               text="",
                               emboss=False,
                               icon="IMPORT")
@@ -360,10 +360,10 @@ class BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
 
 
 classes = (
-    BLENDER_PROJECT_MANAGER_PT_main_panel,
-    BLENDER_PROJECT_MANAGER_PT_starter_main_panel,
-    BLENDER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel,
-    BLENDER_PROJECT_MANAGER_PT_Open_Projects_subpanel
+    SUPER_PROJECT_MANAGER_PT_main_panel,
+    SUPER_PROJECT_MANAGER_PT_starter_main_panel,
+    SUPER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel,
+    SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel
 )
 
 

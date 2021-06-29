@@ -43,10 +43,10 @@ from . import (
 )
 
 bl_info = {
-    "name": "Blender PM (Project Manager)",
+    "name": "Super Project Manager",
     "description": "Manage and setup your projects the easy way!",
-    "author": "Blender Defender, Steven Scott",
-    "version": (1, 3, 0),
+    "author": "Blender Defender",
+    "version": (1, 3, 1),
     "blender": (2, 83, 0),
     "location": "Properties >> Scene Properties >> Blender PM (Project Manager)",
     "warning": "",

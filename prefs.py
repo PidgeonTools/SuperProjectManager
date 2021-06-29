@@ -65,7 +65,7 @@ Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
         default="")
 
 
-class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
+class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     bl_idname = __package__
     previous_set: StringProperty(default="Default Folder Set")
 
@@ -144,12 +144,17 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
     def draw(self, context):
         layout = self.layout
-        ic = context.scene.blender_project_manager_icons["BUILD_ICON"].icon_id
+        ic = context.scene.super_project_manager_icons["BUILD_ICON"].icon_id
 
         layout.label(
-            text="Blender Project Manager ",
+            text="Super Project Manager",
             icon_value=ic
         )
+
+        layout.separator()
+        col = layout.column()
+        op = col.operator("wm.url_open", text="Support", icon="URL")
+        op.url = "https://discord.gg/grvMQuh6ru"
 
         layout.prop(self, "prefix_with_project_name")
         layout.prop(self, "auto_set_render_outputpath")
@@ -161,10 +166,10 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
         row = layout.row(align=True)
         row.prop(self, "folder_structure_sets")
-        row.operator("blender_project_manager.add_structure_set",
+        row.operator("super_project_manager.add_structure_set",
                      text="", icon="ADD")
         op = row.operator(
-            "blender_project_manager.remove_structure_set", text="", icon="REMOVE")
+            "super_project_manager.remove_structure_set", text="", icon="REMOVE")
         op.structure_set = self.previous_set
 
         row = layout.row()
@@ -181,7 +186,7 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
                 col.prop(folder, "render_outputpath")
             split.prop(folder, "folder_name", text="")
 
-            op = row.operator("blender_project_manager.remove_folder",
+            op = row.operator("super_project_manager.remove_folder",
                               text="",
                               emboss=False,
                               icon="PANEL_CLOSE")
@@ -202,7 +207,7 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         split = row.split(factor=0.2)
 
         split.separator()
-        op = split.operator("blender_project_manager.add_folder",
+        op = split.operator("super_project_manager.add_folder",
                             icon="PLUS")
         op.coming_from = "prefs"
 
@@ -229,7 +234,7 @@ class BLENDER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
 classes = (
     project_folder_props,
-    BLENDER_PROJECT_MANAGER_APT_Preferences
+    SUPER_PROJECT_MANAGER_APT_Preferences
 )
 
 

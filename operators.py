@@ -61,8 +61,8 @@ from .functions.path_generator import (
 C = bpy.context
 
 
-class BLENDER_PROJECT_MANAGER_OT_Build_Project(Operator):
-    bl_idname = "blender_project_manager.build_project"
+class SUPER_PROJECT_MANAGER_OT_Build_Project(Operator):
+    bl_idname = "super_project_manager.build_project"
     bl_label = "Build Project"
     bl_description = "Build Project Operator "
     bl_options = {"REGISTER", "UNDO"}
@@ -163,8 +163,8 @@ class BLENDER_PROJECT_MANAGER_OT_Build_Project(Operator):
         return {"FINISHED"}
 
 
-class BLENDER_PROJECT_MANAGER_OT_add_folder(Operator):
-    bl_idname = "blender_project_manager.add_folder"
+class SUPER_PROJECT_MANAGER_OT_add_folder(Operator):
+    bl_idname = "super_project_manager.add_folder"
     bl_label = "Add Folder"
     bl_description = "Add a Folder with the subfolder \
 Layout Folder>>Subfolder>>Subsubfolder."
@@ -183,8 +183,8 @@ Layout Folder>>Subfolder>>Subsubfolder."
         return {"FINISHED"}
 
 
-class BLENDER_PROJECT_MANAGER_OT_remove_folder(Operator):
-    bl_idname = "blender_project_manager.remove_folder"
+class SUPER_PROJECT_MANAGER_OT_remove_folder(Operator):
+    bl_idname = "super_project_manager.remove_folder"
     bl_label = "Remove Folder"
     bl_description = "Remove the selected Folder."
 
@@ -203,8 +203,8 @@ class BLENDER_PROJECT_MANAGER_OT_remove_folder(Operator):
         return {"FINISHED"}
 
 
-class BLENDER_PROJECT_MANAGER_OT_add_project(Operator, ImportHelper):
-    bl_idname = "blender_project_manager.add_project"
+class SUPER_PROJECT_MANAGER_OT_add_project(Operator, ImportHelper):
+    bl_idname = "super_project_manager.add_project"
     bl_label = "Add Project"
     bl_description = "Add a Project"
 
@@ -222,8 +222,8 @@ class BLENDER_PROJECT_MANAGER_OT_add_project(Operator, ImportHelper):
         layout.label(text="Please select a project Directory")
 
 
-class BLENDER_PROJECT_MANAGER_OT_close_project(bpy.types.Operator):
-    bl_idname = "blender_project_manager.close_project"
+class SUPER_PROJECT_MANAGER_OT_close_project(bpy.types.Operator):
+    bl_idname = "super_project_manager.close_project"
     bl_label = "Close Project"
     bl_description = "Close the selected Project."
     bl_options = {'REGISTER', 'UNDO'}
@@ -252,8 +252,8 @@ class BLENDER_PROJECT_MANAGER_OT_close_project(bpy.types.Operator):
             text="but you might forget about this project and never finish it.")
 
 
-class BLENDER_PROJECT_MANAGER_OT_redefine_project_path(Operator, ImportHelper):
-    bl_idname = "blender_project_manager.redefine_project_path"
+class SUPER_PROJECT_MANAGER_OT_redefine_project_path(Operator, ImportHelper):
+    bl_idname = "super_project_manager.redefine_project_path"
     bl_label = "Update Project path"
     bl_description = "Your project has changed location - \
 please update the project path"
@@ -289,8 +289,8 @@ please update the project path"
         encode_json(data, path)
 
 
-class BLENDER_PROJECT_MANAGER_OT_open_project_path(Operator):
-    bl_idname = "blender_project_manager.open_project_path"
+class SUPER_PROJECT_MANAGER_OT_open_project_path(Operator):
+    bl_idname = "super_project_manager.open_project_path"
     bl_label = "Open Project path"
     bl_description = "Open your project folder."
 
@@ -303,9 +303,9 @@ class BLENDER_PROJECT_MANAGER_OT_open_project_path(Operator):
         return {"FINISHED"}
 
 
-class BLENDER_PROJECT_MANAGER_OT_open_blender_file(Operator):
+class SUPER_PROJECT_MANAGER_OT_open_blender_file(Operator):
     """Open the latest Blender-File of a project"""
-    bl_idname = "blender_project_manager.open_blender_file"
+    bl_idname = "super_project_manager.open_blender_file"
     bl_label = "Open Blender File"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -321,9 +321,9 @@ class BLENDER_PROJECT_MANAGER_OT_open_blender_file(Operator):
         return {"FINISHED"}
 
 
-class BLENDER_PROJECT_MANAGER_ot_define_blend_file_location(bpy.types.Operator, ImportHelper):
+class SUPER_PROJECT_MANAGER_ot_define_blend_file_location(bpy.types.Operator, ImportHelper):
     """This Operator is used to (re)define the location of the projects main Blender File"""
-    bl_idname = "blender_project_manager.define_blend_file_location"
+    bl_idname = "super_project_manager.define_blend_file_location"
     bl_label = "Define Project Blender File Path"
     bl_options = {'REGISTER', 'UNDO'}
     bl_description = "Can't find the right path to the Blender File. \
@@ -342,7 +342,7 @@ Please select the latest Blender File of you Project."
             p.basename(self.filepath)
         self.report({'INFO'}, message)
 
-        bpy.ops.blender_project_manager.open_blender_file(
+        bpy.ops.super_project_manager.open_blender_file(
             filepath=self.filepath, message_type="INFO", message=f"Opened the project file found in {self.filepath}")
         return {"FINISHED"}
 
@@ -355,9 +355,9 @@ Please select the latest Blender File of you Project."
         layout.label(text=name)
 
 
-class BLENDER_PROJECT_MANAGER_ot_rearrange_up(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_rearrange_up(bpy.types.Operator):
     """Rearrange a Project or Label one step up."""
-    bl_idname = "blender_project_manager.rearrange_up"
+    bl_idname = "super_project_manager.rearrange_up"
     bl_label = "Rearrange Up"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -378,9 +378,9 @@ class BLENDER_PROJECT_MANAGER_ot_rearrange_up(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class BLENDER_PROJECT_MANAGER_ot_rearrange_down(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_rearrange_down(bpy.types.Operator):
     """Rearrange a Project or Label one step down."""
-    bl_idname = "blender_project_manager.rearrange_down"
+    bl_idname = "super_project_manager.rearrange_down"
     bl_label = "Rearrange Down"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -401,9 +401,9 @@ class BLENDER_PROJECT_MANAGER_ot_rearrange_down(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class BLENDER_PROJECT_MANAGER_ot_rearrange_to_top(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_rearrange_to_top(bpy.types.Operator):
     """Rearrange a Project or Label to the top."""
-    bl_idname = "blender_project_manager.rearrange_to_top"
+    bl_idname = "super_project_manager.rearrange_to_top"
     bl_label = "Rearrange to Top"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -425,9 +425,9 @@ class BLENDER_PROJECT_MANAGER_ot_rearrange_to_top(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class BLENDER_PROJECT_MANAGER_ot_rearrange_to_bottom(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_rearrange_to_bottom(bpy.types.Operator):
     """Rearrange a Project or Label to the bottom."""
-    bl_idname = "blender_project_manager.rearrange_to_bottom"
+    bl_idname = "super_project_manager.rearrange_to_bottom"
     bl_label = "Rearrange to Bottom"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -449,9 +449,9 @@ class BLENDER_PROJECT_MANAGER_ot_rearrange_to_bottom(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class BLENDER_PROJECT_MANAGER_ot_add_label(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_add_label(bpy.types.Operator):
     """Add a category Label to the open projects list."""
-    bl_idname = "blender_project_manager.add_label"
+    bl_idname = "super_project_manager.add_label"
     bl_label = "Add Label"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -478,9 +478,9 @@ class BLENDER_PROJECT_MANAGER_ot_add_label(bpy.types.Operator):
         layout.prop(self, "label", text="Category Label Text:")
 
 
-class BLENDER_PROJECT_MANAGER_ot_remove_label(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_remove_label(bpy.types.Operator):
     """Remove a category Label from the open projects list."""
-    bl_idname = "blender_project_manager.remove_label"
+    bl_idname = "super_project_manager.remove_label"
     bl_label = "Remove Label"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -499,9 +499,9 @@ class BLENDER_PROJECT_MANAGER_ot_remove_label(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class BLENDER_PROJECT_MANAGER_ot_change_label(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_change_label(bpy.types.Operator):
     """Change a category Label from the open projects list."""
-    bl_idname = "blender_project_manager.change_label"
+    bl_idname = "super_project_manager.change_label"
     bl_label = "Change Label"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -529,9 +529,9 @@ class BLENDER_PROJECT_MANAGER_ot_change_label(bpy.types.Operator):
         layout.prop(self, "label", text="Category Label Text:")
 
 
-class BLENDER_PROJECT_MANAGER_ot_add_structure_set(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_add_structure_set(bpy.types.Operator):
     """Adds a new folder structure set."""
-    bl_idname = "blender_project_manager.add_structure_set"
+    bl_idname = "super_project_manager.add_structure_set"
     bl_label = "Add Folder Structure Set"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -563,9 +563,9 @@ class BLENDER_PROJECT_MANAGER_ot_add_structure_set(bpy.types.Operator):
         layout.prop(self, "name", text="Folder Structure Set Name:")
 
 
-class BLENDER_PROJECT_MANAGER_ot_remove_structure_set(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_remove_structure_set(bpy.types.Operator):
     """Remove a folder structure set"""
-    bl_idname = "blender_project_manager.remove_structure_set"
+    bl_idname = "super_project_manager.remove_structure_set"
     bl_label = "Remove Set"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -592,24 +592,24 @@ class BLENDER_PROJECT_MANAGER_ot_remove_structure_set(bpy.types.Operator):
 
 
 classes = (
-    BLENDER_PROJECT_MANAGER_OT_add_folder,
-    BLENDER_PROJECT_MANAGER_OT_remove_folder,
-    BLENDER_PROJECT_MANAGER_OT_Build_Project,
-    BLENDER_PROJECT_MANAGER_OT_add_project,
-    BLENDER_PROJECT_MANAGER_OT_close_project,
-    BLENDER_PROJECT_MANAGER_OT_redefine_project_path,
-    BLENDER_PROJECT_MANAGER_OT_open_project_path,
-    BLENDER_PROJECT_MANAGER_OT_open_blender_file,
-    BLENDER_PROJECT_MANAGER_ot_define_blend_file_location,
-    BLENDER_PROJECT_MANAGER_ot_rearrange_up,
-    BLENDER_PROJECT_MANAGER_ot_rearrange_down,
-    BLENDER_PROJECT_MANAGER_ot_rearrange_to_top,
-    BLENDER_PROJECT_MANAGER_ot_rearrange_to_bottom,
-    BLENDER_PROJECT_MANAGER_ot_add_label,
-    BLENDER_PROJECT_MANAGER_ot_remove_label,
-    BLENDER_PROJECT_MANAGER_ot_change_label,
-    BLENDER_PROJECT_MANAGER_ot_add_structure_set,
-    BLENDER_PROJECT_MANAGER_ot_remove_structure_set
+    SUPER_PROJECT_MANAGER_OT_add_folder,
+    SUPER_PROJECT_MANAGER_OT_remove_folder,
+    SUPER_PROJECT_MANAGER_OT_Build_Project,
+    SUPER_PROJECT_MANAGER_OT_add_project,
+    SUPER_PROJECT_MANAGER_OT_close_project,
+    SUPER_PROJECT_MANAGER_OT_redefine_project_path,
+    SUPER_PROJECT_MANAGER_OT_open_project_path,
+    SUPER_PROJECT_MANAGER_OT_open_blender_file,
+    SUPER_PROJECT_MANAGER_ot_define_blend_file_location,
+    SUPER_PROJECT_MANAGER_ot_rearrange_up,
+    SUPER_PROJECT_MANAGER_ot_rearrange_down,
+    SUPER_PROJECT_MANAGER_ot_rearrange_to_top,
+    SUPER_PROJECT_MANAGER_ot_rearrange_to_bottom,
+    SUPER_PROJECT_MANAGER_ot_add_label,
+    SUPER_PROJECT_MANAGER_ot_remove_label,
+    SUPER_PROJECT_MANAGER_ot_change_label,
+    SUPER_PROJECT_MANAGER_ot_add_structure_set,
+    SUPER_PROJECT_MANAGER_ot_remove_structure_set
 )
 
 
