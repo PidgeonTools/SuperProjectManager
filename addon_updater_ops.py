@@ -128,7 +128,7 @@ class addon_updater_install_popup(bpy.types.Operator):
         default=False,
         options={'HIDDEN'}
     )
-    ignore_enum = bpy.props.EnumProperty(
+    ignore_enum: bpy.props.EnumProperty(
         name="Process update",
         description="Decide to install, ignore, or defer new addon update",
         items=[
@@ -335,7 +335,7 @@ class addon_updater_update_target(bpy.types.Operator):
             i += 1
         return ret
 
-    target = bpy.props.EnumProperty(
+    target: bpy.props.EnumProperty(
         name="Target version to install",
         description="Select the version to install",
         items=target_version
