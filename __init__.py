@@ -43,7 +43,7 @@ from . import (
 )
 
 bl_info = {
-    "name": "Super Project Manager",
+    "name": "Super Project Manager (SPM)",
     "description": "Manage and setup your projects the easy way!",
     "author": "Blender Defender",
     "version": (1, 3, 1),
