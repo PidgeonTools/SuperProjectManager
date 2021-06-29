@@ -35,7 +35,7 @@ C = bpy.context
 
 
 class SUPER_PROJECT_MANAGER_PT_main_panel(Panel):
-    bl_label = "Blender PM (Project Manager)"
+    bl_label = "Super Project Manager"
     bl_idname = "super_project_manager_PT__main_panel"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
@@ -237,7 +237,7 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
     # is returned. If no file is available, None is returned.
     def path_to_blend(self, projectpath):
         if not p.exists(p.join(projectpath, ".blender_pm")):
-            return None, "WARNING", "Your project is not a Blender PM Project."
+            return None, "WARNING", "Your project is not a Super Project Manager Project."
 
         blender_files = decode_json(
             p.join(projectpath, ".blender_pm"))["blender_files"]

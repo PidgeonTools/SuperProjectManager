@@ -2,7 +2,7 @@
 ![GitHub](https://img.shields.io/github/license/BlenderDefender/blender_project_starter?color=green&style=for-the-badge)
 [![GitHub issues](https://img.shields.io/github/issues/BlenderDefender/blender_project_starter?style=for-the-badge)](https://github.com/BlenderDefender/blender_pm/issues)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/BlenderDefender/blender_project_starter?style=for-the-badge)
-# Blender PM (Project Manager)
+# Super Project Manager
 Managing your unfinished Projects streamlined. Features:
 - Create your Project Folders consistently. With the click of a button, all your project folders are
 created and the Blender File is saved into the right folder.

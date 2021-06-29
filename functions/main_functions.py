@@ -188,7 +188,7 @@ def close_project(index):
 
 def write_project_info(root_path, blend_file_path):
     if not blend_file_path.endswith(".blend"):
-        return {"WARNING"}, "Can't create a Blender PM project! Please select a Blender file and try again."
+        return {"WARNING"}, "Can't create a Super Project Manager project! Please select a Blender file and try again."
     data = {
         "blender_files": {
             "main_file": None,
@@ -216,4 +216,4 @@ def write_project_info(root_path, blend_file_path):
     if sys.platform == "win32":
         subprocess.call('attrib +h "{}"'.format(project_info_path), shell=True)
 
-    return {"INFO"}, "Successfully created a Blender PM project!"
+    return {"INFO"}, "Successfully created a Super Project Manager project!"

@@ -48,7 +48,7 @@ bl_info = {
     "author": "Blender Defender",
     "version": (1, 3, 1),
     "blender": (2, 83, 0),
-    "location": "Properties >> Scene Properties >> Blender PM (Project Manager)",
+    "location": "Properties >> Scene Properties >> Super Project Manager",
     "warning": "",
     "wiki_url": "https://github.com/BlenderDefender/blender_project_manager/wiki",
     "tracker_url": "https://github.com/BlenderDefender/\
