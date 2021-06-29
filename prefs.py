@@ -151,11 +151,6 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
             icon_value=ic
         )
 
-        layout.separator()
-        col = layout.column()
-        op = col.operator("wm.url_open", text="Support", icon="URL")
-        op.url = "https://discord.gg/grvMQuh6ru"
-
         layout.prop(self, "prefix_with_project_name")
         layout.prop(self, "auto_set_render_outputpath")
         layout.prop(self, "default_path")
@@ -230,6 +225,11 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         # col.scale_y = 2
         # col.operator("wm.url_open","Open webpage ").url=\
         # addon_updater_ops.updater.website
+
+        layout.separator()
+        col = layout.column()
+        op = col.operator("wm.url_open", text="Support", icon="URL")
+        op.url = "https://discord.gg/grvMQuh6ru"
 
 
 classes = (
