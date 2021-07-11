@@ -14,6 +14,7 @@ Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you
 
 We've just hit another update. No features are planned so far. [Change this!](https://github.com/BlenderDefender/blender_pm/issues/new/choose)
 
+  <!-- - [ ] Improvement: Finish project dialogue: https://discord.com/channels/697931587387392010/859073990802276393/863326768411574314 -->
   <!-- - [ ] Feature: More precise differentiation between Blender Files that are part of a project and Blender Files, that aren't part of a project  Not sure! -->
   <!-- - [ ] Feature: More options to handle Files that are/aren't part of a project:
         1. Cut an existing file (The file is not part / part of a project)
