@@ -1,3 +1,6 @@
 __pycache__/
 super project manager_updater/
 icons/OLD_ICONS/
+
+# Ignore workspace settings
+.vscode
