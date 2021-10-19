@@ -1,7 +1,7 @@
-Version 1.3.1
+## Version 1.3.1
 * Codestyle: Rename Addon to Super Project Manager, adjust class names
 
-Version 1.3.0
+## Version 1.3.0
 * Fix: Open Finder ([Issue #16](https://github.com/BlenderDefender/blender_pm/issues/16))
 * Feature: Update BPS.json to work with the new features.
 * Feature: Automatically Set Render Output Path
@@ -16,7 +16,7 @@ Version 1.3.0
 * Improvement: Better icons
 * Improvement: Multiple subfolders in one Folder (Syntax: Folder>>((Subfolder1>>Subsubfolder))++Subfolder2)
 
-Version 1.2.0
+## Version 1.2.0
 * Fix: Project Folder doesn't open on Linux
 * Fix: Subfolders aren't created on Linux
 * Fix: Bring back property "Open Folder after Build"
@@ -36,7 +36,7 @@ Version 1.2.0
 * Updater: Update Addon Updater to latest version
 * Updater: Restrict Minimal Version to 1.0.2 (Rename of branch)
 
-Version 1.1.0:
+## Version 1.1.0:
 * Feature: Add Addon Updater for Easy Updating
 * Fix: Enable Blender 2.83 support
 * Fix: Remove Social Media Buttons, add wiki and issue page instead
