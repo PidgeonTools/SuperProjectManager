@@ -292,11 +292,11 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                 op.message_type = project_details[1]
                 op.message = project_details[2]
 
-                op = row.operator("super_project_manager.open_project_path",
+                op = row.operator("wm.path_open",
                                   text="",
                                   emboss=False,
                                   icon="FOLDER_REDIRECT")
-                op.projectpath = project
+                op.filepath = project
 
                 op = row.operator("super_project_manager.close_project",
                                   text="",

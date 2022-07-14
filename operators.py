@@ -36,7 +36,6 @@ from .functions.main_functions import (
     build_file_folders,
     convert_input_to_filepath,
     generate_file_version_number,
-    open_directory,
     is_file_in_project_folder,
     save_filepath,
     add_unfinished_project,
@@ -158,7 +157,7 @@ class SUPER_PROJECT_MANAGER_OT_Build_Project(Operator):
                                    context.scene.project_name)
             open_location = p.realpath(open_location)
 
-            open_directory(open_location)
+            bpy.ops.wm.path_open(filepath=open_location)
 
         return {"FINISHED"}
 
@@ -287,20 +286,6 @@ please update the project path"
 
         data["unfinished_projects"][index][1] = new_path
         encode_json(data, path)
-
-
-class SUPER_PROJECT_MANAGER_OT_open_project_path(Operator):
-    bl_idname = "super_project_manager.open_project_path"
-    bl_label = "Open Project path"
-    bl_description = "Open your project folder."
-
-    projectpath: StringProperty()
-
-    def execute(self, context):
-        projectpath = self.projectpath
-        open_directory(projectpath)
-        self.report({'INFO'}, "Opened project path")
-        return {"FINISHED"}
 
 
 class SUPER_PROJECT_MANAGER_OT_open_blender_file(Operator):
@@ -598,7 +583,6 @@ classes = (
     SUPER_PROJECT_MANAGER_OT_add_project,
     SUPER_PROJECT_MANAGER_OT_close_project,
     SUPER_PROJECT_MANAGER_OT_redefine_project_path,
-    SUPER_PROJECT_MANAGER_OT_open_project_path,
     SUPER_PROJECT_MANAGER_OT_open_blender_file,
     SUPER_PROJECT_MANAGER_ot_define_blend_file_location,
     SUPER_PROJECT_MANAGER_ot_rearrange_up,

@@ -87,15 +87,6 @@ def generate_file_version_number(path):
     return "{}_v{}.blend".format(path, number)
 
 
-def open_directory(path):
-    if sys.platform == "win32":
-        subprocess.call('explorer "{}"'.format(path), shell=True)
-    elif sys.platform == "linux":
-        subprocess.call('xdg-open "{}"'.format(path), shell=True)
-    elif sys.platform == "darwin":
-        subprocess.call(["open", path])
-
-
 def is_file_in_project_folder(context, filepath):
     if filepath == "":
         return False
