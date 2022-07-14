@@ -39,7 +39,7 @@ from .functions.main_functions import (
     is_file_in_project_folder,
     save_filepath,
     add_unfinished_project,
-    close_project,
+    finish_project,
     write_project_info
 )
 
@@ -221,16 +221,16 @@ class SUPER_PROJECT_MANAGER_OT_add_project(Operator, ImportHelper):
         layout.label(text="Please select a project Directory")
 
 
-class SUPER_PROJECT_MANAGER_OT_close_project(bpy.types.Operator):
-    bl_idname = "super_project_manager.close_project"
-    bl_label = "Close Project"
-    bl_description = "Close the selected Project."
+class SUPER_PROJECT_MANAGER_OT_finish_project(bpy.types.Operator):
+    bl_idname = "super_project_manager.finish_project"
+    bl_label = "Finish Project"
+    bl_description = "Finish the selected Project."
     bl_options = {'REGISTER', 'UNDO'}
 
     index: IntProperty()
 
     def execute(self, context):
-        close_project(self.index)
+        finish_project(self.index)
         return {'FINISHED'}
 
     def invoke(self, context, event):
@@ -581,7 +581,7 @@ classes = (
     SUPER_PROJECT_MANAGER_OT_remove_folder,
     SUPER_PROJECT_MANAGER_OT_Build_Project,
     SUPER_PROJECT_MANAGER_OT_add_project,
-    SUPER_PROJECT_MANAGER_OT_close_project,
+    SUPER_PROJECT_MANAGER_OT_finish_project,
     SUPER_PROJECT_MANAGER_OT_redefine_project_path,
     SUPER_PROJECT_MANAGER_OT_open_blender_file,
     SUPER_PROJECT_MANAGER_ot_define_blend_file_location,

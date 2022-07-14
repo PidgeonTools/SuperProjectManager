@@ -166,7 +166,7 @@ def add_unfinished_project(project_path):
     return {'INFO'}, f"Successfully added project {p.basename(project_path)} to the list of unfinished projects."
 
 
-def close_project(index):
+def finish_project(index):
     path = p.join(p.expanduser("~"),
                   "Blender Addons Data",
                   "blender-project-starter",
