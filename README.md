@@ -1,7 +1,7 @@
 [![Donate](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBlenderDefender%2FBlenderDefender%2Fshields_endpoint%2FSUPERPROJECTMANAGER.json)](https://blendermarket.com/products/superprojectmanager)
-![GitHub](https://img.shields.io/github/license/BlenderDefender/blender_project_starter?color=green&style=for-the-badge)
-[![GitHub issues](https://img.shields.io/github/issues/BlenderDefender/blender_project_starter?style=for-the-badge)](https://github.com/BlenderDefender/blender_pm/issues)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/BlenderDefender/blender_project_starter?style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/PidgeonTools/SuperProjectManager?color=green&style=for-the-badge)
+[![GitHub issues](https://img.shields.io/github/issues/PidgeonTools/SuperProjectManager?style=for-the-badge)](https://github.com/PidgeonTools/SuperProjectManager/issues)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/PidgeonTools/SuperProjectManager?style=for-the-badge)
 
 # Super Project Manager
 
@@ -11,13 +11,13 @@ Managing your unfinished Projects streamlined. Features:
   created and the Blender File is saved into the right folder.
 - Automatically append a version number to your Blender File, if needed.
 - Display your unfinished Projects in Blender, so you'll never forget about them.
-  Check out the [wiki](https://github.com/BlenderDefender/blender_pm/wiki), if you want to [learn more](https://github.com/BlenderDefender/blender_pm/wiki)
+  Check out the [wiki](https://github.com/PidgeonTools/SuperProjectManager/wiki), if you want to [learn more](https://github.com/PidgeonTools/SuperProjectManager/wiki)
 
 ## Upcoming Version:
 
 - [ ] Improvement: Finish project dialogue
 
-<!-- We've just hit another update. No features are planned so far. [Change this!](https://github.com/BlenderDefender/SuperProjectManager/issues/new/choose) -->
+<!-- We've just hit another update. No features are planned so far. [Change this!](https://github.com/PidgeonTools/SuperProjectManager/issues/new/choose) -->
 
   <!-- - [ ] Fix: Prevent SAM from accidentally overwriting projects (Using Project Info File) -->
   <!-- - [ ] Feature: Synchronize Blender File Name and Project name -->
@@ -37,3 +37,5 @@ Managing your unfinished Projects streamlined. Features:
 | OSX     | Testing, please give feedback if it works for you. |
 | Windows | Blender 2.83+                                      |
 | Linux   | Blender 2.83+                                      |
+
+Got questions? [Join the Discord](https://bd-links.netlify.app/discord-spm)
