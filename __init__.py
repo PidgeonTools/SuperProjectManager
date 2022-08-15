@@ -50,9 +50,8 @@ bl_info = {
     "blender": (2, 83, 0),
     "location": "Properties >> Scene Properties >> Super Project Manager",
     "warning": "",
-    "wiki_url": "https://github.com/BlenderDefender/blender_project_manager/wiki",
-    "tracker_url": "https://github.com/BlenderDefender/\
-blender_project_manager/issues",
+    "doc_url": "https://github.com/PidgeonTools/SuperProjectManager/wiki",
+    "tracker_url": "https://github.com/PidgeonTools/SuperProjectManager/issues",
     "category": "System"
 }
 
