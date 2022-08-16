@@ -208,7 +208,7 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
             text="Here are your {} unfinished projects:".format(project_count))
 
         if project_count == 0:
-            url = "https://blenderdefender.github.io/BlenderDefender/pages/randorender.html"
+            url = "https://bd-links.netlify.app/randorender"
 
             layout.separator(factor=0.25)
             layout.label(text="Nothing to do.", icon="CHECKMARK")

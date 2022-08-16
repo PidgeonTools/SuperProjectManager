@@ -1347,15 +1347,15 @@ def register(bl_info):
     updater.private_token = None  # "tokenstring"
 
     # choose your own username(all lowercase), must match website (not needed for GitLab)
-    updater.user = "blenderdefender"
+    updater.user = "pidgeontools"
 
     # choose your own repository, must match git name
-    updater.repo = "blender_project_manager"
+    updater.repo = "SuperProjectManager"
 
     # updater.addon = # define at top of module, MUST be done first
 
     # Website for manual addon download, optional but recommended to set
-    updater.website = "https://github.com/BlenderDefender/blender_project_manager/"
+    updater.website = "https://github.com/PidgeonTools/SuperProjectManager/"
 
     # Addon subfolder path
     # "sample/path/to/addon"

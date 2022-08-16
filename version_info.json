@@ -1,9 +1,0 @@
-{
-    "name": "Super Project Manager",
-    "version": [
-        "1",
-        "3",
-        "1"
-    ],
-    "update_endpoint": "https://raw.githubusercontent.com/BlenderDefender/BlenderDefender/updater_endpoints/BLENDERPROJECTMANAGER.json"
-}

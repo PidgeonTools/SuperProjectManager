@@ -2,12 +2,12 @@
 * Codestyle: Rename Addon to Super Project Manager, adjust class names
 
 ## Version 1.3.0
-* Fix: Open Finder ([Issue #16](https://github.com/BlenderDefender/blender_pm/issues/16))
+* Fix: Open Finder ([Issue #16](https://github.com/PidgeonTools/SuperProjectManager/issues/16))
 * Feature: Update BPS.json to work with the new features.
 * Feature: Automatically Set Render Output Path
 * Feature: Hidden Project info file, as a base for these features:
 * - Open .blend file with one click
-* Feature: Folder Structure Sets [#14](https://github.com/BlenderDefender/blender_project_manager/issues/14)
+* Feature: Folder Structure Sets [#14](https://github.com/PidgeonTools/SuperProjectManager/issues/14)
 * Improvement: Project display:
 * - Option to rearrange Projects
 * - Option to Sort Project in Categories

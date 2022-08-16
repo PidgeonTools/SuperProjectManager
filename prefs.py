@@ -229,7 +229,7 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         layout.separator()
         col = layout.column()
         op = col.operator("wm.url_open", text="Support", icon="URL")
-        op.url = "https://discord.gg/grvMQuh6ru"
+        op.url = "https://bd-links.netlify.app/discord-spm"
 
 
 classes = (

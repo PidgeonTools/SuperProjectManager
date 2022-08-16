@@ -52,6 +52,7 @@ bl_info = {
     "warning": "",
     "doc_url": "https://github.com/PidgeonTools/SuperProjectManager/wiki",
     "tracker_url": "https://github.com/PidgeonTools/SuperProjectManager/issues",
+    "endpoint_url": "https://raw.githubusercontent.com/PidgeonTools/SAM-Endpoints/main/SuperProjectManager.json",
     "category": "System"
 }
 
