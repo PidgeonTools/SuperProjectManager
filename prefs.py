@@ -30,7 +30,9 @@ from bpy.props import (
 )
 from bpy.types import (
     PropertyGroup,
-    AddonPreferences
+    AddonPreferences,
+    Context,
+    UILayout
 )
 
 import os
@@ -142,8 +144,8 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         max=59
     )
 
-    def draw(self, context):
-        layout = self.layout
+    def draw(self, context: Context):
+        layout: UILayout = self.layout
         ic = context.scene.super_project_manager_icons["BUILD_ICON"].icon_id
 
         layout.label(

@@ -22,6 +22,9 @@
 
 import bpy
 from bpy.utils import previews
+from bpy.types import (
+    Context
+)
 
 import os
 from os import path as p
@@ -50,7 +53,7 @@ C = bpy.context
 D = bpy.data
 
 
-def convert_input_to_filepath(context=None, input=""):
+def convert_input_to_filepath(context: Context = None, input=""):
     parts = input.split(">>")
     path = ""
     if context:
@@ -63,7 +66,7 @@ def convert_input_to_filepath(context=None, input=""):
     return path
 
 
-def build_file_folders(context, prefix, unparsed_string):
+def build_file_folders(context: Context, prefix, unparsed_string):
 
     for path in Subfolders(unparsed_string).paths:
         top_level_path = p.join(context.scene.project_location,
@@ -87,7 +90,7 @@ def generate_file_version_number(path):
     return "{}_v{}.blend".format(path, number)
 
 
-def is_file_in_project_folder(context, filepath):
+def is_file_in_project_folder(context: Context, filepath):
     if filepath == "":
         return False
 
@@ -99,7 +102,7 @@ def is_file_in_project_folder(context, filepath):
     return filepath.startswith(project_folder)
 
 
-def save_filepath(context, filename, subfolder):
+def save_filepath(context: Context, filename, subfolder):
     path = p.join(
         context.scene.project_location,
         context.scene.project_name,
@@ -110,7 +113,7 @@ def save_filepath(context, filename, subfolder):
     return path
 
 
-def subfolder_enum(self, context):
+def subfolder_enum(self, context: Context):
     tooltip = "Select Folder as target folder for your Blender File. \
 Uses Folders from Automatic Setup."
     items = [("Root", "Root", tooltip)]
@@ -128,7 +131,7 @@ Uses Folders from Automatic Setup."
     return items
 
 
-def structure_sets_enum(self, context):
+def structure_sets_enum(self, context: Context):
     tooltip = "Select a folder Structure Set."
     items = []
 
@@ -143,7 +146,7 @@ def structure_sets_enum(self, context):
     return items
 
 
-def structure_sets_enum_update(self, context):
+def structure_sets_enum_update(self, context: Context):
     unregister_automatic_folders(self.automatic_folders, self.previous_set)
     register_automatic_folders(
         self.automatic_folders, self.folder_structure_sets)

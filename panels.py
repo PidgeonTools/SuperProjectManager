@@ -22,7 +22,11 @@
 
 # import operators
 import bpy
-from bpy.types import Panel
+from bpy.types import (
+    Context,
+    Panel,
+    UILayout,
+)
 
 import os
 from os import path as p
@@ -42,7 +46,7 @@ class SUPER_PROJECT_MANAGER_PT_main_panel(Panel):
     bl_context = "scene"
     bl_order = 0
 
-    def draw(self, context):
+    def draw(self, context: Context):
         pass
 
 
@@ -54,11 +58,11 @@ class SUPER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
     bl_context = "scene"
     bl_parent_id = "super_project_manager_PT__main_panel"
 
-    def draw(self, context):
+    def draw(self, context: Context):
         prefs = C.preferences.addons[__package__].preferences
         ic = context.scene.super_project_manager_icons["BUILD_ICON"].icon_id
 
-        layout = self.layout
+        layout: UILayout = self.layout
         row = layout.row(align=False)
         row.scale_x = 2.0
         row.scale_y = 2.0
@@ -132,16 +136,16 @@ class SUPER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel(Panel):
     bl_context = "scene"
     bl_parent_id = "super_project_manager_PT_starter_main_panel"
 
-    def draw_header(self, context):
-        layout = self.layout
+    def draw_header(self, context: Context):
+        layout: UILayout = self.layout
         layout.prop(context.scene, "save_blender_file",
                     text="Save Blender File / Options")
 
-    def draw(self, context):
+    def draw(self, context: Context):
         D = bpy.data
         prefs = C.preferences.addons[__package__].preferences
 
-        layout = self.layout
+        layout: UILayout = self.layout
         layout.enabled = context.scene.save_blender_file
 
         if D.filepath == "":
@@ -195,8 +199,8 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
     bl_context = "scene"
     bl_parent_id = "super_project_manager_PT__main_panel"
 
-    def draw(self, context):
-        layout = self.layout
+    def draw(self, context: Context):
+        layout: UILayout = self.layout
         path = p.join(p.expanduser("~"),
                       "Blender Addons Data",
                       "blender-project-starter",
@@ -256,8 +260,9 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
         return None, "ERROR", "No Blender File found in this project! Please select the latest project file."
 
     # Drawing Function for the regular project display mode.
-    def draw_normal(self, context, data):
-        layout = self.layout
+    def draw_normal(self, context: Context, data):
+        layout: UILayout = self.layout
+
         for index, entry in enumerate(data):
             type = entry[0]
             content = entry[1]
@@ -313,8 +318,9 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                 row.label(text=label)
 
     # Drawing Function for the project rearrange mode.
-    def draw_rearrange(self, context, data):
-        layout = self.layout
+    def draw_rearrange(self, context: Context, data):
+        layout: UILayout = self.layout
+
         for index, entry in enumerate(data):
             type = entry[0]
             content = entry[1]

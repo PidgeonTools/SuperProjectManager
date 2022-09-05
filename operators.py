@@ -72,7 +72,7 @@ class SUPER_PROJECT_MANAGER_OT_Build_Project(Operator):
     bl_description = "Build Project Operator "
     bl_options = {"REGISTER", "UNDO"}
 
-    def execute(self, context):
+    def execute(self, context: Context):
 
         D = bpy.data
         scene = context.scene
@@ -176,7 +176,7 @@ Layout Folder>>Subfolder>>Subsubfolder."
 
     coming_from: StringProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         pref = context.preferences.addons[__package__].preferences
 
         if self.coming_from == "prefs":
@@ -196,7 +196,7 @@ class SUPER_PROJECT_MANAGER_OT_remove_folder(Operator):
     index: IntProperty()
     coming_from: StringProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         pref = context.preferences.addons[__package__].preferences
 
         if self.coming_from == "prefs":
@@ -215,14 +215,14 @@ class SUPER_PROJECT_MANAGER_OT_add_project(Operator, ImportHelper):
 
     filter_glob: StringProperty(default='*.filterall', options={'HIDDEN'})
 
-    def execute(self, context):
+    def execute(self, context: Context):
         projectpath = p.dirname(self.filepath)
 
         message_type, message = add_unfinished_project(projectpath)
         self.report(message_type, message)
         return {"FINISHED"}
 
-    def draw(self, context):
+    def draw(self, context: Context):
         layout = self.layout
         layout.label(text="Please select a project Directory")
 
@@ -236,11 +236,11 @@ class SUPER_PROJECT_MANAGER_OT_finish_project(bpy.types.Operator):
     index: IntProperty()
     project_name: StringProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         finish_project(self.index)
         return {'FINISHED'}
 
-    def invoke(self, context, event):
+    def invoke(self, context: Context, event: Event):
         return context.window_manager.invoke_props_dialog(self)
 
     def draw(self, context: Context):
@@ -263,7 +263,7 @@ please update the project path"
     filter_glob: StringProperty(default='*.filterall', options={'HIDDEN'})
     index: IntProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         projectpath = p.dirname(self.filepath)
         self.redefine_project_path(self.index, projectpath)
 
@@ -272,7 +272,7 @@ please update the project path"
         self.report({'INFO'}, message)
         return {"FINISHED"}
 
-    def draw(self, context):
+    def draw(self, context: Context):
         name = self.name
 
         layout = self.layout
@@ -300,7 +300,7 @@ class SUPER_PROJECT_MANAGER_OT_open_blender_file(Operator):
     message_type: StringProperty()
     message: StringProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
 
         bpy.ops.wm.open_mainfile(filepath=self.filepath)
         self.report(
@@ -321,7 +321,7 @@ Please select the latest Blender File of you Project."
     message: StringProperty()
     projectpath: StringProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         # print(self.filepath)
         write_project_info(self.projectpath, self.filepath)
 
@@ -333,7 +333,7 @@ Please select the latest Blender File of you Project."
             filepath=self.filepath, message_type="INFO", message=f"Opened the project file found in {self.filepath}")
         return {"FINISHED"}
 
-    def draw(self, context):
+    def draw(self, context: Context):
         name = p.basename(self.projectpath)
 
         layout = self.layout
@@ -350,7 +350,7 @@ class SUPER_PROJECT_MANAGER_ot_rearrange_up(bpy.types.Operator):
 
     index: IntProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         index = self.index
         path = p.join(p.expanduser("~"),
                       "Blender Addons Data",
@@ -373,7 +373,7 @@ class SUPER_PROJECT_MANAGER_ot_rearrange_down(bpy.types.Operator):
 
     index: IntProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         index = self.index
         path = p.join(p.expanduser("~"),
                       "Blender Addons Data",
@@ -396,7 +396,7 @@ class SUPER_PROJECT_MANAGER_ot_rearrange_to_top(bpy.types.Operator):
 
     index: IntProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         index = self.index
         path = p.join(p.expanduser("~"),
                       "Blender Addons Data",
@@ -420,7 +420,7 @@ class SUPER_PROJECT_MANAGER_ot_rearrange_to_bottom(bpy.types.Operator):
 
     index: IntProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         index = self.index
         path = p.join(p.expanduser("~"),
                       "Blender Addons Data",
@@ -444,7 +444,7 @@ class SUPER_PROJECT_MANAGER_ot_add_label(bpy.types.Operator):
 
     label: StringProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         path = p.join(p.expanduser("~"),
                       "Blender Addons Data",
                       "blender-project-starter",
@@ -456,11 +456,11 @@ class SUPER_PROJECT_MANAGER_ot_add_label(bpy.types.Operator):
         encode_json(data, path)
         return {'FINISHED'}
 
-    def invoke(self, context, event):
+    def invoke(self, context: Context, event: Event):
         return context.window_manager.invoke_props_dialog(self)
 
-    def draw(self, context):
-        layout = self.layout
+    def draw(self, context: Context):
+        layout: UILayout = self.layout
 
         layout.prop(self, "label", text="Category Label Text:")
 
@@ -473,7 +473,7 @@ class SUPER_PROJECT_MANAGER_ot_remove_label(bpy.types.Operator):
 
     index: IntProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         path = p.join(p.expanduser("~"),
                       "Blender Addons Data",
                       "blender-project-starter",
@@ -495,7 +495,7 @@ class SUPER_PROJECT_MANAGER_ot_change_label(bpy.types.Operator):
     index: IntProperty()
     label: StringProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         path = p.join(p.expanduser("~"),
                       "Blender Addons Data",
                       "blender-project-starter",
@@ -507,11 +507,11 @@ class SUPER_PROJECT_MANAGER_ot_change_label(bpy.types.Operator):
         encode_json(data, path)
         return {'FINISHED'}
 
-    def invoke(self, context, event):
+    def invoke(self, context: Context, event: Event):
         return context.window_manager.invoke_props_dialog(self)
 
-    def draw(self, context):
-        layout = self.layout
+    def draw(self, context: Context):
+        layout: UILayout = self.layout
 
         layout.prop(self, "label", text="Category Label Text:")
 
@@ -524,7 +524,7 @@ class SUPER_PROJECT_MANAGER_ot_add_structure_set(bpy.types.Operator):
 
     name: StringProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         prefs = context.preferences.addons[__package__].preferences
 
         path = p.join(p.expanduser("~"),
@@ -541,10 +541,10 @@ class SUPER_PROJECT_MANAGER_ot_add_structure_set(bpy.types.Operator):
 
         return {'FINISHED'}
 
-    def invoke(self, context, event):
+    def invoke(self, context: Context, event: Event):
         return context.window_manager.invoke_props_dialog(self)
 
-    def draw(self, context):
+    def draw(self, context: Context):
         layout = self.layout
 
         layout.prop(self, "name", text="Folder Structure Set Name:")
@@ -558,7 +558,7 @@ class SUPER_PROJECT_MANAGER_ot_remove_structure_set(bpy.types.Operator):
 
     structure_set: StringProperty()
 
-    def execute(self, context):
+    def execute(self, context: Context):
         prefs = context.preferences.addons[__package__].preferences
         prefs.folder_structure_sets = "Default Folder Set"
 
