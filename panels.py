@@ -303,6 +303,7 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                                   emboss=False,
                                   icon="PANEL_CLOSE")
                 op.index = index
+                op.project_name = project_name
 
             if type == "label":
                 label = content

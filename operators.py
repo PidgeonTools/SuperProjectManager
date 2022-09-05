@@ -26,7 +26,13 @@ from bpy.props import (
     IntProperty,
     EnumProperty
 )
-from bpy.types import Operator
+from bpy.types import (
+    Context,
+    Event,
+    UILayout,
+    Operator
+)
+
 from bpy_extras.io_utils import ImportHelper
 
 import os
@@ -228,6 +234,7 @@ class SUPER_PROJECT_MANAGER_OT_finish_project(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     index: IntProperty()
+    project_name: StringProperty()
 
     def execute(self, context):
         finish_project(self.index)
@@ -236,19 +243,14 @@ class SUPER_PROJECT_MANAGER_OT_finish_project(bpy.types.Operator):
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
 
-    def draw(self, context):
-        layout = self.layout
+    def draw(self, context: Context):
+        layout: UILayout = self.layout
         # layout.prop(self, "disable")
 
-        layout.label(text="Are you sure?")
         layout.label(
-            text="This will remove your project from the open projects list.")
-
-        layout.separator(factor=1)
-
-        layout.label(text="Don't worry, no file gets deleted, ")
+            text="Hurray, you've fininished your project!", icon="FUND")
         layout.label(
-            text="but you might forget about this project and never finish it.")
+            text=f"Click OK below to remove '{self.project_name}' from your ToDo List.")
 
 
 class SUPER_PROJECT_MANAGER_OT_redefine_project_path(Operator, ImportHelper):
