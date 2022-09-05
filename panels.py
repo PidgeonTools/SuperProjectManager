@@ -306,7 +306,7 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                 op = row.operator("super_project_manager.finish_project",
                                   text="",
                                   emboss=False,
-                                  icon="PANEL_CLOSE")
+                                  icon="CHECKMARK")
                 op.index = index
                 op.project_name = project_name
 
