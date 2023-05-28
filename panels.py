@@ -223,69 +223,6 @@ class SUPER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
                      text="Set Render Output")
 
 
-# # class SUPER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel(Panel):
-# #     bl_label = " "
-# #     bl_idname = "super_project_manager_PT_Blender_File_save_options_subpanel"
-# #     bl_space_type = "PROPERTIES"
-# #     bl_region_type = "WINDOW"
-# #     bl_context = "scene"
-# #     bl_parent_id = "super_project_manager_PT_starter_main_panel"
-
-# #     def draw_header(self, context: Context):
-# #         layout: UILayout = self.layout
-# #         layout.prop(context.scene, "save_blender_file",
-# #                     text="Save Blender File / Options")
-
-# #     def draw(self, context: Context):
-# #         D = bpy.data
-# #         prefs = C.preferences.addons[__package__].preferences
-
-# #         layout: UILayout = self.layout
-# #         layout.enabled = context.scene.save_blender_file
-
-# #         if D.filepath == "":
-# #             layout.prop(prefs, "save_folder")
-# #             layout.prop(context.scene, "save_file_name", text="Save File Name")
-
-# #         elif not is_file_in_project_folder(context, D.filepath):
-# #             if context.scene.cut_or_copy:
-# #                 layout.prop(context.scene,
-# #                             "cut_or_copy",
-# #                             text="Change to Copy File",
-# #                             toggle=True)
-# #             else:
-# #                 layout.prop(context.scene,
-# #                             "cut_or_copy",
-# #                             text="Change to Cut File",
-# #                             toggle=True)
-# #             layout.prop(prefs, "save_folder")
-# #             layout.prop(context.scene,
-# #                         "save_file_with_new_name",
-# #                         text="Save with new File Name")
-# #             if context.scene.save_file_with_new_name:
-# #                 layout.prop(context.scene,
-# #                             "save_file_name",
-# #                             text="Save File Name")
-# #         else:
-# #             layout.prop(context.scene, "save_blender_file_versioned")
-
-# #         row = layout.row(align=False)
-# #         row.prop(context.scene,
-# #                  "remap_relative",
-# #                  icon="ERROR",
-# #                  text="Remap Relative")
-# #         row.prop(context.scene,
-# #                  "compress_save",
-# #                  icon="FILE_TICK",
-# #                  text="Compress File")
-# #         if prefs.auto_set_render_outputpath:
-# #             row = layout.row()
-# #             row.prop(context.scene,
-# #                      "set_render_output",
-# #                      icon="OUTPUT",
-# #                      text="Set Render Output")
-
-
 class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
     bl_label = "Project Manager"
     bl_idname = "super_project_manager_PT_Open_Projects_subpanel"
