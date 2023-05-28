@@ -60,28 +60,48 @@ class SUPER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
 
     def draw(self, context: Context):
         prefs = C.preferences.addons[__package__].preferences
-        ic = context.scene.super_project_manager_icons["BUILD_ICON"].icon_id
+        # ic = context.scene.super_project_manager_icons["BUILD_ICON"].icon_id
 
         layout: UILayout = self.layout
-        row = layout.row(align=False)
-        row.scale_x = 2.0
-        row.scale_y = 2.0
-        row.operator("super_project_manager.build_project",
-                     text="BUILD PROJECT",
-                     icon_value=ic)
 
-        layout.separator(factor=1.0)
+        # Project Name Property
+        row = layout.row()
+        row.label(text="Project Name")
 
-        layout.prop(context.scene,
-                    "project_name",
-                    text="Project Name")
-        layout.prop(context.scene,
-                    "project_location",
-                    text="Project Location")
-        layout.prop(context.scene,
-                    "project_setup",
-                    text="Project Setup",
-                    expand=False)
+        row = layout.row()
+        row.prop(context.scene,
+                 "project_name",
+                 text="")
+
+        layout.separator(factor=0.5)
+
+        # Project Location Property
+        row = layout.row()
+        row.label(text="Project Location")
+
+        row = layout.row()
+        row.prop(context.scene,
+                 "project_location",
+                 text="")
+
+        layout.separator(factor=0.5)
+
+        # Layout all options for saving the Blender File.
+        layout.prop(context.scene, "save_blender_file",
+                    text="Save Blender File")
+        if context.scene.save_blender_file:
+            self.draw_file_options(context)
+
+        layout.separator(factor=2.0)
+
+        # Project Setup (Automatic/Manual)
+        row = layout.row()
+        row.label(text="Project Setup")
+        row = layout.row()
+        row.prop(context.scene,
+                 "project_setup",
+                 text="",
+                 expand=False)
 
         if context.scene.project_setup == "Custom_Setup":
             layout.label(text="Custom Folder Setup",
@@ -127,68 +147,143 @@ class SUPER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
                     text="Open Directory after Build",
                     expand=False)
 
+        # Build Project Button
+        row = layout.row(align=False)
+        row.scale_x = 2.0
+        row.scale_y = 2.0
+        row.operator("super_project_manager.build_project",
+                     text="Build Project")  # , icon_value=ic)
 
-class SUPER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel(Panel):
-    bl_label = " "
-    bl_idname = "super_project_manager_PT_Blender_File_save_options_subpanel"
-    bl_space_type = "PROPERTIES"
-    bl_region_type = "WINDOW"
-    bl_context = "scene"
-    bl_parent_id = "super_project_manager_PT_starter_main_panel"
-
-    def draw_header(self, context: Context):
-        layout: UILayout = self.layout
-        layout.prop(context.scene, "save_blender_file",
-                    text="Save Blender File / Options")
-
-    def draw(self, context: Context):
+    def draw_file_options(self, context: Context):
         D = bpy.data
         prefs = C.preferences.addons[__package__].preferences
 
         layout: UILayout = self.layout
         layout.enabled = context.scene.save_blender_file
 
+        box = layout.box()
+
         if D.filepath == "":
-            layout.prop(prefs, "save_folder")
-            layout.prop(context.scene, "save_file_name", text="Save File Name")
+            # File Name
+            row = box.row()
+            row.label(text="File Name")
+            row = box.row()
+            row.prop(context.scene, "save_file_name", text="")
+
+            # Subdirectory
+            row = box.row()
+            row.label(text="Subdirectory")
+            row = box.row()
+            row.prop(prefs, "save_folder", text="")
 
         elif not is_file_in_project_folder(context, D.filepath):
             if context.scene.cut_or_copy:
-                layout.prop(context.scene,
-                            "cut_or_copy",
-                            text="Change to Copy File",
-                            toggle=True)
+                box.prop(context.scene,
+                         "cut_or_copy",
+                         text="Change to Copy File",
+                         toggle=True)
             else:
-                layout.prop(context.scene,
-                            "cut_or_copy",
-                            text="Change to Cut File",
-                            toggle=True)
-            layout.prop(prefs, "save_folder")
-            layout.prop(context.scene,
-                        "save_file_with_new_name",
-                        text="Save with new File Name")
+                box.prop(context.scene,
+                         "cut_or_copy",
+                         text="Change to Cut File",
+                         toggle=True)
+            box.prop(prefs, "save_folder")
+            box.prop(context.scene,
+                     "save_file_with_new_name",
+                     text="Save with new File Name")
             if context.scene.save_file_with_new_name:
-                layout.prop(context.scene,
-                            "save_file_name",
-                            text="Save File Name")
+                box.prop(context.scene,
+                         "save_file_name",
+                         text="Save File Name")
         else:
-            layout.prop(context.scene, "save_blender_file_versioned")
+            box.prop(context.scene, "save_blender_file_versioned")
 
-        row = layout.row(align=False)
+        box.separator()
+
+        box.label(text="Further options:")
+
+        # Remap relative
+        row = box.row(align=False)
         row.prop(context.scene,
                  "remap_relative",
-                 icon="ERROR",
                  text="Remap Relative")
+
+        # Compress file
+        row = box.row(align=False)
         row.prop(context.scene,
                  "compress_save",
-                 icon="FILE_TICK",
                  text="Compress File")
+
+        # Automatically set the render output.
         if prefs.auto_set_render_outputpath:
-            row = layout.row()
+            row = box.row()
             row.prop(context.scene,
                      "set_render_output",
                      icon="OUTPUT",
                      text="Set Render Output")
+
+
+# # class SUPER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel(Panel):
+# #     bl_label = " "
+# #     bl_idname = "super_project_manager_PT_Blender_File_save_options_subpanel"
+# #     bl_space_type = "PROPERTIES"
+# #     bl_region_type = "WINDOW"
+# #     bl_context = "scene"
+# #     bl_parent_id = "super_project_manager_PT_starter_main_panel"
+
+# #     def draw_header(self, context: Context):
+# #         layout: UILayout = self.layout
+# #         layout.prop(context.scene, "save_blender_file",
+# #                     text="Save Blender File / Options")
+
+# #     def draw(self, context: Context):
+# #         D = bpy.data
+# #         prefs = C.preferences.addons[__package__].preferences
+
+# #         layout: UILayout = self.layout
+# #         layout.enabled = context.scene.save_blender_file
+
+# #         if D.filepath == "":
+# #             layout.prop(prefs, "save_folder")
+# #             layout.prop(context.scene, "save_file_name", text="Save File Name")
+
+# #         elif not is_file_in_project_folder(context, D.filepath):
+# #             if context.scene.cut_or_copy:
+# #                 layout.prop(context.scene,
+# #                             "cut_or_copy",
+# #                             text="Change to Copy File",
+# #                             toggle=True)
+# #             else:
+# #                 layout.prop(context.scene,
+# #                             "cut_or_copy",
+# #                             text="Change to Cut File",
+# #                             toggle=True)
+# #             layout.prop(prefs, "save_folder")
+# #             layout.prop(context.scene,
+# #                         "save_file_with_new_name",
+# #                         text="Save with new File Name")
+# #             if context.scene.save_file_with_new_name:
+# #                 layout.prop(context.scene,
+# #                             "save_file_name",
+# #                             text="Save File Name")
+# #         else:
+# #             layout.prop(context.scene, "save_blender_file_versioned")
+
+# #         row = layout.row(align=False)
+# #         row.prop(context.scene,
+# #                  "remap_relative",
+# #                  icon="ERROR",
+# #                  text="Remap Relative")
+# #         row.prop(context.scene,
+# #                  "compress_save",
+# #                  icon="FILE_TICK",
+# #                  text="Compress File")
+# #         if prefs.auto_set_render_outputpath:
+# #             row = layout.row()
+# #             row.prop(context.scene,
+# #                      "set_render_output",
+# #                      icon="OUTPUT",
+# #                      text="Set Render Output")
 
 
 class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
@@ -369,7 +464,7 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
 classes = (
     SUPER_PROJECT_MANAGER_PT_main_panel,
     SUPER_PROJECT_MANAGER_PT_starter_main_panel,
-    SUPER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel,
+    # SUPER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel,
     SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel
 )
 
