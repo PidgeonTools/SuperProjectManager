@@ -248,9 +248,33 @@ class SUPER_PROJECT_MANAGER_OT_finish_project(bpy.types.Operator):
         # layout.prop(self, "disable")
 
         layout.label(
-            text="Hurray, you've fininished your project!", icon="FUND")
-        layout.label(
-            text=f"Click OK below to remove '{self.project_name}' from your ToDo List.")
+            text="Congratulations, you've finished your project!")
+        layout.separator()
+
+        confirmation_text = f"Click OK below to remove '{self.project_name}' from your ToDo List."
+        if len(confirmation_text) > 55:
+            # Break up the confirmation text, if it is longer than 55 characters.
+            pieces = confirmation_text.split(" ")
+            confirmation_lines = []
+
+            line = ""
+            for p in pieces:
+                if len(line + p) > 55:
+                    confirmation_lines.append(line)
+                    line = ""
+
+                line += p + " "
+
+            confirmation_lines.append(line)
+
+            # Display the confirmation text line by line
+            for line in confirmation_lines:
+                row = layout.row()
+                row.scale_y = 0.6
+                row.label(text=line)
+
+        else:
+            layout.label(text=confirmation_text)
 
 
 class SUPER_PROJECT_MANAGER_OT_redefine_project_path(Operator, ImportHelper):
