@@ -1,8 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
-#  <Blender Project Starter is made for automatic Project Folder Generation.>
-#    Copyright (C) <2021>  <Steven Scott>
-#    Modified <2021> <Blender Defender>
+#  <Super Project Manager helps you manage your Blender Projects.>
+#    Copyright (C) <2023>  <Blender Defender>
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
