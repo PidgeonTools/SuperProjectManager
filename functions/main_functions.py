@@ -44,9 +44,6 @@ from .json_functions import (
     encode_json,
 )
 
-from .path_generator import (
-    Subfolders
-)
 
 C = bpy.context
 D = bpy.data
@@ -63,18 +60,6 @@ def convert_input_to_filepath(context: Context = None, input=""):
         path = p.join(path, i)
 
     return path
-
-
-def build_file_folders(context: Context, prefix, unparsed_string):
-
-    for path in Subfolders(unparsed_string).paths:
-        top_level_path = p.join(context.scene.project_location,
-                                context.scene.project_name)
-        path = prefix + path
-        path = p.join(top_level_path, path)
-
-        if not p.isdir(path):
-            os.makedirs(path)
 
 
 def generate_file_version_number(path):
@@ -110,24 +95,6 @@ def save_filepath(context: Context, filename, subfolder):
     ) + ".blend"
 
     return path
-
-
-def subfolder_enum(self, context: Context):
-    tooltip = "Select Folder as target folder for your Blender File. \
-Uses Folders from Automatic Setup."
-    items = [("Root", "Root", tooltip)]
-
-    folders = self.automatic_folders
-    if context.scene.project_setup == "Custom_Setup":
-        folders = self.custom_folders
-    try:
-        for folder in folders:
-            for folder in Subfolders(folder.folder_name).display_paths:
-                items.append((folder, folder, tooltip))
-    except:
-        print("Error in main_functions.py, line 128")
-
-    return items
 
 
 def structure_sets_enum(self, context: Context):

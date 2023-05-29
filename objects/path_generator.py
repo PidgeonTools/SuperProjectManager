@@ -1,6 +1,13 @@
 import os
 from os import path as p
 
+try:
+    from bpy.types import (
+        Context
+    )
+except:
+    pass
+
 
 class Subfolders():
     def __init__(self, string):
@@ -123,3 +130,34 @@ class Subfolders():
             display_paths.append(display_path)
 
         return display_paths
+
+
+def build_file_folders(context: 'Context', prefix, unparsed_string):
+
+    for path in Subfolders(unparsed_string).paths:
+        top_level_path = p.join(context.scene.project_location,
+                                context.scene.project_name)
+        path = prefix + path
+        path = p.join(top_level_path, path)
+
+        if not p.isdir(path):
+            os.makedirs(path)
+
+
+def subfolder_enum(self, context: 'Context'):
+    tooltip = "Select Folder as target folder for your Blender File. \
+Uses Folders from Automatic Setup."
+    items = [("Root", "Root", tooltip)]
+
+    folders = self.automatic_folders
+    if context.scene.project_setup == "Custom_Setup":
+        folders = self.custom_folders
+
+    try:
+        for folder in folders:
+            for folder in Subfolders(folder.folder_name).display_paths:
+                items.append((folder, folder, tooltip))
+    except:
+        print("Error in main_functions.py, line 128")
+
+    return items

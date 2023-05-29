@@ -40,13 +40,13 @@ from os import path as p
 from . import addon_updater_ops
 
 from .functions.main_functions import (
-    subfolder_enum,
     structure_sets_enum,
     structure_sets_enum_update
 )
 
-from .functions.path_generator import (
-    Subfolders
+from .objects.path_generator import (
+    Subfolders,
+    subfolder_enum,
 )
 
 C = bpy.context

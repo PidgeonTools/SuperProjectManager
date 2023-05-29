@@ -38,7 +38,6 @@ import os
 from os import path as p
 
 from .functions.main_functions import (
-    build_file_folders,
     convert_input_to_filepath,
     generate_file_version_number,
     is_file_in_project_folder,
@@ -58,8 +57,9 @@ from .functions.register_functions import (
     unregister_automatic_folders
 )
 
-from .functions.path_generator import (
-    Subfolders
+from .objects.path_generator import (
+    Subfolders,
+    build_file_folders,
 )
 
 C = bpy.context
