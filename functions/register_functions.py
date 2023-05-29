@@ -70,7 +70,7 @@ def register_properties():
         name="Project Location",
         description="Saves the location of file",
         subtype="DIR_PATH",
-        default=prefs.default_path
+        default=prefs.default_project_location
     )
     Scene_Prop.project_setup = EnumProperty(
         name="Project Setup",

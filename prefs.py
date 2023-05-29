@@ -52,12 +52,17 @@ from .objects.path_generator import (
 C = bpy.context
 D = bpy.data
 
+FOLDER_BOX_PADDING_X = 0.1
+FOLDER_BOX_PADDING_Y = 1
+WARNING_MARGIN_BOTTOM = 0.2
+ADD_FOLDER_BUTTON_MARGIN_TOP = 0.4
+
 
 class project_folder_props(PropertyGroup):
 
     render_outputpath: BoolProperty(
         name="Render Output",
-        description="Output path for your renders.",
+        description="Set the last path this folder input results in as output path for your renders",
         default=False)
     folder_name: StringProperty(
         name="Folder Name",
@@ -74,6 +79,17 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
     automatic_folders: CollectionProperty(type=project_folder_props)
 
+    layout_tab: EnumProperty(
+        name="UI Section",
+        description="Display the different UI Elements of the Super Project Manager preferences.",
+        items=[
+            ("misc_settings", "General", "General settings of Super Project Manager."),
+            ("folder_structure_sets", "Folder Structures",
+             "Manage your folder structure settings."),
+            ("updater", "Updater", "Check for updates and install them."),
+        ],
+        default="misc_settings")
+
     folder_structure_sets: EnumProperty(
         name="Folder Structure Set",
         description="A list of all available folder sets.",
@@ -83,17 +99,17 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
     prefix_with_project_name: BoolProperty(
         name="Project Name Prefix",
-        description="If enabled, use the project name as prefix for all folders.",
+        description="If enabled, use the project name as prefix for all folders",
         default=False,
     )
 
     auto_set_render_outputpath: BoolProperty(
         name="Auto Set Render Output Path",
-        description="If enabled, the Auto Set render Output path feature can be used.",
+        description="If enabled, the feature to automatically set the Render Output path can be used",
         default=False,
     )
 
-    default_path: StringProperty(
+    default_project_location: StringProperty(
         name="Default Project Location",
         subtype="DIR_PATH",
         default=p.expanduser("~")
@@ -105,8 +121,8 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     )
 
     preview_subfolders: BoolProperty(
-        name="Preview compiled Subfolders and warnings.",
-        description="Show the compiled subfolder-strings and their warnings in the preferences.",
+        name="Preview compiled Subfolders",
+        description="Show the compiled subfolder-strings in the preferences",
         default=True
     )
 
@@ -145,92 +161,120 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
     def draw(self, context: Context):
         layout: UILayout = self.layout
-        ic = context.scene.super_project_manager_icons["BUILD_ICON"].icon_id
 
-        layout.label(
-            text="Super Project Manager",
-            icon_value=ic
-        )
+        # Layout Tabs to switch between Settings Tabs.
+        row = layout.row(align=True)
+        row.scale_y = 1.3
+        row.prop(self, "layout_tab", expand=True)
 
-        layout.prop(self, "prefix_with_project_name")
-        layout.prop(self, "auto_set_render_outputpath")
-        layout.prop(self, "default_path")
+        if self.layout_tab == "misc_settings":
+            self.draw_misc_settings(context, layout)
+
+        if self.layout_tab == "folder_structure_sets":
+            self.draw_folder_structure_sets(context, layout)
+
+        if self.layout_tab == "updater":
+            # updater draw function
+            # could also pass in col as third arg
+            addon_updater_ops.update_settings_ui(self, context)
+
+        # Support URL
+        layout.separator()
+        col = layout.column()
+        op = col.operator("wm.url_open", text="Support", icon="URL")
+        op.url = "https://bd-links.netlify.app/discord-spm"
+
+    def draw_misc_settings(self, context: Context, layout: UILayout):
+        layout.label(text="Default Project Location")
+        layout.prop(self, "default_project_location", text="")
         layout.separator(factor=0.4)
 
-        render_outpath_active = True in [
-            e.render_outputpath for e in self.automatic_folders]
+        layout.prop(self, "prefix_with_project_name",
+                    text="Add the Project Name as Folder Prefix")
+        layout.separator(factor=0.4)
+
+        layout.prop(self, "auto_set_render_outputpath",
+                    text="Automatically set the render output path")
+
+    def draw_folder_structure_sets(self, context: Context, layout: UILayout):
+        layout.label(text="Folder Structure Set")
+
+        # TODO
+        # row = layout.row()
+        # row.prop(self, "preview_subfolders")
 
         row = layout.row(align=True)
-        row.prop(self, "folder_structure_sets")
+        row.prop(self, "folder_structure_sets", text="")
         row.operator("super_project_manager.add_structure_set",
                      text="", icon="ADD")
         op = row.operator(
             "super_project_manager.remove_structure_set", text="", icon="REMOVE")
         op.structure_set = self.previous_set
 
-        row = layout.row()
-        row.prop(self, "preview_subfolders", toggle=True)
+        # Layout the Box containing the folder structure properties.
+        box = layout.box()
+        box.separator(factor=FOLDER_BOX_PADDING_Y)
 
         for index, folder in enumerate(self.automatic_folders):
-            row = layout.row()
-            split = row.split(factor=0.2)
-            split.label(text="Folder {}".format(index + 1))
+            self.draw_folder_props(index, folder, box)
 
-            if self.auto_set_render_outputpath:
-                col = split.column()
-                col.enabled = folder.render_outputpath or not render_outpath_active
-                col.prop(folder, "render_outputpath")
-            split.prop(folder, "folder_name", text="")
+        # Add folder button
+        box.separator(factor=ADD_FOLDER_BUTTON_MARGIN_TOP)
 
-            op = row.operator("super_project_manager.remove_folder",
-                              text="",
-                              emboss=False,
-                              icon="PANEL_CLOSE")
-            op.index = index
-            op.coming_from = "prefs"
+        row = box.row()
+        row.split(factor=FOLDER_BOX_PADDING_X)  # Padding left
 
-            if self.preview_subfolders:
-                box = layout.box()
-                for path in Subfolders(folder.folder_name).display_paths:
-                    row = box.row()
-                    row.label(text=path)
+        op = row.operator("super_project_manager.add_folder",
+                          icon="PLUS")
+        op.coming_from = "prefs"
+        row.split(factor=FOLDER_BOX_PADDING_X)  # Padding right
 
-                for warning in Subfolders(folder.folder_name).warnings:
-                    row = box.row()
-                    row.label(text=warning, icon="ERROR")
+        box.separator(factor=FOLDER_BOX_PADDING_Y)  # Padding bottom
+
+        # TODO: Preview complete folder structure
+        if self.preview_subfolders and False:
+            box = layout.box()
+            for path in Subfolders(folder.folder_name).display_tree:
+                row = box.row()
+                row.label(text=path)
+
+    def draw_folder_props(self, index: int, folder: 'project_folder_props', layout: UILayout):
+        render_outpath_active = True in [
+            e.render_outputpath for e in self.automatic_folders]
 
         row = layout.row()
-        split = row.split(factor=0.2)
+        row.split(factor=FOLDER_BOX_PADDING_X)  # Padding left
 
-        split.separator()
-        op = split.operator("super_project_manager.add_folder",
-                            icon="PLUS")
+        # # split.label(text="Folder {}".format(index + 1))
+
+        # Folder Name/Path Property
+        row.prop(folder, "folder_name", text="")
+
+        # Render Output Path
+        if self.auto_set_render_outputpath:
+            col = row.column()
+            col.enabled = folder.render_outputpath or not render_outpath_active
+            col.prop(folder, "render_outputpath",
+                     text="", icon="OUTPUT", emboss=folder.render_outputpath)
+
+            # Remove Icon
+        op = row.operator("super_project_manager.remove_folder",
+                          text="",
+                          emboss=False,
+                          icon="PANEL_CLOSE")
+        op.index = index
         op.coming_from = "prefs"
 
-        mainrow = layout.row()
-        col = mainrow.column()
+        row.split(factor=FOLDER_BOX_PADDING_X)  # Padding right
 
-        # updater draw function
-        # could also pass in col as third arg
-        addon_updater_ops.update_settings_ui(self, context)
+        for warning in Subfolders(folder.folder_name).warnings:
+            row = layout.row()
+            row.split(factor=FOLDER_BOX_PADDING_X)  # Padding left
 
-        # Alternate draw function, which is more condensed and can be
-        # placed within an existing draw function. Only contains:
-        # 1) check for update/update now buttons
-        # 2) toggle for auto-check(interval will be equal to what is set above)
-        # addon_updater_ops.update_settings_ui_condensed(self, context, col)
+            row.label(text=warning, icon="ERROR")
+            layout.separator(factor=WARNING_MARGIN_BOTTOM)
 
-        # Adding another column,
-        # to help show the above condensed ui as one column
-        # col = mainrow.column()
-        # col.scale_y = 2
-        # col.operator("wm.url_open","Open webpage ").url=\
-        # addon_updater_ops.updater.website
-
-        layout.separator()
-        col = layout.column()
-        op = col.operator("wm.url_open", text="Support", icon="URL")
-        op.url = "https://bd-links.netlify.app/discord-spm"
+            row.split(factor=FOLDER_BOX_PADDING_X)  # Padding right
 
 
 classes = (
