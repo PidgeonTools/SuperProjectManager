@@ -104,22 +104,27 @@ class SUPER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
                  expand=False)
 
         if context.scene.project_setup == "Custom_Setup":
-            layout.label(text="Custom Folder Setup",
-                         icon="NEWFOLDER")
+            box = layout.box()
+            box.label(text="Custom Folder Setup",
+                      icon="NEWFOLDER")
 
             render_outpath_active = True in [
                 e.render_outputpath for e in prefs.custom_folders]
 
             for index, folder in enumerate(prefs.custom_folders):
-                row = layout.row()
-                split = row.split(factor=0.2)
-                split.label(text="Folder {}".format(index + 1))
-                if prefs.auto_set_render_outputpath:
-                    col = split.column()
-                    col.enabled = folder.render_outputpath or not render_outpath_active
-                    col.prop(folder, "render_outputpath")
-                split.prop(folder, "folder_name", text="")
+                row = box.row()
 
+                # Folder Name
+                row.prop(folder, "folder_name", text="")
+
+                # Render Output
+                if prefs.auto_set_render_outputpath:
+                    col = row.column()
+                    col.enabled = folder.render_outputpath or not render_outpath_active
+                    col.prop(folder, "render_outputpath",
+                             text="", icon="OUTPUT", emboss=folder.render_outputpath)
+
+                # Remove button
                 op = row.operator("super_project_manager.remove_folder",
                                   text="",
                                   emboss=False,
@@ -127,12 +132,9 @@ class SUPER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
                 op.index = index
                 op.coming_from = "panel"
 
-            row = layout.row()
-            split = row.split(factor=0.2)
-
-            split.separator()
-            op = split.operator("super_project_manager.add_folder",
-                                icon="PLUS")
+            row = box.row()
+            op = row.operator("super_project_manager.add_folder",
+                              icon="PLUS")
             op.coming_from = "panel"
 
         layout.separator(factor=1.0)
