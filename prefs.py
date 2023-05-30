@@ -123,7 +123,7 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     preview_subfolders: BoolProperty(
         name="Preview compiled Subfolders",
         description="Show the compiled subfolder-strings in the preferences",
-        default=True
+        default=False
     )
 
     auto_check_update: BoolProperty(

@@ -59,7 +59,6 @@ from .functions.register_functions import (
 
 from .objects.path_generator import (
     Subfolders,
-    build_file_folders,
 )
 
 C = bpy.context
@@ -98,7 +97,7 @@ class SUPER_PROJECT_MANAGER_OT_Build_Project(Operator):
             unparsed_string = folders[is_render_outputfolder_set.index(
                 True)].folder_name
             output_path = prefix + Subfolders(
-                unparsed_string).paths[-1]  # Use last path.
+                unparsed_string).compile_paths()[-1]  # Use last path.
             render_outputfolder = convert_input_to_filepath(
                 context, output_path)
 
@@ -109,9 +108,9 @@ class SUPER_PROJECT_MANAGER_OT_Build_Project(Operator):
         # Build all Project Folders
         for folder in folders:
             try:
-                build_file_folders(context,
-                                   prefix,
-                                   folder.folder_name)
+                s = Subfolders(folder.folder_name, prefix)
+                s.build_folders(p.join(context.scene.project_location,
+                                       context.scene.project_name), prefix)
             except:
                 pass
 

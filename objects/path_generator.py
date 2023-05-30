@@ -1,147 +1,151 @@
 import os
 from os import path as p
 
+import typing
+
+
 try:
+    from .token import Token
     from bpy.types import (
         Context
     )
 except:
-    pass
+    import sys
+    sys.path.append(p.dirname(p.dirname(__file__)))
+    from objects.token import Token
 
 
 class Subfolders():
-    def __init__(self, string):
+    def __init__(self, string: str, prefix: str = ""):
+        self.prefix = ""
+        self.tree = {}
         self.warnings = []
-        self.recursion_level = 0
 
-        self.string = string
-        self.tokens = self.tokenize()
-        self.tokens = self.stack_tokens()
-        self.paths = self.compile_paths(self.tokens)
-        self.display_paths = self.compile_display_paths(self.paths)
+        self._return_from_close_bracket = False
 
-        if self.recursion_level != 0:
+        self.tokens = self.tokenize(string)
+        if len(self.tokens) == 0:
+            return
+
+        self.tree = self.parse_tree()
+
+    def __str__(self) -> str:
+        """Return a string representation of the folder tree."""
+        return "/\n" + self.__to_string(self.tree)
+
+    def __to_string(self, subtree: dict = None, row_prefix: str = "") -> str:
+        """Recursive helper function for __str__()."""
+
+        # Unicode characters for the tree represantation.
+        UNICODE_RIGHT = "\u2514"
+        UNICODE_VERTICAL_RIGHT = "\u251C"
+        UNICODE_VERTICAL = "\u2502"
+
+        return_string = ""
+
+        folders = subtree.keys()
+
+        for i, folder in enumerate(folders):
+            unicode_prefix = UNICODE_VERTICAL_RIGHT + " "
+            row_prefix_addition = UNICODE_VERTICAL + " "
+
+            if i == len(folders) - 1:
+                unicode_prefix = UNICODE_RIGHT + " "
+                row_prefix_addition = "  "
+
+            return_string += row_prefix + unicode_prefix + self.prefix + folder + "\n"
+
+            return_string += self.__to_string(subtree.get(folder,
+                                                          {}), row_prefix + row_prefix_addition)
+
+        return return_string
+
+    def tokenize(self, string: str):
+        """Tokenize a string with the syntax foo>>bar>>((spam>>eggs))++lorem++impsum
+        Possible Tokens: String token, branch down token >>, brackets (( and )), add token ++
+        Avoiding Regex. Instead, first envelope the tokens with the safe phrase ::safephrase.
+        This phrase won't occur in the string, so it can be safely used for splitting in the next step.
+        In the next step, the string is split up into all tokens by splitting up along ::safephrase
+        Finally, all empty strings are removed to avoid errors."""
+
+        string = string.replace(">>", "::safephrase>::safephrase")
+        string = string.replace("++", "::safephrase+::safephrase")
+        string = string.replace("((", "::safephrase(::safephrase")
+        string = string.replace("))", "::safephrase)::safephrase")
+
+        tokenized_string = string.split("::safephrase")
+        if tokenized_string.count("(") != tokenized_string.count(")"):
             self.warnings.append(
                 "Unmatched Brackets detected! This might lead to unexpected behaviour when compiling paths!")
 
-    # Tokenize a string with the syntax foo>>bar>>((spam>>eggs))++lorem++impsum
-    # Possible Tokens: String token, branch down token >>, brackets (( and )), add token ++
-    # Avoiding Regex. Instead, first envelope the tokens with the safe phrase ::safephrase.
-    # This phrase won't occur in the string, so it can be safely used for splitting in the next step.
-    # In the next step, the string is split up into all tokens by splitting up along ::safephrase
-    # Finally, all empty strings are removed to avoid errors.
-    def tokenize(self):
-        self.string = self.string.replace(">>", "::safephrase>::safephrase")
-        self.string = self.string.replace("++", "::safephrase+::safephrase")
-        self.string = self.string.replace("((", "::safephrase(::safephrase")
-        self.string = self.string.replace("))", "::safephrase)::safephrase")
+        tokens = [Token(el) for el in tokenized_string if el != ""]
 
-        tokenized_string = self.string.split("::safephrase")
-        tokenized_string = [el for el in tokenized_string if el != ""]
+        return tokens
 
-        return tokenized_string
+    def parse_tree(self):
+        """Parse tokens as tree of paths."""
+        tree: dict = {}
+        active_folder = ""
 
-    # Make sure subtrees opened and closed with brackets appear as single object.
-    def stack_tokens(self):
-        stacked_tokens = []
-        while self.tokens:  # Using global self variable.
+        if not self.tokens[-1].is_valid_closing_token():
+            last_token = str(self.tokens.pop()) * 2
+            self.warnings.append(
+                f"A folder path should not end with '{last_token}'!")
+
+        while self.tokens:
+            if self._return_from_close_bracket:
+                return tree
+
             token = self.tokens.pop(0)
-            # Appends all elements from a subtree using recursion.
-            if token == "(":
-                self.recursion_level += 1
-                stacked_tokens.append(self.stack_tokens())
-            elif token == ")":  # Returns the current subtree as type list. This can be safely done, since it's working with recursion.
-                self.recursion_level -= 1
-                return stacked_tokens
-            else:
-                stacked_tokens.append(token)
-        return stacked_tokens
 
-    # Compile a list of stacked tokens into relative paths.
-    def compile_paths(self, tokens):
-        compiled_paths = []
-        top_level_path = ""
+            if token.is_string():
+                tree[str(token)] = {}
+                active_folder = str(token)
+                continue
 
-        while tokens:
-            token = tokens.pop(0)
-
-            if type(token) == list:
-                compiled_paths.extend(self.compile_paths(token))
-            elif token == ">":
-                try:
-                    token = tokens.pop(0)
-                except IndexError:
+            if token.is_branch_down():
+                if active_folder == "":
                     self.warnings.append(
-                        "A string should end with a folder name, not with >> or ++!")
-                    continue
-                try:
-                    top_level_path = compiled_paths[-1]
-                except IndexError:
-                    self.warnings.append(
-                        "A >> can't be used until at least one Folder name is specified. This also applies for Brackets!")
-
-                if type(token) == list:
-                    for e in self.compile_paths(token):
-                        compiled_paths.append(p.join(top_level_path, e))
-
-                # In case of conflicting ++ and >> tokens, the >> token is preferred.
-                elif token == "+":
-                    self.warnings.append("A >> can't be followed by ++")
-                    tokens.insert(0, "+")
-                elif token == ">":
-                    self.warnings.append("A >> can't be followed by >>")
-                else:
-                    compiled_paths.append(p.join(top_level_path, token))
-
-            elif token == "+":
-                try:
-                    token = tokens.pop(0)
-                except IndexError:
-                    self.warnings.append(
-                        "A string should end with a folder name, not with >> or ++!")
+                        "A '>>' can't be used until at least one Folder name is specified! This rule also applies for subfolders.")
                     continue
 
-                if type(token) == list:
-                    for e in self.compile_paths(token):
-                        compiled_paths.append(p.join(top_level_path, e))
-                elif token == ">":
-                    self.warnings.append("A ++ can't be followed by >>")
-                    tokens.insert(0, ">")
-                elif token == "+":
-                    self.warnings.append("A ++ can't be followed by ++")
-                else:
-                    if top_level_path == "":
-                        self.warnings.append(
-                            "A ++ can't be used until at least one Folder name is specified and one >> is used. This also applies for Brackets!")
-                    compiled_paths.append(p.join(top_level_path, token))
-            else:
-                compiled_paths.append(token)
+                tree[active_folder] = self.parse_tree()
+                continue
 
-        return compiled_paths
+            if token.is_bracket_open():
+                tree.update(self.parse_tree())
 
-    def compile_display_paths(self, paths):
-        display_paths = []
+                self._return_from_close_bracket = False
+                continue
 
-        for path in paths:
-            display_path = path.replace("\\", ">>")
-            display_path = display_path.replace("//", ">>")
-            display_path = display_path.replace("/", ">>")
+            if token.is_bracket_close():
+                self._return_from_close_bracket = True
+                return tree
 
-            display_paths.append(display_path)
+        return tree
 
-        return display_paths
+    def compile_paths(self, subpath: str = "", subtree: dict = None,) -> typing.List[str]:
+        """Compile the Tree into a list of relative paths."""
+        paths = []
 
+        if subtree is None:
+            subtree = self.tree
 
-def build_file_folders(context: 'Context', prefix, unparsed_string):
+        for folder in subtree.keys():
+            path = p.join(subpath, self.prefix + folder)
+            paths.append(path)
 
-    for path in Subfolders(unparsed_string).paths:
-        top_level_path = p.join(context.scene.project_location,
-                                context.scene.project_name)
-        path = prefix + path
-        path = p.join(top_level_path, path)
+            paths.extend(self.compile_paths(path, subtree.get(folder, {})))
 
-        if not p.isdir(path):
-            os.makedirs(path)
+        return paths
+
+    def build_folders(self, project_dir: str, prefix: str) -> None:
+        """Create the folders on the system."""
+        for path in self.compile_paths():
+            path = p.join(project_dir, prefix + path)
+
+            if not p.isdir(path):
+                os.makedirs(path)
 
 
 def subfolder_enum(self, context: 'Context'):
