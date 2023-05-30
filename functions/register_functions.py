@@ -43,21 +43,6 @@ D = bpy.data
 Scene_Prop = bpy.types.Scene
 
 
-def register_icons():
-    icons = ["BUILD_ICON", "TWITTER", "YOUTUBE", "GUMROAD"]
-    Scene_Prop.super_project_manager_icons = previews.new()
-    icons_dir = p.join(p.dirname(p.dirname(__file__)), "icons")
-    for icon in icons:
-        Scene_Prop.super_project_manager_icons.load(icon,
-                                                    p.join(icons_dir,
-                                                           icon + ".png"),
-                                                    "IMAGE")
-
-
-def unregister_icons():
-    previews.remove(Scene_Prop.super_project_manager_icons)
-
-
 def register_properties():
     prefs = C.preferences.addons[__package__.split(".")[0]].preferences
 

@@ -25,9 +25,7 @@ from os import path as p
 import shutil
 
 from .functions.register_functions import (
-    register_icons,
     register_properties,
-    unregister_icons,
 )
 
 from .functions.blenderdefender_functions import (
@@ -74,7 +72,6 @@ def register():
     operators.register()
     panels.register()
 
-    register_icons()
     register_properties()
 
 
@@ -82,5 +79,3 @@ def unregister():
     operators.unregister()
     prefs.unregister()
     panels.unregister()
-
-    unregister_icons()

@@ -60,7 +60,6 @@ class SUPER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
 
     def draw(self, context: Context):
         prefs = C.preferences.addons[__package__].preferences
-        # ic = context.scene.super_project_manager_icons["BUILD_ICON"].icon_id
 
         layout: UILayout = self.layout
 
