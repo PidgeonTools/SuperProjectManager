@@ -27,15 +27,79 @@ import sys
 sys.path.append(p.dirname(p.dirname(__file__)))
 
 if True:
-    from objects.path_generator import Subfolders
+    from objects.path_generator import Subfolders, Token
 
 
 class TestSubfolders(unittest.TestCase):
     def test_compile_paths(self):
-        # Test Case 1
+        # Test a simple folder path with subfolders. Shouldn't result in a warning.
+        test_case = Subfolders("Folder>>Subfolder>>Subsubfolder")
+        self.assertEqual(test_case.compile_paths(), [
+            "Folder",
+            "Folder\\Subfolder",
+            "Folder\\Subfolder\\Subsubfolder"
+        ])
+        self.assertEqual(test_case.warnings, [])
+
+        # Test a simple folder path with a prefix. Shouldn't result in a warning.
+        test_case = Subfolders(
+            "Folder>>Subfolder>>Subsubfolder", "Test_Prefix_")
+        self.assertEqual(test_case.compile_paths(), [
+            "Test_Prefix_Folder",
+            "Test_Prefix_Folder\\Test_Prefix_Subfolder",
+            "Test_Prefix_Folder\\Test_Prefix_Subfolder\\Test_Prefix_Subsubfolder"
+        ])
+        self.assertEqual(test_case.warnings, [])
+
+        # Test a folder path with multiple subfolders in a Folder.
+        # Shouldn't result in a warning.
+        test_case = Subfolders(
+            "Folder>>Subfolder1++Subfolder2>>Subsubfolder")
+        self.assertEqual(test_case.compile_paths(), [
+            "Folder",
+            "Folder\\Subfolder1",
+            "Folder\\Subfolder2",
+            "Folder\\Subfolder2\\Subsubfolder"
+        ])
+        self.assertEqual(test_case.warnings, [])
+
+        # Test a simple folder path with subfolders and '++' following '>>'.
+        # Shouldn't result in a warning, because '>>' is preferred over '++'.
+        test_case = Subfolders("Folder>>Subfolder1>>++Subfolder2")
+        self.assertEqual(test_case.compile_paths(), [
+            "Folder",
+            "Folder\\Subfolder1",
+            "Folder\\Subfolder1\\Subfolder2"
+        ])
+        self.assertEqual(test_case.warnings, [])
+
+        # Test a simple folder path with subfolders and '>>' following '++'.
+        # Shouldn't result in a warning, because '>>' is preferred over '++'.
+        test_case = Subfolders("Folder++Folder2++>>Test>>Amazing")
+        self.assertEqual(test_case.compile_paths(), [
+            "Folder",
+            "Folder2",
+            "Folder2\\Test",
+            "Folder2\\Test\\Amazing"
+        ])
+        self.assertEqual(test_case.warnings, [])
+
+        # Test a simple folder path that ends with '>>'. Should result in a warning.
+        test_case = Subfolders(
+            "Folder>>Subfolder1++Subfolder2>>")
+        self.assertEqual(test_case.compile_paths(), [
+            "Folder",
+            "Folder\\Subfolder1",
+            "Folder\\Subfolder2"
+        ])
+        self.assertEqual(test_case.warnings, [
+            "A folder path should not end with '>>'!"
+        ])
+
+        # Test a folder path with brackets. Shouldn't result in a warning.
         test_case = Subfolders(
             "Folder>>Subfolder++((Subfolder2>>Subsubfolder))++Subfolder3")
-        self.assertEqual(test_case.paths, [
+        self.assertEqual(test_case.compile_paths(), [
             "Folder",
             "Folder\\Subfolder",
             "Folder\\Subfolder2",
@@ -44,119 +108,40 @@ class TestSubfolders(unittest.TestCase):
         ])
         self.assertEqual(test_case.warnings, [])
 
-        # Test Case 2
-        test_case = Subfolders("Folder++Folder2++>>Test>>Amazing")
-        self.assertEqual(test_case.paths, [
-            "Folder",
-            "Folder2",
-            "Folder2\\Test",
-            "Folder2\\Test\\Amazing"
-        ])
-        self.assertEqual(test_case.warnings, [
-            "A ++ can't be used until at least one Folder name is specified and one >> is used. This also applies for Brackets!",
-            "A ++ can't be followed by >>"
-        ])
-
-        # Test Case 3
-        test_case = Subfolders("Folder>>Subfolder>>Subsubfolder")
-        self.assertEqual(test_case.paths, [
-            "Folder",
-            "Folder\\Subfolder",
-            "Folder\\Subfolder\\Subsubfolder"
-        ])
-        self.assertEqual(test_case.warnings, [])
-
-        # Test Case 4
-        test_case = Subfolders(
-            "Folder>>Subfolder1++Subfolder2>>Subsubfolder")
-        self.assertEqual(test_case.paths, [
-            "Folder",
-            "Folder\\Subfolder1",
-            "Folder\\Subfolder2",
-            "Folder\\Subfolder2\\Subsubfolder"
-        ])
-        self.assertEqual(test_case.warnings, [])
-
-        # Test Case 5
-        test_case = Subfolders(
-            "Folder>>((Subfolder1>>Subsubfolder1))++Subfolder2>>Subsubfolder2")
-        self.assertEqual(test_case.paths, [
-            "Folder",
-            "Folder\\Subfolder1",
-            "Folder\\Subfolder1\\Subsubfolder1",
-            "Folder\\Subfolder2",
-            "Folder\\Subfolder2\\Subsubfolder2"
-        ])
-        self.assertEqual(test_case.warnings, [])
-
-        # Test Case 6
-        test_case = Subfolders("Folder>>Subfolder1>>++Subfolder2")
-        self.assertEqual(test_case.paths, [
-            "Folder",
-            "Folder\\Subfolder1",
-            "Folder\\Subfolder1\\Subfolder2"
-        ])
-        self.assertEqual(test_case.warnings, ["A >> can't be followed by ++"])
-
-        # Test Case 7
-        test_case = Subfolders(
-            "Folder>>((Subfolder>>Subsubfolder1++Subfolder2")
-        self.assertEqual(test_case.paths, [
-            "Folder",
-            "Folder\\Subfolder",
-            "Folder\\Subfolder\\Subsubfolder1",
-            "Folder\\Subfolder\\Subfolder2"
-        ])
-        self.assertEqual(test_case.warnings, [
-            "Unmatched Brackets detected! This might lead to unexpected behaviour when compiling paths!"
-        ])
-
-        # Test Case 8
+        # Test a folder path with unmatched brackets and a misplaced '>>'.
+        # Should result in two warnings.
         test_case = Subfolders(
             "Folder((>>Subfolder>>Subsubfolder1++Subfolder2")
-        self.assertEqual(test_case.paths, [
+        self.assertEqual(test_case.compile_paths(), [
             "Folder",
             "Subfolder",
             "Subfolder\\Subsubfolder1",
             "Subfolder\\Subfolder2"
         ])
         self.assertEqual(test_case.warnings, [
-            "A >> can't be used until at least one Folder name is specified. This also applies for Brackets!",
-            "Unmatched Brackets detected! This might lead to unexpected behaviour when compiling paths!"
+            "Unmatched Brackets detected! This might lead to unexpected behaviour when compiling paths!",
+            "A '>>' can't be used until at least one Folder name is specified! This rule also applies for subfolders.",
         ])
 
-        # Test Case 9
+        # Test a folder path with unmatched opening brackets.
+        # Should result in a warning.
         test_case = Subfolders(
             "Folder((++Subfolder>>Subsubfolder1++Subfolder2")
-        self.assertEqual(test_case.paths, [
+        self.assertEqual(test_case.compile_paths(), [
             "Folder",
             "Subfolder",
             "Subfolder\\Subsubfolder1",
             "Subfolder\\Subfolder2"
         ])
         self.assertEqual(test_case.warnings, [
-            "A ++ can't be used until at least one Folder name is specified and one >> is used. This also applies for Brackets!",
             "Unmatched Brackets detected! This might lead to unexpected behaviour when compiling paths!"
         ])
 
-        # Test Case 10
-        test_case = Subfolders(
-            "Folder++Subfolder>>Subsubfolder1++Subfolder2>>")
-        self.assertEqual(test_case.paths, [
-            "Folder",
-            "Subfolder",
-            "Subfolder\\Subsubfolder1",
-            "Subfolder\\Subfolder2"
-        ])
-        self.assertEqual(test_case.warnings, [
-            "A ++ can't be used until at least one Folder name is specified and one >> is used. This also applies for Brackets!",
-            "A string should end with a folder name, not with >> or ++!"
-        ])
-
-        # Test Case 11
+        # Test a folder path with unmatched closing brackets.
+        # Should result in a warning.
         test_case = Subfolders(
             "Folder>>Subfolder>>Subsubfolder1))++Subfolder2")
-        self.assertEqual(test_case.paths, [
+        self.assertEqual(test_case.compile_paths(), [
             "Folder",
             "Folder\\Subfolder",
             "Folder\\Subfolder\\Subsubfolder1"
@@ -165,29 +150,25 @@ class TestSubfolders(unittest.TestCase):
             "Unmatched Brackets detected! This might lead to unexpected behaviour when compiling paths!"
         ])
 
-        # Test Case 12
+        # Test a folder path with brackets and a misplaced '>>'.
+        # Should result in a warning.
         test_case = Subfolders(
             "((Folder>>Subfolder++Subfolder2))>>Subsubfolder1++Subsubfolder2")
-        self.assertEqual(test_case.paths, [
+        self.assertEqual(test_case.compile_paths(), [
             "Folder",
             "Folder\\Subfolder",
             "Folder\\Subfolder2",
-            "Folder\\Subfolder2\\Subsubfolder1",
-            "Folder\\Subfolder2\\Subsubfolder2"
+            "Subsubfolder1",
+            "Subsubfolder2"
         ])
-        self.assertEqual(test_case.warnings, [])
+        self.assertEqual(test_case.warnings, [
+                         "A '>>' can't be used until at least one Folder name is specified! This rule also applies for subfolders."])
 
-    def test_compile_display_paths(self):
+    def test_tokenize(self):
         test_obj = Subfolders("Placeholder")
-
-        self.assertEqual(test_obj.compile_display_paths(
-            ["Folder//Subfolder//Subfolder3"]), ["Folder>>Subfolder>>Subfolder3"])
-
-        self.assertEqual(test_obj.compile_display_paths(
-            ["Folder/Subfolder/Subfolder3"]), ["Folder>>Subfolder>>Subfolder3"])
-
-        self.assertEqual(test_obj.compile_display_paths(
-            ["Folder\\Subfolder\\Subfolder3"]), ["Folder>>Subfolder>>Subfolder3"])
+        self.assertEqual(test_obj.tokenize("Test"), [Token("Test")])
+        self.assertEqual(test_obj.tokenize("Test>>++((Test)))"), [Token("Test"), Token(
+            ">"), Token("+"), Token("("), Token("Test"), Token(")"), Token(")")])
 
 
 def main():
