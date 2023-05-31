@@ -16,6 +16,7 @@ Managing your unfinished Projects streamlined. Features:
 ## Upcoming Version:
 
 - [ ] Improvement: Finish project dialogue
+- [ ] Improvement: Clean up the user interface
 
 <!-- We've just hit another update. No features are planned so far. [Change this!](https://github.com/PidgeonTools/SuperProjectManager/issues/new/choose) -->
 
