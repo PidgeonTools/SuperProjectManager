@@ -49,17 +49,17 @@ C = bpy.context
 D = bpy.data
 
 
-def convert_input_to_filepath(context: Context = None, input=""):
-    parts = input.split(">>")
-    path = ""
-    if context:
-        path = p.join(context.scene.project_location,
-                      context.scene.project_name)
+# def convert_input_to_filepath(context: Context = None, input=""):
+#     parts = input.split(">>")
+#     path = ""
+#     if context:
+#         path = p.join(context.scene.project_location,
+#                       context.scene.project_name)
 
-    for i in parts:
-        path = p.join(path, i)
+#     for i in parts:
+#         path = p.join(path, i)
 
-    return path
+#     return path
 
 
 def generate_file_version_number(path):

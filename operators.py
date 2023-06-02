@@ -38,7 +38,6 @@ import os
 from os import path as p
 
 from .functions.main_functions import (
-    convert_input_to_filepath,
     generate_file_version_number,
     is_file_in_project_folder,
     save_filepath,
@@ -96,10 +95,9 @@ class SUPER_PROJECT_MANAGER_OT_Build_Project(Operator):
         if True in is_render_outputfolder_set:
             unparsed_string = folders[is_render_outputfolder_set.index(
                 True)].folder_name
-            output_path = prefix + Subfolders(
-                unparsed_string).compile_paths()[-1]  # Use last path.
-            render_outputfolder = convert_input_to_filepath(
-                context, output_path)
+            render_outputfolder = Subfolders(
+                unparsed_string, prefix).compile_paths(p.join(context.scene.project_location,
+                                                              context.scene.project_name))[-1]  # Use last path.
 
         # Create the Project Folder.
         if not p.isdir(projectpath):
@@ -110,14 +108,12 @@ class SUPER_PROJECT_MANAGER_OT_Build_Project(Operator):
             try:
                 s = Subfolders(folder.folder_name, prefix)
                 s.build_folders(p.join(context.scene.project_location,
-                                       context.scene.project_name), prefix)
+                                       context.scene.project_name))
             except:
                 pass
 
         # Set the subfolder of the Blender file.
-        subfolder = prefix + convert_input_to_filepath(input=prefs.save_folder)
-        if prefs.save_folder == "Root":
-            subfolder = ""
+        subfolder: str = prefs.save_folder.strip()
 
         # Set the path the Blender File gets saved to.
         filepath = D.filepath

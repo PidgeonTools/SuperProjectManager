@@ -17,7 +17,7 @@ except:
 
 class Subfolders():
     def __init__(self, string: str, prefix: str = ""):
-        self.prefix = ""
+        self.prefix = prefix
         self.tree = {}
         self.warnings = []
 
@@ -139,29 +139,38 @@ class Subfolders():
 
         return paths
 
-    def build_folders(self, project_dir: str, prefix: str) -> None:
+    def build_folders(self, project_dir: str) -> None:
         """Create the folders on the system."""
-        for path in self.compile_paths():
-            path = p.join(project_dir, prefix + path)
+        for path in self.compile_paths(project_dir):
 
             if not p.isdir(path):
                 os.makedirs(path)
 
 
 def subfolder_enum(self, context: 'Context'):
+    prefs = context.preferences.addons[__package__.split(".")[0]].preferences
+
     tooltip = "Select Folder as target folder for your Blender File. \
 Uses Folders from Automatic Setup."
-    items = [("Root", "Root", tooltip)]
+    items = [(" ", "Root", tooltip)]
 
     folders = self.automatic_folders
     if context.scene.project_setup == "Custom_Setup":
         folders = self.custom_folders
 
+    prefix = ""
+    if prefs.prefix_with_project_name:
+        prefix = context.scene.project_name + "_"
+
     try:
         for folder in folders:
-            for folder in Subfolders(folder.folder_name).display_paths:
-                items.append((folder, folder, tooltip))
-    except:
-        print("Error in main_functions.py, line 128")
+            for subfolder in Subfolders(folder.folder_name, prefix).compile_paths():
+                # subfolder = subfolder.replace(
+                #     "/", ">>").replace("//", ">>").replace("\\", ">>")
+                items.append(
+                    (subfolder, subfolder.replace(prefix, ""), tooltip))
+    except Exception as e:
+        print("Exception in function subfolder_enum")
+        print(e)
 
     return items
