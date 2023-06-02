@@ -30,7 +30,6 @@ from .functions.register_functions import (
 
 from .functions.blenderdefender_functions import (
     setup_addons_data,
-    update_json
 )
 
 from . import (
@@ -55,18 +54,7 @@ bl_info = {
 
 
 def register():
-    path = p.join(p.expanduser("~"),
-                  "Blender Addons Data",
-                  "blender-project-starter")
-
     setup_addons_data()
-    if "BPS.json" not in os.listdir(path):
-        shutil.copyfile(p.join(p.dirname(__file__),
-                               "functions",
-                               "BPS.json"),
-                        p.join(path, "BPS.json"))
-
-    update_json()
 
     prefs.register(bl_info)
     operators.register()

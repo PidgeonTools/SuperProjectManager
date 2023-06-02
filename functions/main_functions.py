@@ -48,6 +48,13 @@ from .json_functions import (
 C = bpy.context
 D = bpy.data
 
+BPS_DATA_FILE = p.join(
+    p.expanduser("~"),
+    "Blender Addons Data",
+    "blender-project-starter",
+    "BPS.json"
+)
+
 
 def generate_file_version_number(path):
     i = 1
@@ -88,12 +95,7 @@ def structure_sets_enum(self, context: Context):
     tooltip = "Select a folder Structure Set."
     items = []
 
-    path = p.join(p.expanduser("~"),
-                  "Blender Addons Data",
-                  "blender-project-starter",
-                  "BPS.json")
-
-    for i in decode_json(path)["automatic_folders"]:
+    for i in decode_json(BPS_DATA_FILE)["automatic_folders"]:
         items.append((i, i, tooltip))
 
     return items
@@ -107,30 +109,22 @@ def structure_sets_enum_update(self, context: Context):
 
 
 def add_unfinished_project(project_path):
-    path = p.join(p.expanduser("~"),
-                  "Blender Addons Data",
-                  "blender-project-starter",
-                  "BPS.json")
-    data = decode_json(path)
+    data = decode_json(BPS_DATA_FILE)
 
     if ["project", project_path] in data["unfinished_projects"]:
         return {'WARNING'}, f"The Project {p.basename(project_path)} already exists in the list of unfinished Projects!"
 
     data["unfinished_projects"].append(["project", project_path])
-    encode_json(data, path)
+    encode_json(data, BPS_DATA_FILE)
 
     return {'INFO'}, f"Successfully added project {p.basename(project_path)} to the list of unfinished projects."
 
 
 def finish_project(index):
-    path = p.join(p.expanduser("~"),
-                  "Blender Addons Data",
-                  "blender-project-starter",
-                  "BPS.json")
-    data = decode_json(path)
+    data = decode_json(BPS_DATA_FILE)
 
     data["unfinished_projects"].pop(index)
-    encode_json(data, path)
+    encode_json(data, BPS_DATA_FILE)
 
 
 def write_project_info(root_path, blend_file_path):

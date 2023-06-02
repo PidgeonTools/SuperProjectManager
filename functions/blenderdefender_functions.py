@@ -25,6 +25,8 @@ from os import path as p
 
 import json
 
+import shutil
+
 from .json_functions import (
     decode_json,
     encode_json
@@ -32,12 +34,23 @@ from .json_functions import (
 
 
 def setup_addons_data():
-    path = p.join(p.expanduser("~"),
-                  "Blender Addons Data",
-                  "blender-project-starter"
-                  )
-    if not p.isdir(path):
-        os.makedirs(path)
+    """Setup and validate the addon data."""
+    addons_data_path = p.join(
+        p.expanduser("~"),
+        "Blender Addons Data",
+        "blender-project-starter"
+    )
+
+    if not p.isdir(addons_data_path):
+        os.makedirs(addons_data_path)
+
+    if "BPS.json" not in os.listdir(addons_data_path):
+        shutil.copyfile(p.join(p.dirname(__file__),
+                               "functions",
+                               "BPS.json"),
+                        p.join(addons_data_path, "BPS.json"))
+
+    update_json()
 
 
 def update_to_120(data):
@@ -70,10 +83,7 @@ def update_json():
                   "BPS.json")
     data = decode_json(path)
 
-    try:
-        version = data["version"]
-    except:
-        version = 110
+    version = data.get("version", 110)
 
     if version == 110:
         data = update_to_120(data)

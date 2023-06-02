@@ -37,6 +37,13 @@ from .functions.json_functions import decode_json
 
 C = bpy.context
 
+BPS_DATA_FILE = p.join(
+    p.expanduser("~"),
+    "Blender Addons Data",
+    "blender-project-starter",
+    "BPS.json"
+)
+
 
 class SUPER_PROJECT_MANAGER_PT_main_panel(Panel):
     bl_label = "Super Project Manager"
@@ -234,11 +241,8 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
 
     def draw(self, context: Context):
         layout: UILayout = self.layout
-        path = p.join(p.expanduser("~"),
-                      "Blender Addons Data",
-                      "blender-project-starter",
-                      "BPS.json")
-        data = decode_json(path)["unfinished_projects"]
+
+        data = decode_json(BPS_DATA_FILE)["unfinished_projects"]
 
         project_count = len([e for e in data if e[0] == "project"])
         layout.label(

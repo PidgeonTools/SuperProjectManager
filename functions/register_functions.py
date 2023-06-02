@@ -42,6 +42,13 @@ C = bpy.context
 D = bpy.data
 Scene_Prop = bpy.types.Scene
 
+BPS_DATA_FILE = p.join(
+    p.expanduser("~"),
+    "Blender Addons Data",
+    "blender-project-starter",
+    "BPS.json"
+)
+
 
 def register_properties():
     prefs = C.preferences.addons[__package__.split(".")[0]].preferences
@@ -98,15 +105,12 @@ current folder to the project folder.",
 
 
 def register_automatic_folders(folders, folderset="Default Folder Set"):
-    path = p.join(p.expanduser("~"),
-                  "Blender Addons Data",
-                  "blender-project-starter", "BPS.json")
 
     index = 0
     for folder in folders:
         folders.remove(index)
 
-    data = decode_json(path)
+    data = decode_json(BPS_DATA_FILE)
 
     for folder in data["automatic_folders"][folderset]:
         f = folders.add()
@@ -115,12 +119,8 @@ def register_automatic_folders(folders, folderset="Default Folder Set"):
 
 
 def unregister_automatic_folders(folders, folderset="Default Folder Set"):
-    path = p.join(p.expanduser("~"),
-                  "Blender Addons Data",
-                  "blender-project-starter",
-                  "BPS.json")
     data = []
-    original_json = decode_json(path)
+    original_json = decode_json(BPS_DATA_FILE)
 
     for folder in folders:
         data.append([int(folder.render_outputpath),
@@ -128,4 +128,4 @@ def unregister_automatic_folders(folders, folderset="Default Folder Set"):
 
     original_json["automatic_folders"][folderset] = data
 
-    encode_json(original_json, path)
+    encode_json(original_json, BPS_DATA_FILE)

@@ -62,6 +62,10 @@ from .objects.path_generator import (
 
 C = bpy.context
 
+BPS_DATA_DIR = p.join(p.expanduser(
+    "~"), "Blender Addons Data", "blender-project-starter")
+BPS_DATA_FILE = p.join(BPS_DATA_DIR, "BPS.json")
+
 
 class SUPER_PROJECT_MANAGER_OT_Build_Project(Operator):
     bl_idname = "super_project_manager.build_project"
@@ -298,14 +302,10 @@ please update the project path"
         layout.label(text=name)
 
     def redefine_project_path(self, index, new_path):
-        path = p.join(p.expanduser("~"),
-                      "Blender Addons Data",
-                      "blender-project-starter",
-                      "BPS.json")
-        data = decode_json(path)
+        data = decode_json(BPS_DATA_FILE)
 
         data["unfinished_projects"][index][1] = new_path
-        encode_json(data, path)
+        encode_json(data, BPS_DATA_FILE)
 
 
 class SUPER_PROJECT_MANAGER_OT_open_blender_file(Operator):
@@ -370,16 +370,12 @@ class SUPER_PROJECT_MANAGER_ot_rearrange_up(bpy.types.Operator):
 
     def execute(self, context: Context):
         index = self.index
-        path = p.join(p.expanduser("~"),
-                      "Blender Addons Data",
-                      "blender-project-starter",
-                      "BPS.json")
-        data = decode_json(path)
+        data = decode_json(BPS_DATA_FILE)
 
         data["unfinished_projects"][index], data["unfinished_projects"][index -
                                                                         1] = data["unfinished_projects"][index - 1], data["unfinished_projects"][index]
 
-        encode_json(data, path)
+        encode_json(data, BPS_DATA_FILE)
         return {'FINISHED'}
 
 
@@ -393,16 +389,12 @@ class SUPER_PROJECT_MANAGER_ot_rearrange_down(bpy.types.Operator):
 
     def execute(self, context: Context):
         index = self.index
-        path = p.join(p.expanduser("~"),
-                      "Blender Addons Data",
-                      "blender-project-starter",
-                      "BPS.json")
-        data = decode_json(path)
+        data = decode_json(BPS_DATA_FILE)
 
         data["unfinished_projects"][index], data["unfinished_projects"][index +
                                                                         1] = data["unfinished_projects"][index + 1], data["unfinished_projects"][index]
 
-        encode_json(data, path)
+        encode_json(data, BPS_DATA_FILE)
         return {'FINISHED'}
 
 
@@ -416,17 +408,13 @@ class SUPER_PROJECT_MANAGER_ot_rearrange_to_top(bpy.types.Operator):
 
     def execute(self, context: Context):
         index = self.index
-        path = p.join(p.expanduser("~"),
-                      "Blender Addons Data",
-                      "blender-project-starter",
-                      "BPS.json")
-        data = decode_json(path)
+        data = decode_json(BPS_DATA_FILE)
 
         element = data["unfinished_projects"].pop(index)
 
         data["unfinished_projects"].insert(0, element)
 
-        encode_json(data, path)
+        encode_json(data, BPS_DATA_FILE)
         return {'FINISHED'}
 
 
@@ -440,17 +428,13 @@ class SUPER_PROJECT_MANAGER_ot_rearrange_to_bottom(bpy.types.Operator):
 
     def execute(self, context: Context):
         index = self.index
-        path = p.join(p.expanduser("~"),
-                      "Blender Addons Data",
-                      "blender-project-starter",
-                      "BPS.json")
-        data = decode_json(path)
+        data = decode_json(BPS_DATA_FILE)
 
         element = data["unfinished_projects"].pop(index)
 
         data["unfinished_projects"].append(element)
 
-        encode_json(data, path)
+        encode_json(data, BPS_DATA_FILE)
         return {'FINISHED'}
 
 
@@ -463,15 +447,11 @@ class SUPER_PROJECT_MANAGER_ot_add_label(bpy.types.Operator):
     label: StringProperty()
 
     def execute(self, context: Context):
-        path = p.join(p.expanduser("~"),
-                      "Blender Addons Data",
-                      "blender-project-starter",
-                      "BPS.json")
-        data = decode_json(path)
+        data = decode_json(BPS_DATA_FILE)
 
         data["unfinished_projects"].append(["label", self.label])
 
-        encode_json(data, path)
+        encode_json(data, BPS_DATA_FILE)
         return {'FINISHED'}
 
     def invoke(self, context: Context, event: Event):
@@ -492,15 +472,11 @@ class SUPER_PROJECT_MANAGER_ot_remove_label(bpy.types.Operator):
     index: IntProperty()
 
     def execute(self, context: Context):
-        path = p.join(p.expanduser("~"),
-                      "Blender Addons Data",
-                      "blender-project-starter",
-                      "BPS.json")
-        data = decode_json(path)
+        data = decode_json(BPS_DATA_FILE)
 
         data["unfinished_projects"].pop(self.index)
 
-        encode_json(data, path)
+        encode_json(data, BPS_DATA_FILE)
         return {'FINISHED'}
 
 
@@ -514,15 +490,11 @@ class SUPER_PROJECT_MANAGER_ot_change_label(bpy.types.Operator):
     label: StringProperty()
 
     def execute(self, context: Context):
-        path = p.join(p.expanduser("~"),
-                      "Blender Addons Data",
-                      "blender-project-starter",
-                      "BPS.json")
-        data = decode_json(path)
+        data = decode_json(BPS_DATA_FILE)
 
         data["unfinished_projects"][self.index] = ["label", self.label]
 
-        encode_json(data, path)
+        encode_json(data, BPS_DATA_FILE)
         return {'FINISHED'}
 
     def invoke(self, context: Context, event: Event):
@@ -545,15 +517,11 @@ class SUPER_PROJECT_MANAGER_ot_add_structure_set(bpy.types.Operator):
     def execute(self, context: Context):
         prefs = context.preferences.addons[__package__].preferences
 
-        path = p.join(p.expanduser("~"),
-                      "Blender Addons Data",
-                      "blender-project-starter",
-                      "BPS.json")
-        data = decode_json(path)
+        data = decode_json(BPS_DATA_FILE)
 
         data["automatic_folders"][self.name] = []
 
-        encode_json(data, path)
+        encode_json(data, BPS_DATA_FILE)
 
         prefs.folder_structure_sets = self.name
 
@@ -583,15 +551,11 @@ class SUPER_PROJECT_MANAGER_ot_remove_structure_set(bpy.types.Operator):
         if self.structure_set == "Default Folder Set":
             return {'FINISHED'}
 
-        path = p.join(p.expanduser("~"),
-                      "Blender Addons Data",
-                      "blender-project-starter",
-                      "BPS.json")
-        data = decode_json(path)
+        data = decode_json(BPS_DATA_FILE)
 
         data["automatic_folders"].pop(self.structure_set)
 
-        encode_json(data, path)
+        encode_json(data, BPS_DATA_FILE)
 
         return {'FINISHED'}
 
