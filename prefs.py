@@ -199,10 +199,6 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     def draw_folder_structure_sets(self, context: Context, layout: UILayout):
         layout.label(text="Folder Structure Set")
 
-        # TODO
-        # row = layout.row()
-        # row.prop(self, "preview_subfolders")
-
         row = layout.row(align=True)
         row.prop(self, "folder_structure_sets", text="")
         row.operator("super_project_manager.add_structure_set",
@@ -215,8 +211,10 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         box = layout.box()
         box.separator(factor=FOLDER_BOX_PADDING_Y)
 
+        compiled_preview_string = ""
         for index, folder in enumerate(self.automatic_folders):
             self.draw_folder_props(index, folder, box)
+            compiled_preview_string += "((" + folder.folder_name + "))++"
 
         # Add folder button
         box.separator(factor=ADD_FOLDER_BUTTON_MARGIN_TOP)
@@ -231,12 +229,25 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
         box.separator(factor=FOLDER_BOX_PADDING_Y)  # Padding bottom
 
-        # TODO: Preview complete folder structure
-        if self.preview_subfolders and False:
-            box = layout.box()
-            for path in Subfolders(folder.folder_name).display_tree:
+        # Expand/Collapse Preview of compiled subfolders
+        row = box.row()
+        row.alignment = "LEFT"
+        icon = "TRIA_DOWN" if self.preview_subfolders else "TRIA_RIGHT"
+        row.prop(self, "preview_subfolders",
+                 emboss=False, icon=icon, text="Preview")
+
+        # Preview complete folder structure
+        if self.preview_subfolders:
+
+            prefix = ""
+            if self.prefix_with_project_name:
+                prefix = "Project_Name_"
+
+            for line in str(Subfolders(compiled_preview_string, prefix)).split("\n"):
                 row = box.row()
-                row.label(text=path)
+                row.split(factor=FOLDER_BOX_PADDING_X)
+                row.scale_y = 0.3
+                row.label(text=line)
 
     def draw_folder_props(self, index: int, folder: 'project_folder_props', layout: UILayout):
         render_outpath_active = True in [
