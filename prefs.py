@@ -37,6 +37,8 @@ from bpy.types import (
 import os
 from os import path as p
 
+import re
+
 from . import addon_updater_ops
 
 from .functions.main_functions import (
@@ -177,6 +179,28 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
             # updater draw function
             # could also pass in col as third arg
             addon_updater_ops.update_settings_ui(self, context)
+
+        # Display warning, if a backup of a corrupted file is in the Addons Data directory
+        addons_data_dir = p.join(p.expanduser(
+            "~"), "Blender Addons Data", "blender-project-starter")
+        corrupted_files = [file for file in os.listdir(
+            addons_data_dir) if re.match("BPS\.\d\d\d\d-\d\d-\d\d\.json", file)]
+        if len(corrupted_files) > 0:
+            layout.separator()
+
+            box = layout.box()
+            box.label(
+                text="Warning: Corrupted Addon Data files detected", icon="ERROR")
+            box.label(
+                text="Click 'Open directory' below to view the corrupted files or click 'Support' for help on Discord.")
+            box.label(text="Corrupted files:")
+            for f in corrupted_files:
+                row = box.row()
+                row.scale_y = 0.4
+                row.label(text=f)
+
+            box.operator(
+                "wm.path_open", text="Open directory").filepath = addons_data_dir
 
         # Support URL
         layout.separator()

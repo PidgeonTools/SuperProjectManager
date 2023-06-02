@@ -25,6 +25,8 @@ from os import path as p
 
 import json
 
+import time
+
 import shutil
 
 from .json_functions import (
@@ -35,22 +37,54 @@ from .json_functions import (
 
 def setup_addons_data():
     """Setup and validate the addon data."""
+    default_addons_data = {
+        "automatic_folders": {
+            "Default Folder Set": [
+                [
+                    0,
+                    "Blender Files"
+                ],
+                [
+                    1,
+                    "Images>>Textures++References++Rendered Images"
+                ],
+                [
+                    0,
+                    "Sounds"
+                ]
+            ]
+        },
+        "unfinished_projects": [],
+        "version": 130
+    }
+
     addons_data_path = p.join(
         p.expanduser("~"),
         "Blender Addons Data",
         "blender-project-starter"
     )
+    addons_data_file = p.join(addons_data_path, "BPS.json")
 
     if not p.isdir(addons_data_path):
         os.makedirs(addons_data_path)
 
     if "BPS.json" not in os.listdir(addons_data_path):
-        shutil.copyfile(p.join(p.dirname(__file__),
-                               "functions",
-                               "BPS.json"),
-                        p.join(addons_data_path, "BPS.json"))
+        encode_json(default_addons_data, addons_data_file)
 
-    update_json()
+    addons_data = ""
+    try:
+        addons_data = decode_json(addons_data_file)
+    except Exception:
+        pass
+
+    if type(addons_data) != dict:
+        shutil.move(addons_data_file, p.join(addons_data_path,
+                                             f"BPS.{time.strftime('%Y-%m-%d')}.json"))
+        encode_json(default_addons_data, addons_data_file)
+        addons_data = default_addons_data
+
+    if addons_data.get("version") < 130:
+        encode_json(update_json(addons_data), addons_data_file)
 
 
 def update_to_120(data):
@@ -76,13 +110,7 @@ def update_to_130(data):
     return data
 
 
-def update_json():
-    path = p.join(p.expanduser("~"),
-                  "Blender Addons Data",
-                  "blender-project-starter",
-                  "BPS.json")
-    data = decode_json(path)
-
+def update_json(data: dict) -> dict:
     version = data.get("version", 110)
 
     if version == 110:
@@ -93,4 +121,4 @@ def update_json():
         data = update_to_130(data)
         version = 130
 
-    encode_json(data, path)
+    return data
