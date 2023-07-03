@@ -37,6 +37,8 @@ from bpy_extras.io_utils import ImportHelper
 import os
 from os import path as p
 
+from .addon_types import AddonPreferences
+
 from .functions.main_functions import (
     generate_file_version_number,
     is_file_in_project_folder,
@@ -77,7 +79,7 @@ class SUPER_PROJECT_MANAGER_OT_Build_Project(Operator):
 
         D = bpy.data
         scene = context.scene
-        prefs = C.preferences.addons[__package__].preferences
+        prefs: 'AddonPreferences' = C.preferences.addons[__package__].preferences
         projectpath = p.join(context.scene.project_location,
                              context.scene.project_name)
         filename = context.scene.save_file_name
@@ -175,7 +177,7 @@ Layout Folder>>Subfolder>>Subsubfolder."
     coming_from: StringProperty()
 
     def execute(self, context: Context):
-        pref = context.preferences.addons[__package__].preferences
+        pref: 'AddonPreferences' = context.preferences.addons[__package__].preferences
 
         if self.coming_from == "prefs":
             folder = pref.automatic_folders.add()
@@ -195,7 +197,7 @@ class SUPER_PROJECT_MANAGER_OT_remove_folder(Operator):
     coming_from: StringProperty()
 
     def execute(self, context: Context):
-        pref = context.preferences.addons[__package__].preferences
+        pref: 'AddonPreferences' = context.preferences.addons[__package__].preferences
 
         if self.coming_from == "prefs":
             folder = pref.automatic_folders.remove(self.index)
@@ -515,7 +517,7 @@ class SUPER_PROJECT_MANAGER_ot_add_structure_set(bpy.types.Operator):
     name: StringProperty()
 
     def execute(self, context: Context):
-        prefs = context.preferences.addons[__package__].preferences
+        prefs: 'AddonPreferences' = context.preferences.addons[__package__].preferences
 
         data = decode_json(BPS_DATA_FILE)
 
@@ -545,7 +547,7 @@ class SUPER_PROJECT_MANAGER_ot_remove_structure_set(bpy.types.Operator):
     structure_set: StringProperty()
 
     def execute(self, context: Context):
-        prefs = context.preferences.addons[__package__].preferences
+        prefs: 'AddonPreferences' = context.preferences.addons[__package__].preferences
         prefs.folder_structure_sets = "Default Folder Set"
 
         if self.structure_set == "Default Folder Set":
@@ -582,14 +584,14 @@ classes = (
 
 
 def register():
-    prefs = C.preferences.addons[__package__].preferences
+    prefs: 'AddonPreferences' = C.preferences.addons[__package__].preferences
     register_automatic_folders(prefs.automatic_folders, prefs.previous_set)
     for cls in classes:
         bpy.utils.register_class(cls)
 
 
 def unregister():
-    prefs = C.preferences.addons[__package__].preferences
+    prefs: 'AddonPreferences' = C.preferences.addons[__package__].preferences
     unregister_automatic_folders(prefs.automatic_folders, prefs.previous_set)
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)

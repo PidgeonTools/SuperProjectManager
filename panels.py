@@ -31,6 +31,8 @@ from bpy.types import (
 import os
 from os import path as p
 
+from .addon_types import AddonPreferences
+
 from .functions.main_functions import is_file_in_project_folder
 
 from .functions.json_functions import decode_json
@@ -66,7 +68,7 @@ class SUPER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
     bl_parent_id = "super_project_manager_PT__main_panel"
 
     def draw(self, context: Context):
-        prefs = C.preferences.addons[__package__].preferences
+        prefs: 'AddonPreferences' = C.preferences.addons[__package__].preferences
 
         layout: UILayout = self.layout
 
@@ -164,7 +166,7 @@ class SUPER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
 
     def draw_file_options(self, context: Context):
         D = bpy.data
-        prefs = C.preferences.addons[__package__].preferences
+        prefs: 'AddonPreferences' = C.preferences.addons[__package__].preferences
 
         layout: UILayout = self.layout
         layout.enabled = context.scene.save_blender_file
