@@ -227,7 +227,7 @@ class SUPER_PROJECT_MANAGER_OT_add_project(Operator, ImportHelper):
         layout.label(text="Please select a project Directory")
 
 
-class SUPER_PROJECT_MANAGER_OT_finish_project(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_OT_finish_project(Operator):
     bl_idname = "super_project_manager.finish_project"
     bl_label = "Finish Project"
     bl_description = "Finish the selected Project."
@@ -328,7 +328,7 @@ class SUPER_PROJECT_MANAGER_OT_open_blender_file(Operator):
         return {"FINISHED"}
 
 
-class SUPER_PROJECT_MANAGER_ot_define_blend_file_location(bpy.types.Operator, ImportHelper):
+class SUPER_PROJECT_MANAGER_ot_define_blend_file_location(Operator, ImportHelper):
     """This Operator is used to (re)define the location of the projects main Blender File"""
     bl_idname = "super_project_manager.define_blend_file_location"
     bl_label = "Define Project Blender File Path"
@@ -362,7 +362,7 @@ Please select the latest Blender File of you Project."
         layout.label(text=name)
 
 
-class SUPER_PROJECT_MANAGER_ot_rearrange_up(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_rearrange_up(Operator):
     """Rearrange a Project or Label one step up."""
     bl_idname = "super_project_manager.rearrange_up"
     bl_label = "Rearrange Up"
@@ -381,7 +381,7 @@ class SUPER_PROJECT_MANAGER_ot_rearrange_up(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class SUPER_PROJECT_MANAGER_ot_rearrange_down(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_rearrange_down(Operator):
     """Rearrange a Project or Label one step down."""
     bl_idname = "super_project_manager.rearrange_down"
     bl_label = "Rearrange Down"
@@ -400,7 +400,7 @@ class SUPER_PROJECT_MANAGER_ot_rearrange_down(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class SUPER_PROJECT_MANAGER_ot_rearrange_to_top(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_rearrange_to_top(Operator):
     """Rearrange a Project or Label to the top."""
     bl_idname = "super_project_manager.rearrange_to_top"
     bl_label = "Rearrange to Top"
@@ -420,7 +420,7 @@ class SUPER_PROJECT_MANAGER_ot_rearrange_to_top(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class SUPER_PROJECT_MANAGER_ot_rearrange_to_bottom(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_rearrange_to_bottom(Operator):
     """Rearrange a Project or Label to the bottom."""
     bl_idname = "super_project_manager.rearrange_to_bottom"
     bl_label = "Rearrange to Bottom"
@@ -440,7 +440,7 @@ class SUPER_PROJECT_MANAGER_ot_rearrange_to_bottom(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class SUPER_PROJECT_MANAGER_ot_add_label(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_add_label(Operator):
     """Add a category Label to the open projects list."""
     bl_idname = "super_project_manager.add_label"
     bl_label = "Add Label"
@@ -465,7 +465,7 @@ class SUPER_PROJECT_MANAGER_ot_add_label(bpy.types.Operator):
         layout.prop(self, "label", text="Category Label Text:")
 
 
-class SUPER_PROJECT_MANAGER_ot_remove_label(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_remove_label(Operator):
     """Remove a category Label from the open projects list."""
     bl_idname = "super_project_manager.remove_label"
     bl_label = "Remove Label"
@@ -482,7 +482,7 @@ class SUPER_PROJECT_MANAGER_ot_remove_label(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class SUPER_PROJECT_MANAGER_ot_change_label(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_change_label(Operator):
     """Change a category Label from the open projects list."""
     bl_idname = "super_project_manager.change_label"
     bl_label = "Change Label"
@@ -508,7 +508,7 @@ class SUPER_PROJECT_MANAGER_ot_change_label(bpy.types.Operator):
         layout.prop(self, "label", text="Category Label Text:")
 
 
-class SUPER_PROJECT_MANAGER_ot_add_structure_set(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_add_structure_set(Operator):
     """Adds a new folder structure set."""
     bl_idname = "super_project_manager.add_structure_set"
     bl_label = "Add Folder Structure Set"
@@ -538,7 +538,7 @@ class SUPER_PROJECT_MANAGER_ot_add_structure_set(bpy.types.Operator):
         layout.prop(self, "name", text="Folder Structure Set Name:")
 
 
-class SUPER_PROJECT_MANAGER_ot_remove_structure_set(bpy.types.Operator):
+class SUPER_PROJECT_MANAGER_ot_remove_structure_set(Operator):
     """Remove a folder structure set"""
     bl_idname = "super_project_manager.remove_structure_set"
     bl_label = "Remove Set"
