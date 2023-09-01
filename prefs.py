@@ -43,7 +43,9 @@ from . import addon_updater_ops
 
 from .functions.main_functions import (
     structure_sets_enum,
-    structure_sets_enum_update
+    structure_sets_enum_update,
+    active_project_enum,
+    active_project_enum_update
 )
 
 from .objects.path_generator import (
@@ -73,6 +75,39 @@ Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
         default="")
 
 
+class FilebrowserEntry(PropertyGroup):
+
+    icon: StringProperty(default="FILE_FOLDER")
+    is_valid: BoolProperty()
+    """Whether this path is currently reachable"""
+
+    name: StringProperty()
+
+    path: StringProperty()
+
+    use_save: BoolProperty()
+    """Whether this path is saved in bookmarks, or generated from OS"""
+
+
+def get_active_project_path(self):
+    active_directory = bpy.context.space_data.params.directory.decode(
+        encoding="utf-8")
+
+    for i, p in enumerate(self.project_paths):
+        if os.path.normpath(p.path) == os.path.normpath(active_directory):
+            return i
+
+    return -1
+
+
+def set_active_project_path(self, value):
+    bpy.context.space_data.params.directory = self.project_paths[value].path.encode(
+    )
+
+    # Custom setter logic
+    self["active_project_path"] = value
+
+
 class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     bl_idname = __package__
     previous_set: StringProperty(default="Default Folder Set")
@@ -80,6 +115,20 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     custom_folders: CollectionProperty(type=project_folder_props)
 
     automatic_folders: CollectionProperty(type=project_folder_props)
+
+    active_project: EnumProperty(
+        name="Active Project",
+        description="Which project should be displayed in the Filebrowser panel.",
+        items=active_project_enum,
+        update=active_project_enum_update
+    )
+
+    project_paths: CollectionProperty(type=FilebrowserEntry)
+    active_project_path: IntProperty(
+        name="Custom Property",
+        get=get_active_project_path,
+        set=set_active_project_path
+    )
 
     layout_tab: EnumProperty(
         name="UI Section",
@@ -314,6 +363,7 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
 classes = (
     project_folder_props,
+    FilebrowserEntry,
     SUPER_PROJECT_MANAGER_APT_Preferences
 )
 

@@ -23,8 +23,8 @@ import bpy
 from bpy.utils import previews
 from bpy.props import (
     BoolProperty,
+    EnumProperty,
     StringProperty,
-    EnumProperty
 )
 
 import os
@@ -134,3 +134,32 @@ def unregister_automatic_folders(folders, folderset="Default Folder Set"):
     original_json["automatic_folders"][folderset] = data
 
     encode_json(original_json, BPS_DATA_FILE)
+
+
+def register_project_folders(project_folders, project_path):
+    project_info: str = p.join(project_path, ".blender_pm")
+
+    index = 0
+    for folder in project_folders:
+        project_folders.remove(index)
+
+    project_metadata: dict = {}
+
+    if p.exists(project_info):
+        project_metadata: dict = decode_json(project_info)
+
+    folders: list = project_metadata.get("displayed_project_folders", [])
+    if len(folders) == 0:
+        folders = [{"folder_path": f}
+                   for f in os.listdir(project_path) if p.isdir(p.join(project_path, f))]
+
+    for folder in folders:
+        f = project_folders.add()
+
+        folder_name = p.basename(folder.get("folder_path", ""))
+        full_path = p.join(project_path, folder.get("folder_path", ""))
+
+        f["icon"] = folder.get("icon", "FILE_FOLDER")
+        f["name"] = folder_name
+        f["is_valid"] = p.exists(full_path)
+        f["path"] = full_path

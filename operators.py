@@ -37,6 +37,8 @@ from bpy_extras.io_utils import ImportHelper
 import os
 from os import path as p
 
+import time
+
 from .addon_types import AddonPreferences
 
 from .functions.main_functions import (
@@ -45,7 +47,8 @@ from .functions.main_functions import (
     save_filepath,
     add_unfinished_project,
     finish_project,
-    write_project_info
+    write_project_info,
+    set_file_hidden
 )
 
 from .functions.json_functions import (
@@ -55,7 +58,8 @@ from .functions.json_functions import (
 
 from .functions.register_functions import (
     register_automatic_folders,
-    unregister_automatic_folders
+    unregister_automatic_folders,
+    register_project_folders
 )
 
 from .objects.path_generator import (
@@ -562,6 +566,166 @@ class SUPER_PROJECT_MANAGER_ot_remove_structure_set(Operator):
         return {'FINISHED'}
 
 
+class SUPER_PROJECT_MANAGER_OT_add_panel_project(Operator):
+    """Add a project to the project panel."""
+    bl_idname = "super_project_manager.add_panel_project"
+    bl_label = "Add"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context: 'Context'):
+        data: dict = decode_json(BPS_DATA_FILE)
+        prefs: 'AddonPreferences' = context.preferences.addons[__package__].preferences
+
+        project_path = p.normpath(
+            context.space_data.params.directory.decode("utf-8"))
+
+        options = data.get("filebrowser_panel_options", [])[:]
+        options.append(project_path)
+
+        data["filebrowser_panel_options"] = options
+
+        encode_json(data, BPS_DATA_FILE)
+
+        prefs.active_project = project_path
+
+        return {'FINISHED'}
+
+
+class SUPER_PROJECT_MANAGER_OT_remove_panel_project(Operator):
+    """Remove a project from the project panel."""
+    bl_idname = "super_project_manager.remove_panel_project"
+    bl_label = "remove"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context: 'Context'):
+        data: dict = decode_json(BPS_DATA_FILE)
+        prefs: 'AddonPreferences' = context.preferences.addons[__package__].preferences
+
+        options = data.get("filebrowser_panel_options", [])[:]
+        options.remove(prefs.active_project)
+
+        data["filebrowser_panel_options"] = options
+
+        encode_json(data, BPS_DATA_FILE)
+
+        prefs.active_project = options[0]
+
+        return {'FINISHED'}
+
+
+class SUPER_PROJECT_MANAGER_OT_panel_folder_base(Operator):
+    """Base operator for panel folder operations"""
+    bl_idname = "super_project_manager.panel_folder_base"
+    bl_label = "Panel Folder Base"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def invoke(self, context: Context, event: Event):
+        prefs: 'AddonPreferences' = context.preferences.addons[__package__].preferences
+
+        if p.exists(p.join(prefs.active_project, ".blender_pm")):
+            return self.execute(context)
+
+        return context.window_manager.invoke_props_dialog(self)
+
+    def draw(self, context: Context):
+        layout: 'UILayout' = self.layout
+
+        layout.label(text="This project is missing important metadata.")
+        layout.label(
+            text="Do you want to continue? (Metadata will be added now)")
+
+    def execute(self, context: 'Context'):
+        prefs: 'AddonPreferences' = context.preferences.addons[__package__].preferences
+        project_metadata_file = p.join(prefs.active_project, ".blender_pm")
+
+        if not p.exists(project_metadata_file):
+            encode_json({"blender_files": {
+                "main_file": "",
+                "other_files": []
+            }, "build_date": time.time()}, project_metadata_file)
+
+        set_file_hidden(project_metadata_file, False)
+
+        data: dict = decode_json(project_metadata_file)
+
+        folders = data.get("displayed_project_folders", [])[:]
+
+        if len(folders) == 0:
+            for f in prefs.project_paths:
+                folders.append({"folder_path": f.path})
+
+        data["displayed_project_folders"] = self.manipulate_folders(
+            context, folders)
+        encode_json(data, project_metadata_file)
+        register_project_folders(prefs.project_paths, prefs.active_project)
+
+        set_file_hidden(project_metadata_file)
+
+        return {'FINISHED'}
+
+    def manipulate_folders(self, context: 'Context', folders: 'list') -> list:
+        return folders
+
+
+class SUPER_PROJECT_MANAGER_OT_add_panel_project_folder(SUPER_PROJECT_MANAGER_OT_panel_folder_base):
+    """Add the current folder path to the project panel."""
+    bl_idname = "super_project_manager.add_panel_project_folder"
+    bl_label = "Add Folder"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def manipulate_folders(self, context: Context, folders: list) -> list:
+        folders = folders[:]
+
+        folder_path = p.normpath(
+            context.space_data.params.directory.decode("utf-8"))
+        folders.append({"folder_path": folder_path})
+
+        paths = []
+        i = 0
+        while i < len(folders):
+            if folders[i].get("folder_path", "") in paths:
+                folders.pop(i)
+                continue
+
+            paths.append(folders[i].get("folder_path", ""))
+            i += 1
+
+        return folders
+
+
+class SUPER_PROJECT_MANAGER_OT_remove_panel_project_folder(SUPER_PROJECT_MANAGER_OT_panel_folder_base):
+    """Remove a folder from the project panel."""
+    bl_idname = "super_project_manager.remove_panel_project_folder"
+    bl_label = "remove"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    index: IntProperty()
+
+    def manipulate_folders(self, context: Context, folders: list) -> list:
+        folders = folders[:]
+        folders.pop(self.index)
+
+        return folders
+
+
+class SUPER_PROJECT_MANAGER_OT_move_panel_project_folder(SUPER_PROJECT_MANAGER_OT_panel_folder_base):
+    """Rearrange the project panel"""
+    bl_idname = "super_project_manager.move_panel_project_folder"
+    bl_label = "Move"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    index: IntProperty()
+    direction: IntProperty()
+
+    def manipulate_folders(self, context: Context, folders: list) -> list:
+        folders = folders[:]
+
+        f = folders.pop(self.index)
+        folders.insert(self.index + self.direction, f)
+
+        return folders
+
+
 classes = (
     SUPER_PROJECT_MANAGER_OT_add_folder,
     SUPER_PROJECT_MANAGER_OT_remove_folder,
@@ -579,7 +743,12 @@ classes = (
     SUPER_PROJECT_MANAGER_ot_remove_label,
     SUPER_PROJECT_MANAGER_ot_change_label,
     SUPER_PROJECT_MANAGER_ot_add_structure_set,
-    SUPER_PROJECT_MANAGER_ot_remove_structure_set
+    SUPER_PROJECT_MANAGER_ot_remove_structure_set,
+    SUPER_PROJECT_MANAGER_OT_add_panel_project,
+    SUPER_PROJECT_MANAGER_OT_remove_panel_project,
+    SUPER_PROJECT_MANAGER_OT_add_panel_project_folder,
+    SUPER_PROJECT_MANAGER_OT_remove_panel_project_folder,
+    SUPER_PROJECT_MANAGER_OT_move_panel_project_folder,
 )
 
 

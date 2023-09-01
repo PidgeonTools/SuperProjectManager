@@ -9,6 +9,14 @@ class AddonPreferences():
 
     automatic_folders: typing.List['ProjectFolderProps']
 
+    project_paths: list  # CollectionProperty(type=FilebrowserEntry)
+    active_project_path: int
+    # IntProperty(
+    #     name="Custom Property",
+    #     get=get_active_project_path,
+    #     set=set_active_project_path
+    # )
+
     layout_tab: tuple
     # layout_tab: EnumProperty(
     #     name="UI Section",

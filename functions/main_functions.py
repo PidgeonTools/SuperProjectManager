@@ -36,13 +36,16 @@ import time
 
 from .register_functions import (
     register_automatic_folders,
-    unregister_automatic_folders
+    unregister_automatic_folders,
+    register_project_folders
 )
 
 from .json_functions import (
     decode_json,
     encode_json,
 )
+
+from ..addon_types import AddonPreferences
 
 
 C = bpy.context
@@ -108,6 +111,22 @@ def structure_sets_enum_update(self, context: Context):
     self.previous_set = self.folder_structure_sets
 
 
+def active_project_enum(self, context: Context):
+    tooltip = "Select a project you want to work with."
+    items = []
+
+    options = decode_json(BPS_DATA_FILE).get("filebrowser_panel_options", [])
+
+    for el in options:
+        items.append((el, p.basename(el), tooltip))
+
+    return items
+
+
+def active_project_enum_update(self: 'AddonPreferences', context: Context):
+    register_project_folders(self.project_paths, self.active_project)
+
+
 def add_unfinished_project(project_path):
     data = decode_json(BPS_DATA_FILE)
 
@@ -139,9 +158,7 @@ def write_project_info(root_path, blend_file_path):
     project_info_path = p.join(root_path, ".blender_pm")
     if p.exists(project_info_path):
         data = decode_json(project_info_path)
-        if sys.platform == "win32":
-            subprocess.call(
-                'attrib -h "{}"'.format(project_info_path), shell=True)
+        set_file_hidden(project_info_path, False)
 
     bfiles = data["blender_files"]
     if bfiles["main_file"] and bfiles["main_file"] != blend_file_path:
@@ -154,7 +171,14 @@ def write_project_info(root_path, blend_file_path):
 
     encode_json(data, project_info_path)
 
-    if sys.platform == "win32":
-        subprocess.call('attrib +h "{}"'.format(project_info_path), shell=True)
+    set_file_hidden(project_info_path)
 
     return {"INFO"}, "Successfully created a Super Project Manager project!"
+
+
+def set_file_hidden(f, hide_file=True):
+    if sys.platform != "win32":
+        return
+
+    hide_flag = "+h" if hide_file else "-h"
+    subprocess.call(f'attrib {hide_flag} "{f}"', shell=True)

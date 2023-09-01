@@ -26,6 +26,7 @@ from bpy.types import (
     Context,
     Panel,
     UILayout,
+    UIList,
 )
 
 import os
@@ -405,11 +406,101 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
             op.index = index
 
 
+class SUPER_PROJECT_MANAGER_PT_filebrowser_project_paths(Panel):
+    bl_idname = "SUPER_PROJECT_MANAGER_PT_filebrowser_project_paths"
+    bl_label = "Project Paths"
+    bl_space_type = "FILE_BROWSER"
+    bl_region_type = "TOOLS"  # Works for adding a category for preset file paths
+    # bl_region_type = "WINDOW" # No failure, doesn't show
+    # bl_region_type = "HEADER" # No failure, doesn't show
+    # bl_region_type = "UI"  # Shows in the topbar
+    # bl_region_type = "TOOL_PROPS"  # Shows in the right panel/sidebar
+    # bl_region_type = "EXECUTE" # Shows at the bottom (Below Open/Cancel)
+
+    bl_category = "Bookmarks"
+    # bl_options = {'DEFAULT_CLOSED'}
+
+    # @classmethod
+    # def poll(self, context):
+    # Testing the poll method
+    # return bpy.data.scenes["Scene"].frame_current == 1
+
+    # def draw_header(self, context: Context):
+    #     self.layout.label(text="Project Name")  # Dynamic panel title
+
+    def draw(self, context: bpy.types.Context):
+        layout: 'UILayout' = self.layout
+        space = context.space_data
+        scene = context.scene
+        prefs = context.preferences.addons[__package__].preferences
+
+        row = layout.row(align=True)
+        row.prop(prefs, "active_project", text="")
+        row.operator("super_project_manager.add_panel_project",
+                     text="", icon="ADD")
+        row.operator(
+            "super_project_manager.remove_panel_project", text="", icon="REMOVE")
+
+        row = layout.row()
+        row.template_list("SPM_UL_dir", "", prefs, "project_paths",
+                          prefs, "active_project_path", item_dyntip_propname="path", rows=1, maxrows=10)  # Paths layout
+
+        row = layout.row()
+        row.operator("super_project_manager.add_panel_project_folder",
+                     icon="ADD")
+
+
+class SPM_UL_dir(UIList):
+    def draw_item(self, _context, layout, _data, item, icon, _active_data, _active_propname, _index):
+        direntry = item
+        # space = context.space_data
+
+        is_active_path = _index == _active_data.active_project_path
+
+        if self.layout_type in {'DEFAULT', 'COMPACT'}:
+            row: 'UILayout' = layout.row(align=True)
+            row.enabled = direntry.is_valid
+
+            # Non-editable entries would show grayed-out, which is bad in this specific case, so switch to mere label.
+            row.label(text=direntry.name, icon=item.icon)
+
+            if is_active_path:
+                self.draw_active_path(
+                    row, _index, len(_active_data.project_paths))
+
+        elif self.layout_type == 'GRID':
+            layout.alignment = 'CENTER'
+            layout.prop(direntry, "path", text="")
+
+    def draw_active_path(self, layout: 'UILayout', index: int, project_paths_length: int):
+        UP = -1
+        DOWN = 1
+
+        if index > 0:
+            op = layout.operator("super_project_manager.move_panel_project_folder",
+                                 icon='SORT_DESC', text="", emboss=False)
+            op.index = index
+            op.direction = UP
+
+        if index < project_paths_length - 1:
+            op = layout.operator("super_project_manager.move_panel_project_folder",
+                                 icon='SORT_ASC', text="", emboss=False)
+            op.index = index
+            op.direction = DOWN
+
+        layout.separator(factor=0.5)
+        op = layout.operator("super_project_manager.remove_panel_project_folder",
+                             icon='X', text="", emboss=False)
+        op.index = index
+
+
 classes = (
     SUPER_PROJECT_MANAGER_PT_main_panel,
     SUPER_PROJECT_MANAGER_PT_starter_main_panel,
     # SUPER_PROJECT_MANAGER_PT_Blender_File_save_options_subpanel,
-    SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel
+    SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel,
+    SUPER_PROJECT_MANAGER_PT_filebrowser_project_paths,
+    SPM_UL_dir,
 )
 
 
