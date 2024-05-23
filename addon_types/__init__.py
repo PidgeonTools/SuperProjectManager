@@ -54,9 +54,11 @@ class AddonPreferences():
 
     preview_subfolders: bool
     """Show the compiled subfolder-strings in the preferences,
-    defaults to False
-    )"""
+    defaults to False"""
 
+    enable_additional_rearrange_tools: bool
+    """Show the "Move to top" and "Move to bottom" operators in the rearrange panel,
+    defaults to False"""
 
 class ProjectFolderProps():
 

@@ -32,6 +32,8 @@ from bpy.types import (
 import os
 from os import path as p
 
+from typing import List
+
 from .addon_types import AddonPreferences
 
 from .functions.main_functions import is_file_in_project_folder
@@ -78,9 +80,7 @@ class SUPER_PROJECT_MANAGER_PT_starter_main_panel(Panel):
         row.label(text="Project Name")
 
         row = layout.row()
-        row.prop(context.scene,
-                 "project_name",
-                 text="")
+        row.prop(context.scene, "project_name", text="")
 
         layout.separator(factor=0.5)
 
@@ -245,7 +245,7 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
     def draw(self, context: Context):
         layout: UILayout = self.layout
 
-        data = decode_json(BPS_DATA_FILE)["unfinished_projects"]
+        data: List[List[str]] = decode_json(BPS_DATA_FILE)["unfinished_projects"]
 
         project_count = len([e for e in data if e[0] == "project"])
         layout.label(
@@ -360,6 +360,8 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
     # Drawing Function for the project rearrange mode.
     def draw_rearrange(self, context: Context, data):
         layout: UILayout = self.layout
+        prefs: 'AddonPreferences' = context.preferences.addons[__package__.split(".")[0]].preferences
+
 
         for index, entry in enumerate(data):
             type = entry[0]
@@ -381,29 +383,33 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                                   icon="FILE_TEXT")
                 op.index = index
 
-            op = row.operator("super_project_manager.rearrange_to_top",
-                              text="",
-                              emboss=False,
-                              icon="EXPORT")
-            op.index = index
+            if index > 0 and prefs.enable_additional_rearrange_tools:
+                op = row.operator("super_project_manager.rearrange_to_top",
+                                text="",
+                                emboss=False,
+                                icon="EXPORT")
+                op.index = index
 
-            op = row.operator("super_project_manager.rearrange_up",
-                              text="",
-                              emboss=False,
-                              icon="SORT_DESC")
-            op.index = index
+            if index > 0:
+                op = row.operator("super_project_manager.rearrange_up",
+                                text="",
+                                emboss=False,
+                                icon="SORT_DESC")
+                op.index = index
 
-            op = row.operator("super_project_manager.rearrange_down",
-                              text="",
-                              emboss=False,
-                              icon="SORT_ASC")
-            op.index = index
+            if index < len(data) - 1:
+                op = row.operator("super_project_manager.rearrange_down",
+                                text="",
+                                emboss=False,
+                                icon="SORT_ASC")
+                op.index = index
 
-            op = row.operator("super_project_manager.rearrange_to_bottom",
-                              text="",
-                              emboss=False,
-                              icon="IMPORT")
-            op.index = index
+            if index < len(data) - 1 and prefs.enable_additional_rearrange_tools:
+                op = row.operator("super_project_manager.rearrange_to_bottom",
+                                text="",
+                                emboss=False,
+                                icon="IMPORT")
+                op.index = index
 
 
 class SUPER_PROJECT_MANAGER_PT_filebrowser_project_paths(Panel):

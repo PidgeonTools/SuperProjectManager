@@ -177,6 +177,12 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         default=False
     )
 
+    enable_additional_rearrange_tools: BoolProperty(
+        name="Enable additional rearrange operators",
+        description="Enable the 'Move to top' and 'Move to bottom' operator. This will make the rearrange panel more crowded",
+        default=False
+    )
+
     auto_check_update: BoolProperty(
         name="Auto-check for Update",
         description="If enabled, auto-check for updates using an interval",
@@ -268,6 +274,9 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
         layout.prop(self, "auto_set_render_outputpath",
                     text="Automatically set the render output path")
+        layout.separator(factor=0.4)
+
+        layout.prop(self, "enable_additional_rearrange_tools")
 
     def draw_folder_structure_sets(self, context: Context, layout: UILayout):
         layout.label(text="Folder Structure Set")
