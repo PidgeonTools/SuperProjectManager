@@ -39,6 +39,15 @@ from os import path as p
 
 import re
 
+from .operators import (
+    SUPER_PROJECT_MANAGER_OT_add_folder,
+    SUPER_PROJECT_MANAGER_OT_remove_folder,
+    SUPER_PROJECT_MANAGER_OT_add_collection,
+    SUPER_PROJECT_MANAGER_OT_remove_collection,
+    SUPER_PROJECT_MANAGER_ot_add_structure_set,
+    SUPER_PROJECT_MANAGER_ot_remove_structure_set
+)
+
 from . import addon_updater_ops
 
 from .functions.main_functions import (
@@ -72,6 +81,29 @@ class project_folder_props(PropertyGroup):
         name="Folder Name",
         description="Automatic Setup Folder. \
 Format for Adding Subfolders: Folder>>Subfolder>>Subsubfolder",
+        default="")
+
+
+class project_collection_props(PropertyGroup):
+    color: EnumProperty(
+        name="Color",
+        description="",
+        items=[
+            ("NONE", "No Color", "", "OUTLINER_COLLECTION", 0),
+            ("COLOR_01", "Color 1", "", "COLLECTION_COLOR_01", 1),
+            ("COLOR_02", "Color 2", "", "COLLECTION_COLOR_02", 2),
+            ("COLOR_03", "Color 3", "", "COLLECTION_COLOR_03", 3),
+            ("COLOR_04", "Color 4", "", "COLLECTION_COLOR_04", 4),
+            ("COLOR_05", "Color 5", "", "COLLECTION_COLOR_05", 5),
+            ("COLOR_06", "Color 6", "", "COLLECTION_COLOR_06", 6),
+            ("COLOR_07", "Color 7", "", "COLLECTION_COLOR_07", 7),
+            ("COLOR_08", "Color 8", "", "COLLECTION_COLOR_08", 8)
+        ],
+        default="NONE")
+
+    collection_name: StringProperty(
+        name="Collection Name",
+        description="Automatic Setup Collection",
         default="")
 
 
@@ -115,6 +147,7 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     custom_folders: CollectionProperty(type=project_folder_props)
 
     automatic_folders: CollectionProperty(type=project_folder_props)
+    automatic_collections: CollectionProperty(type=project_collection_props)
 
     active_project: EnumProperty(
         name="Active Project",
@@ -283,10 +316,10 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
         row = layout.row(align=True)
         row.prop(self, "folder_structure_sets", text="")
-        row.operator("super_project_manager.add_structure_set",
+        row.operator(SUPER_PROJECT_MANAGER_ot_add_structure_set.bl_idname,
                      text="", icon="ADD")
         op = row.operator(
-            "super_project_manager.remove_structure_set", text="", icon="REMOVE")
+            SUPER_PROJECT_MANAGER_ot_remove_structure_set.bl_idname, text="", icon="REMOVE")
         op.structure_set = self.previous_set
 
         # Layout the Box containing the folder structure properties.
@@ -304,7 +337,7 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
         row = box.row()
         row.split(factor=FOLDER_BOX_PADDING_X)  # Padding left
 
-        op = row.operator("super_project_manager.add_folder",
+        op = row.operator(SUPER_PROJECT_MANAGER_OT_add_folder.bl_idname,
                           icon="PLUS")
         op.coming_from = "prefs"
         row.split(factor=FOLDER_BOX_PADDING_X)  # Padding right
@@ -331,6 +364,38 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
                 row.scale_y = 0.3
                 row.label(text=line)
 
+        layout.label(text="Automatic Collections")
+
+        box = layout.box()
+        for index, collection in enumerate(self.automatic_collections):
+            collection: 'project_collection_props'
+
+            row = box.row()
+            row.split(factor=FOLDER_BOX_PADDING_X)  # Padding left
+
+            # Collection Color
+            row.prop(collection, "color", icon_only=True,
+                     emboss=False, text="")
+
+            # Collection name
+            row.prop(collection, "collection_name", text="")
+
+            # Remove button
+            op = row.operator(SUPER_PROJECT_MANAGER_OT_remove_collection.bl_idname,
+                              text="",
+                              emboss=False,
+                              icon="PANEL_CLOSE")
+            op.index = index
+
+            row.split(factor=FOLDER_BOX_PADDING_X)  # Padding right
+
+        row = box.row()
+
+        row.split(factor=FOLDER_BOX_PADDING_X)  # Padding left
+        row.operator(
+            SUPER_PROJECT_MANAGER_OT_add_collection.bl_idname, text="Add Collection", icon="PLUS")
+        row.split(factor=FOLDER_BOX_PADDING_X)  # Padding right
+
     def draw_folder_props(self, index: int, folder: 'project_folder_props', layout: UILayout):
         render_outpath_active = True in [
             e.render_outputpath for e in self.automatic_folders]
@@ -351,7 +416,7 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
                      text="", icon="OUTPUT", emboss=folder.render_outputpath)
 
             # Remove Icon
-        op = row.operator("super_project_manager.remove_folder",
+        op = row.operator(SUPER_PROJECT_MANAGER_OT_remove_folder.bl_idname,
                           text="",
                           emboss=False,
                           icon="PANEL_CLOSE")
@@ -372,6 +437,7 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
 
 classes = (
     project_folder_props,
+    project_collection_props,
     FilebrowserEntry,
     SUPER_PROJECT_MANAGER_APT_Preferences
 )

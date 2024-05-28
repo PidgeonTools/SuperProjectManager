@@ -212,6 +212,34 @@ class SUPER_PROJECT_MANAGER_OT_remove_folder(Operator):
         return {"FINISHED"}
 
 
+class SUPER_PROJECT_MANAGER_OT_add_collection(Operator):
+    """Add a collection"""
+    bl_idname = "super_project_manager.add_collection"
+    bl_label = "Add Collection"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context: Context):
+        pref = context.preferences.addons[__package__].preferences
+        pref.automatic_collections.add()
+
+        return {'FINISHED'}
+
+
+class SUPER_PROJECT_MANAGER_OT_remove_collection(Operator):
+    """Remove a collection"""
+    bl_idname = "super_project_manager.remove_collection"
+    bl_label = "Remove Collection"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    index: IntProperty()
+
+    def execute(self, context: Context):
+        pref = context.preferences.addons[__package__].preferences
+        pref.automatic_collections.remove(self.index)
+
+        return {'FINISHED'}
+
+
 class SUPER_PROJECT_MANAGER_OT_add_project(Operator, ImportHelper):
     bl_idname = "super_project_manager.add_project"
     bl_label = "Add Project"
@@ -729,6 +757,8 @@ class SUPER_PROJECT_MANAGER_OT_move_panel_project_folder(SUPER_PROJECT_MANAGER_O
 classes = (
     SUPER_PROJECT_MANAGER_OT_add_folder,
     SUPER_PROJECT_MANAGER_OT_remove_folder,
+    SUPER_PROJECT_MANAGER_OT_add_collection,
+    SUPER_PROJECT_MANAGER_OT_remove_collection,
     SUPER_PROJECT_MANAGER_OT_Build_Project,
     SUPER_PROJECT_MANAGER_OT_add_project,
     SUPER_PROJECT_MANAGER_OT_finish_project,
@@ -755,6 +785,8 @@ classes = (
 def register():
     prefs: 'AddonPreferences' = C.preferences.addons[__package__].preferences
     register_automatic_folders(prefs.automatic_folders, prefs.previous_set)
+    prefs.automatic_collections.add()
+
     for cls in classes:
         bpy.utils.register_class(cls)
 
