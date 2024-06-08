@@ -108,6 +108,21 @@ def set_active_project_path(self, value):
     self["active_project_path"] = value
 
 
+def layout_tab_items(self, context: 'Context'):
+    items = [
+        ("misc_settings", "General", "General settings of Super Project Manager."),
+        ("folder_structure_sets", "Folder Structures",
+         "Manage your folder structure settings."),
+    ]
+
+    if bpy.app.version < (4, 2):
+        items.append(
+            ("updater", "Updater", "Check for updates and install them."),
+        )
+
+    return items
+
+
 class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     bl_idname = __package__
     previous_set: StringProperty(default="Default Folder Set")
@@ -133,13 +148,8 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
     layout_tab: EnumProperty(
         name="UI Section",
         description="Display the different UI Elements of the Super Project Manager preferences.",
-        items=[
-            ("misc_settings", "General", "General settings of Super Project Manager."),
-            ("folder_structure_sets", "Folder Structures",
-             "Manage your folder structure settings."),
-            ("updater", "Updater", "Check for updates and install them."),
-        ],
-        default="misc_settings")
+        items=layout_tab_items,
+        default=0)
 
     folder_structure_sets: EnumProperty(
         name="Folder Structure Set",
@@ -377,7 +387,12 @@ classes = (
 )
 
 
-def register(bl_info):
+def register():
+    for cls in classes:
+        bpy.utils.register_class(cls)
+
+
+def legacy_register(bl_info):
     # addon updater code and configurations
     # in case of broken version, try to register the updater first
     # so that users can revert back to a working version

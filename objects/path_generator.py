@@ -3,6 +3,10 @@ from os import path as p
 
 import typing
 
+from .. import (
+    __package__
+)
+
 
 try:
     from .token import Token
@@ -149,8 +153,7 @@ class Subfolders():
 
 
 def subfolder_enum(self, context: 'Context'):
-    prefs: 'AddonPreferences' = context.preferences.addons[__package__.split(".")[
-        0]].preferences
+    prefs: 'AddonPreferences' = context.preferences.addons[__package__].preferences
 
     tooltip = "Select Folder as target folder for your Blender File. \
 Uses Folders from Automatic Setup."

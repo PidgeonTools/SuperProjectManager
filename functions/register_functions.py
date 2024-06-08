@@ -39,7 +39,8 @@ from .json_functions import (
 )
 
 from .. import (
-    addon_types
+    addon_types,
+    __package__
 )
 
 C = bpy.context
@@ -55,8 +56,7 @@ BPS_DATA_FILE = p.join(
 
 
 def register_properties():
-    prefs: 'addon_types.AddonPreferences' = C.preferences.addons[__package__.split(".")[
-        0]].preferences
+    prefs: 'addon_types.AddonPreferences' = C.preferences.addons[__package__].preferences
 
     Scene_Prop.project_name = StringProperty(
         name="Project Name",

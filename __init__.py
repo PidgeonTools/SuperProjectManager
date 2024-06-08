@@ -19,6 +19,7 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import bpy
 
 import os
 from os import path as p
@@ -56,7 +57,11 @@ bl_info = {
 def register():
     setup_addons_data()
 
-    prefs.register(bl_info)
+    if bpy.app.version < (4, 2):
+        prefs.legacy_register(bl_info)
+    else:
+        prefs.register()
+
     operators.register()
     panels.register()
 
