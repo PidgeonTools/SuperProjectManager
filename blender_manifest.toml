@@ -16,6 +16,7 @@ paths_exclude_pattern = [
     "/.git/",
     "/.github/",
     "/.vscode/",
+    ".gitignore",
     "/tests/",
     "__pycache__/",
 ]
