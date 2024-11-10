@@ -1,0 +1,13 @@
+name: Run tests
+
+on: push
+
+jobs:
+  run-addon-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: moguri/setup-blender@v1
+        with:
+          blender-version: "4.2"
+      - run: blender --version
