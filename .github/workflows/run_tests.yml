@@ -29,7 +29,6 @@ jobs:
           printf "%s" "$(blender-downloader \
           ${{ matrix.blender-version }} --extract --remove-compressed \
           --quiet --print-blender-executable)" > _blender-executable-path.txt
-      - run: blender --version
       - run: python -m pip install --upgrade pip
       - run: |
           pip install pytest-blender pytest
