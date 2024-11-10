@@ -19,7 +19,6 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-import unittest
 
 from os import path as p
 
@@ -27,39 +26,41 @@ import sys
 sys.path.append(p.dirname(p.dirname(__file__)))
 
 if True:
-    from objects.path_generator import Token
+    from objects.token import Token
 
 
-class TestToken(unittest.TestCase):
-    def test_token_type(self):
-        self.assertEqual(Token("+").is_add(), True)
-        self.assertEqual(Token(">").is_branch_down(), True)
-        self.assertEqual(Token("(").is_bracket_open(), True)
-        self.assertEqual(Token(")").is_bracket_close(), True)
-        self.assertEqual(Token("Test String").is_string(), True)
+def test_token_type():
+    assert Token("+").is_add()
+    assert Token(">").is_branch_down()
+    assert Token("(").is_bracket_open()
+    assert Token(")").is_bracket_close()
+    assert Token("Test String").is_string()
 
-    def test_is_valid_closing_token(self):
-        self.assertEqual(Token("+").is_valid_closing_token(), False)
-
-        self.assertEqual(Token("Test").is_valid_closing_token(), True)
-        self.assertEqual(Token(")").is_valid_closing_token(), True)
-
-    def test_to_str(self):
-        self.assertEqual(str(Token("Test")), "Test")
-        self.assertEqual(str(Token("+")), "+")
-
-    def test_equal_comparison(self):
-        self.assertEqual(Token("+") == Token("+"), True)
-        self.assertEqual(Token("+") == Token(">"), False)
-        self.assertEqual(Token("+") == Token("++"), False)
-
-        self.assertEqual(Token("Test") == Token("Test"), True)
-        self.assertEqual(Token("Test") == Token("NoTest"), False)
+    assert not Token("String").is_add()
+    assert not Token("String").is_branch_down()
+    assert not Token("String").is_bracket_open()
+    assert not Token("String").is_bracket_close()
+    assert not Token(">").is_string()
 
 
-def main():
-    unittest.main()
+def test_is_valid_closing_token():
+    assert not Token("+").is_valid_closing_token()
+    assert not Token(">").is_valid_closing_token()
+    assert not Token("(").is_valid_closing_token()
+
+    assert Token("Test").is_valid_closing_token()
+    assert Token(")").is_valid_closing_token()
 
 
-if __name__ == "__main__":
-    main()
+def test_to_str():
+    assert str(Token("Test")) == "Test"
+    assert str(Token("+")) == "+"
+
+
+def test_equal_comparison():
+    assert Token("+") == Token("+")
+    assert not Token("+") == Token(">")
+    assert not Token("+") == Token("++")
+
+    assert Token("Test") == Token("Test")
+    assert not Token("Test") == Token("NoTest")
