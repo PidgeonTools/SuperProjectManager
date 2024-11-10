@@ -30,11 +30,12 @@ jobs:
           ${{ matrix.blender-version }} --extract --remove-compressed \
           --quiet --print-blender-executable)" > _blender-executable-path.txt
       - run: python -m pip install --upgrade pip
-      - run: |
+      - id: install-dependencies
+        run: |
           pip install pytest-blender pytest
           blender_executable="$(< _blender-executable-path.txt)"
           python_blender_executable="$(pytest-blender --blender-executable $blender_executable)"
           $python_blender_executable -m ensurepip
           $python_blender_executable -m pip install pytest
-          echo $blender_executable
-      - run: pytest tests/
+          echo "blender-executable=$blender_executable" >> $GITHUB_OUTPUT
+      - run: pytest --blender-executable "${{steps.install-dependencies.outputs.blender-executable}}" tests/
