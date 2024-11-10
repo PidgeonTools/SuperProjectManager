@@ -16,7 +16,9 @@ paths_exclude_pattern = [
     "/.git/",
     "/.github/",
     "/.vscode/",
+    "/.pytest*/",
     ".gitignore",
     "/tests/",
     "__pycache__/",
+    "blenderdefender_spm-*.zip",
 ]
