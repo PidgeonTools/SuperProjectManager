@@ -8,13 +8,16 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - uses: moguri/setup-blender@v1
+        id: install-blender
         with:
           blender-version: "4.2"
       - run: blender --version
       - run: python -m pip install --upgrade pip
       - run: |
           pip install pytest-blender
-          python_blender_executable="$(pytest-blender --blender-executable $blender_executable)"
+          python_blender_executable="$(pytest-blender --blender-executable ${{steps.install-blender.outputs.blender-path}})"
           $python_blender_executable -m ensurepip
           $python_blender_executable -m pip install pytest
+          echo $python_blender_executable
+          echo '${{steps.install-blender.outputs.blender-path}}'
       - run: pytest tests/
