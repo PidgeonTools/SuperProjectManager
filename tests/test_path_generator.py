@@ -36,8 +36,8 @@ class TestSubfolders(unittest.TestCase):
         test_case = Subfolders("Folder>>Subfolder>>Subsubfolder")
         self.assertEqual(test_case.compile_paths(), [
             "Folder",
-            "Folder\\Subfolder",
-            "Folder\\Subfolder\\Subsubfolder"
+            p.join("Folder", "Subfolder"),
+            p.join("Folder", "Subfolder", "Subsubfolder")
         ])
         self.assertEqual(test_case.warnings, [])
 
@@ -46,8 +46,9 @@ class TestSubfolders(unittest.TestCase):
             "Folder>>Subfolder>>Subsubfolder", "Test_Prefix_")
         self.assertEqual(test_case.compile_paths(), [
             "Test_Prefix_Folder",
-            "Test_Prefix_Folder\\Test_Prefix_Subfolder",
-            "Test_Prefix_Folder\\Test_Prefix_Subfolder\\Test_Prefix_Subsubfolder"
+            p.join("Test_Prefix_Folder", "Test_Prefix_Subfolder"),
+            p.join("Test_Prefix_Folder", "Test_Prefix_Subfolder",
+                   "Test_Prefix_Subsubfolder")
         ])
         self.assertEqual(test_case.warnings, [])
 
@@ -57,9 +58,9 @@ class TestSubfolders(unittest.TestCase):
             "Folder>>Subfolder1++Subfolder2>>Subsubfolder")
         self.assertEqual(test_case.compile_paths(), [
             "Folder",
-            "Folder\\Subfolder1",
-            "Folder\\Subfolder2",
-            "Folder\\Subfolder2\\Subsubfolder"
+            p.join("Folder", "Subfolder1"),
+            p.join("Folder", "Subfolder2"),
+            p.join("Folder", "Subfolder2", "Subsubfolder")
         ])
         self.assertEqual(test_case.warnings, [])
 
@@ -68,8 +69,8 @@ class TestSubfolders(unittest.TestCase):
         test_case = Subfolders("Folder>>Subfolder1>>++Subfolder2")
         self.assertEqual(test_case.compile_paths(), [
             "Folder",
-            "Folder\\Subfolder1",
-            "Folder\\Subfolder1\\Subfolder2"
+            p.join("Folder", "Subfolder1"),
+            p.join("Folder", "Subfolder1", "Subfolder2")
         ])
         self.assertEqual(test_case.warnings, [])
 
@@ -79,8 +80,8 @@ class TestSubfolders(unittest.TestCase):
         self.assertEqual(test_case.compile_paths(), [
             "Folder",
             "Folder2",
-            "Folder2\\Test",
-            "Folder2\\Test\\Amazing"
+            p.join("Folder2", "Test"),
+            p.join("Folder2", "Test", "Amazing")
         ])
         self.assertEqual(test_case.warnings, [])
 
@@ -89,8 +90,8 @@ class TestSubfolders(unittest.TestCase):
             "Folder>>Subfolder1++Subfolder2>>")
         self.assertEqual(test_case.compile_paths(), [
             "Folder",
-            "Folder\\Subfolder1",
-            "Folder\\Subfolder2"
+            p.join("Folder", "Subfolder1"),
+            p.join("Folder", "Subfolder2")
         ])
         self.assertEqual(test_case.warnings, [
             "A folder path should not end with '>>'!"
@@ -101,10 +102,10 @@ class TestSubfolders(unittest.TestCase):
             "Folder>>Subfolder++((Subfolder2>>Subsubfolder))++Subfolder3")
         self.assertEqual(test_case.compile_paths(), [
             "Folder",
-            "Folder\\Subfolder",
-            "Folder\\Subfolder2",
-            "Folder\\Subfolder2\\Subsubfolder",
-            "Folder\\Subfolder3"
+            p.join("Folder", "Subfolder"),
+            p.join("Folder", "Subfolder2"),
+            p.join("Folder", "Subfolder2", "Subsubfolder"),
+            p.join("Folder", "Subfolder3")
         ])
         self.assertEqual(test_case.warnings, [])
 
@@ -115,8 +116,8 @@ class TestSubfolders(unittest.TestCase):
         self.assertEqual(test_case.compile_paths(), [
             "Folder",
             "Subfolder",
-            "Subfolder\\Subsubfolder1",
-            "Subfolder\\Subfolder2"
+            p.join("Subfolder", "Subsubfolder1"),
+            p.join("Subfolder", "Subfolder2")
         ])
         self.assertEqual(test_case.warnings, [
             "Unmatched Brackets detected! This might lead to unexpected behaviour when compiling paths!",
@@ -130,8 +131,8 @@ class TestSubfolders(unittest.TestCase):
         self.assertEqual(test_case.compile_paths(), [
             "Folder",
             "Subfolder",
-            "Subfolder\\Subsubfolder1",
-            "Subfolder\\Subfolder2"
+            p.join("Subfolder", "Subsubfolder1"),
+            p.join("Subfolder", "Subfolder2")
         ])
         self.assertEqual(test_case.warnings, [
             "Unmatched Brackets detected! This might lead to unexpected behaviour when compiling paths!"
@@ -143,8 +144,8 @@ class TestSubfolders(unittest.TestCase):
             "Folder>>Subfolder>>Subsubfolder1))++Subfolder2")
         self.assertEqual(test_case.compile_paths(), [
             "Folder",
-            "Folder\\Subfolder",
-            "Folder\\Subfolder\\Subsubfolder1"
+            p.join("Folder", "Subfolder"),
+            p.join("Folder", "Subfolder", "Subsubfolder1")
         ])
         self.assertEqual(test_case.warnings, [
             "Unmatched Brackets detected! This might lead to unexpected behaviour when compiling paths!"
@@ -156,8 +157,8 @@ class TestSubfolders(unittest.TestCase):
             "((Folder>>Subfolder++Subfolder2))>>Subsubfolder1++Subsubfolder2")
         self.assertEqual(test_case.compile_paths(), [
             "Folder",
-            "Folder\\Subfolder",
-            "Folder\\Subfolder2",
+            p.join("Folder", "Subfolder"),
+            p.join("Folder", "Subfolder2"),
             "Subsubfolder1",
             "Subsubfolder2"
         ])
