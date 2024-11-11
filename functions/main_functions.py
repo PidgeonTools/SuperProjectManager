@@ -165,9 +165,7 @@ def write_project_info(root_path, blend_file_path):
         bfiles["other_files"].append(bfiles["main_file"])
     bfiles["main_file"] = blend_file_path
 
-    ct = time.localtime()  # Current time
-    data["build_date"] = [ct.tm_year, ct.tm_mon,
-                          ct.tm_mday, ct.tm_hour, ct.tm_min, ct.tm_sec]
+    data["build_date"] = int(time.time())
 
     encode_json(data, project_info_path)
 
