@@ -9,6 +9,9 @@ class AddonPreferences():
 
     automatic_folders: typing.List['ProjectFolderProps']
 
+    active_project: str
+    """The path to the project, that is currently displayed in the filebrowser panel"""
+
     project_paths: list  # CollectionProperty(type=FilebrowserEntry)
     active_project_path: int
     # IntProperty(
@@ -59,6 +62,7 @@ class AddonPreferences():
     enable_additional_rearrange_tools: bool
     """Show the "Move to top" and "Move to bottom" operators in the rearrange panel,
     defaults to False"""
+
 
 class ProjectFolderProps():
 
