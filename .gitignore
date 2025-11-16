@@ -1,6 +1,7 @@
 __pycache__/
 *_updater/
 build/
+*.zip
 
 # Ignore workspace settings
 .vscode
