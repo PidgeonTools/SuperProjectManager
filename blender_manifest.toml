@@ -12,13 +12,4 @@ blender_version_min = "4.2.0"
 license = ["SPDX:GPL-3.0-or-later"]
 
 [build]
-paths_exclude_pattern = [
-    "/.git/",
-    "/.github/",
-    "/.vscode/",
-    "/.pytest*/",
-    ".gitignore",
-    "/tests/",
-    "__pycache__/",
-    "blenderdefender_spm-*.zip",
-]
+paths_exclude_pattern = [".*", "*.pyc", "test_*.py"]
