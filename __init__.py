@@ -43,7 +43,7 @@ bl_info = {
     "name": "Super Project Manager (SPM)",
     "description": "Manage and setup your projects the easy way!",
     "author": "Blender Defender",
-    "version": (1, 3, 1),
+    "version": (1, 4, 0),
     "blender": (2, 83, 0),
     "location": "Properties >> Scene Properties >> Super Project Manager",
     "warning": "",
