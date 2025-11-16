@@ -32,7 +32,7 @@ from bpy.types import (
     Operator
 )
 
-from bpy_extras.io_utils import ImportHelper
+from bpy_extras.io_utils import ImportHelper, ExportHelper
 
 import os
 from os import path as p
@@ -107,7 +107,8 @@ class SUPER_PROJECT_MANAGER_OT_Build_Project(Operator):
                 True)].folder_name
             render_outputfolder = Subfolders(
                 unparsed_string, prefix).compile_paths(p.join(context.scene.project_location,
-                                                              context.scene.project_name))[-1]  # Use last path.
+                                                              # Use last path.
+                                                              context.scene.project_name))[-1]
 
         # Create the Project Folder.
         if not p.isdir(projectpath):
@@ -726,6 +727,72 @@ class SUPER_PROJECT_MANAGER_OT_move_panel_project_folder(SUPER_PROJECT_MANAGER_O
         return folders
 
 
+class SUPER_PROJECT_MANAGER_OT_import_settings(Operator, ImportHelper):
+    bl_idname = "super_project_manager.import_settings"
+    bl_label = "Import Settings"
+    bl_description = "Import SPM Settings"
+
+    filter_glob: StringProperty(default='*.json', options={'HIDDEN'})
+
+    def execute(self, context: Context):
+        file_to_import: str | None = self.filepath
+        prefs: 'AddonPreferences' = context.preferences.addons[__package__].preferences
+
+        if not file_to_import:
+            self.report({"WARNING"}, "No file to import")
+            return {"CANCELLED"}
+
+        imported_prefs = decode_json(file_to_import)
+
+        prefs.prefix_with_project_name = imported_prefs["prefix_with_project_name"]
+        prefs.auto_set_render_outputpath = imported_prefs["auto_set_render_outputpath"]
+        prefs.default_project_location = imported_prefs["default_project_location"]
+        prefs.preview_subfolders = imported_prefs["preview_subfolders"]
+        prefs.enable_additional_rearrange_tools = imported_prefs["enable_additional_rearrange_tools"]
+        prefs.previous_set = imported_prefs["previous_set"]
+
+        encode_json(imported_prefs["bps_data"], BPS_DATA_FILE)
+        register_automatic_folders(prefs.automatic_folders, prefs.previous_set)
+
+        prefs.folder_structure_sets = imported_prefs["folder_structure_sets"]
+
+        return {"FINISHED"}
+
+
+class SUPER_PROJECT_MANAGER_OT_export_settings(Operator, ExportHelper):
+    bl_idname = "super_project_manager.export_settings"
+    bl_label = "Export Settings"
+    bl_description = "Export SPM Settings"
+
+    filename_ext = ".json"
+
+    def execute(self, context: Context):
+        file_to_export: str | None = self.filepath
+        prefs: 'AddonPreferences' = context.preferences.addons[__package__].preferences
+
+        if not file_to_export:
+            self.report({"WARNING"}, "No file to export")
+            return {"CANCELLED"}
+
+        unregister_automatic_folders(
+            prefs.automatic_folders, prefs.previous_set)
+
+        exported_prefs = {}
+
+        exported_prefs["prefix_with_project_name"] = prefs.prefix_with_project_name
+        exported_prefs["auto_set_render_outputpath"] = prefs.auto_set_render_outputpath
+        exported_prefs["default_project_location"] = prefs.default_project_location
+        exported_prefs["preview_subfolders"] = prefs.preview_subfolders
+        exported_prefs["previous_set"] = prefs.previous_set
+        exported_prefs["enable_additional_rearrange_tools"] = prefs.enable_additional_rearrange_tools
+        exported_prefs["folder_structure_sets"] = prefs.folder_structure_sets
+        exported_prefs["bps_data"] = decode_json(BPS_DATA_FILE)
+
+        encode_json(exported_prefs, file_to_export)
+
+        return {"FINISHED"}
+
+
 classes = (
     SUPER_PROJECT_MANAGER_OT_add_folder,
     SUPER_PROJECT_MANAGER_OT_remove_folder,
@@ -749,6 +816,8 @@ classes = (
     SUPER_PROJECT_MANAGER_OT_add_panel_project_folder,
     SUPER_PROJECT_MANAGER_OT_remove_panel_project_folder,
     SUPER_PROJECT_MANAGER_OT_move_panel_project_folder,
+    SUPER_PROJECT_MANAGER_OT_import_settings,
+    SUPER_PROJECT_MANAGER_OT_export_settings,
 )
 
 

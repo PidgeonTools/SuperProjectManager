@@ -267,8 +267,14 @@ class SUPER_PROJECT_MANAGER_APT_Preferences(AddonPreferences):
             box.operator(
                 "wm.path_open", text="Open directory").filepath = addons_data_dir
 
-        # Support URL
+        # Import/Export Settings
         layout.separator()
+        col = layout.column()
+        row = col.row()
+        row.operator("super_project_manager.export_settings")
+        row.operator("super_project_manager.import_settings")
+
+        # Support URL
         col = layout.column()
         op = col.operator("wm.url_open", text="Support", icon="URL")
         op.url = "https://bd-links.netlify.app/discord-spm"
@@ -405,8 +411,10 @@ def legacy_register(bl_info):
 
 
 def unregister():
-    # addon updater unregister
-    addon_updater_ops.unregister()
+
+    if bpy.app.version < (4, 2):
+        # addon updater unregister
+        addon_updater_ops.unregister()
 
     # register the example panel, to show updater buttons
     for cls in reversed(classes):
