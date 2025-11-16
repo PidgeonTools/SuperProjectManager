@@ -403,6 +403,8 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                                   emboss=False,
                                   icon="SORT_ASC")
                 op.index = index
+            else:
+                row.label(icon="BLANK1")
 
             if index < len(data) - 1 and prefs.enable_additional_rearrange_tools:
                 op = row.operator("super_project_manager.rearrange_to_bottom",
@@ -410,6 +412,8 @@ class SUPER_PROJECT_MANAGER_PT_Open_Projects_subpanel(Panel):
                                   emboss=False,
                                   icon="IMPORT")
                 op.index = index
+            elif prefs.enable_additional_rearrange_tools:
+                row.label(icon="BLANK1")
 
 
 class SUPER_PROJECT_MANAGER_PT_filebrowser_project_paths(Panel):
@@ -493,6 +497,8 @@ class SPM_UL_dir(UIList):
                                  icon='SORT_ASC', text="", emboss=False)
             op.index = index
             op.direction = DOWN
+        else:
+            layout.label(icon="BLANK1")
 
         layout.separator(factor=0.5)
         op = layout.operator("super_project_manager.remove_panel_project_folder",
